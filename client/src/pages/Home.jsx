@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 import ProductCard from '../components/product/ProductCard.jsx'
+import { getTopProducts } from '../services/api.js'
 import { ProductCardSkeleton } from '../components/ui/Skeleton.jsx'
 import { FiArrowRight, FiZap, FiShield, FiTruck } from 'react-icons/fi'
 
@@ -10,17 +10,10 @@ const Home = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchFeatured = async () => {
-      try {
-        const { data } = await axios.get('/api/products/top')
-        setFeaturedProducts(data)
-      } catch (error) {
-        console.error('Failed to fetch featured products')
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchFeatured()
+    getTopProducts().then(data => {
+      setFeaturedProducts(data)
+      setLoading(false)
+    })
   }, [])
 
   const categories = [

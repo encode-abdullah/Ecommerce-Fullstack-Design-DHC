@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import axios from 'axios'
 import { useCartStore, useWishlistStore } from '../context/store'
+import { getProductById } from '../services/api.js'
 import { FiHeart, FiShoppingCart, FiMinus, FiPlus } from 'react-icons/fi'
 import Rating from '../components/ui/Rating.jsx'
 import { TextSkeleton } from '../components/ui/Skeleton.jsx'
@@ -15,17 +15,10 @@ const ProductDetail = () => {
   const { addToWishlist, removeFromWishlist, wishlist } = useWishlistStore()
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const { data } = await axios.get(`/api/products/${id}`)
-        setProduct(data)
-      } catch (error) {
-        console.error('Failed to fetch product')
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchProduct()
+    getProductById(id).then(data => {
+      setProduct(data)
+      setLoading(false)
+    })
   }, [id])
 
   const handleAddToCart = () => {

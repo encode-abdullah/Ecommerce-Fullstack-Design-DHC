@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useLocation, Link } from 'react-router-dom'
-import axios from 'axios'
 import ProductCard from '../components/product/ProductCard.jsx'
 import ProductListCard from '../components/product/ProductListCard.jsx'
+import { getProducts } from '../services/api.js'
 import { ProductCardSkeleton } from '../components/ui/Skeleton.jsx'
 import { FiGrid, FiList, FiSearch } from 'react-icons/fi'
 
@@ -11,27 +11,17 @@ const Products = () => {
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState('grid')
   const [keyword, setKeyword] = useState('')
-  const [page, setPage] = useState(1)
-  const [pages, setPages] = useState(1)
   const location = useLocation()
 
   const category = new URLSearchParams(location.search).get('category') || ''
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true)
-      try {
-        const { data } = await axios.get(`/api/products?keyword=${keyword}&category=${category}&pageNumber=${page}`)
-        setProducts(data.products)
-        setPages(data.pages)
-      } catch (error) {
-        console.error('Failed to fetch products')
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchProducts()
-  }, [keyword, category, page])
+    setLoading(true)
+    getProducts({ keyword, category }).then(data => {
+      setProducts(data.products)
+      setLoading(false)
+    })
+  }, [keyword, category])
 
   return (
     <div>
@@ -93,20 +83,6 @@ const Products = () => {
               ))}
             </div>
           )}
-
-          <div className="flex justify-center mt-8 space-x-2">
-            {[...Array(pages).keys()].map(x => (
-              <button
-                key={x + 1}
-                onClick={() => setPage(x + 1)}
-                className={`px-4 py-2 rounded-lg ${
-                  page === x + 1 ? 'bg-primary text-background' : 'bg-surface'
-                }`}
-              >
-                {x + 1}
-              </button>
-            ))}
-          </div>
         </>
       )}
 

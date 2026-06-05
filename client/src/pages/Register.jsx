@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import { useAuthStore } from '../context/store'
 import { FiUser, FiMail, FiLock } from 'react-icons/fi'
 
@@ -12,18 +11,20 @@ const Register = () => {
   const navigate = useNavigate()
   const login = useAuthStore(state => state.login)
 
-  const handleSubmit = async e => {
+  const handleSubmit = e => {
     e.preventDefault()
     setLoading(true)
-    try {
-      const { data } = await axios.post('/api/auth/register', { name, email, password })
-      login(data, data.token)
+    // Mock register for Week 1
+    setTimeout(() => {
+      login({ 
+        _id: '1', 
+        name, 
+        email, 
+        isAdmin: false 
+      }, 'mock-token')
       navigate('/')
-    } catch (error) {
-      console.error(error.response?.data?.message || 'Registration failed')
-    } finally {
       setLoading(false)
-    }
+    }, 500)
   }
 
   return (
