@@ -1,8 +1,7 @@
 import { Link, NavLink } from 'react-router-dom'
 import { FiShoppingCart, FiHeart, FiUser, FiSun, FiMoon, FiMenu, FiX } from 'react-icons/fi'
 import { useState, useEffect } from 'react'
-import { useAuthStore, useCartStore, useThemeStore } from '../context/store'
-import { useWishlistStore } from '../context/store'
+import { useAuthStore, useCartStore, useThemeStore, useWishlistStore } from '../../context/store'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)

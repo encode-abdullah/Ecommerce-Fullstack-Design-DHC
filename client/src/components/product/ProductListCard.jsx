@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import Rating from '../../ui/Rating.jsx'
+import Rating from '../ui/Rating.jsx'
 
 const ProductListCard = ({ product }) => {
   return (

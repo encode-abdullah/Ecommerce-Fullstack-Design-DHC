@@ -1,4 +1,4 @@
-import { useAuthStore } from '../../context/store'
+import { useAuthStore } from '../context/store'
 import { FiUser, FiMail, FiShoppingBag, FiHeart } from 'react-icons/fi'
 
 const Profile = () => {
