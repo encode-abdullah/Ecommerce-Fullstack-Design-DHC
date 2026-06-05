@@ -1,94 +1,31 @@
-# Gaming Gear Store
+# Gaming Gear Store - Week 1
 
-A full-stack ecommerce application built with React, Node.js, Express, and MongoDB.
+Frontend-only ecommerce application built with React, TailwindCSS, and Vite.
 
-## Tech Stack
-- **Frontend**: React + TailwindCSS + Vite + Zustand
-- **Backend**: Node.js + Express.js + MongoDB
-- **Authentication**: JWT + bcrypt
+## Week 1 Status (Frontend)
+- ✅ Static frontend with mock data
+- ✅ 4 responsive pages: Home, Products, ProductDetail, Cart
+- ✅ Login/Register, Wishlist, Profile pages
+- ✅ Dark theme with cyan/purple accents
+- ✅ Grid/List view, search, add-to-cart functionality
 
-## Features
-- Product listing with search and filters
-- Product details with ratings and reviews
-- Shopping cart
-- Wishlist
-- User authentication
-- Admin dashboard
-- Dark/light mode toggle
-- Skeleton loading states
-- Toast notifications
+## Tech Stack (Frontend)
+- React 18 + Vite + TailwindCSS
+- Zustand for state management
+- React Router for navigation
 
 ## Setup
 
-### Prerequisites
-- Node.js 18+
-- MongoDB running locally or connection string
-
-### Installation
 ```bash
-cd server && npm install
-cd ../client && npm install
-```
-
-### Environment Variables
-
-**server/.env**
-```
-MONGODB_URI=mongodb://localhost:27017/gaming-gear-store
-JWT_SECRET=your-secret-key
-CLIENT_URL=http://localhost:5173
-PORT=5000
-```
-
-**client/.env**
-```
-VITE_API_URL=http://localhost:5000/api
-```
-
-### Seed Database
-
-```bash
-cd server
-node seed.js
-```
-
-### Run Development
-
-```bash
-# Terminal 1 - Backend
-cd server
-npm run dev
-
-# Terminal 2 - Frontend
 cd client
+npm install
 npm run dev
 ```
 
-## Project Structure
+Visit http://localhost:5173
 
-```
-├── client/          # React frontend
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── context/
-│   │   └── ...
-│   └── ...
-├── server/          # Node.js backend
-│   ├── models/
-│   ├── routes/
-│   ├── controllers/
-│   └── ...
-```
-
-## API Endpoints
-
-- `POST /api/auth/register` - Register user
-- `POST /api/auth/login` - Login user
-- `GET /api/products` - Get all products (with optional ?keyword= and ?category=)
-- `GET /api/products/:id` - Get single product
-- `GET /api/products/top` - Get top rated products
-- `GET /api/cart` - Get user cart
-- `POST /api/cart` - Add to cart
-- `GET /api/wishlist` - Get user wishlist
-- `POST /api/orders` - Create order
+## Week 2 (Backend - coming soon)
+- MongoDB integration
+- Express.js API
+- JWT authentication
+- Dynamic product data
