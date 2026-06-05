@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Production builds
+/client/dist
+/server/dist
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# MongoDB
+mongod.lock

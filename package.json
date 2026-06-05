@@ -1,0 +1,10 @@
+{
+  "name": "gaming-gear-store",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "setup": "npm install",
+    "dev": "echo \"Run server and client separately\"",
+    "seed": "cd server && npm run seed"
+  }
+}
