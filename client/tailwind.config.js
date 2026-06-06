@@ -2,7 +2,7 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx}",
   ],
   darkMode: 'class',
   theme: {
@@ -12,7 +12,7 @@ export default {
         surface: '#1E293B',
         primary: '#06B6D4',
         accent: '#8B5CF6',
-        muted: '#64748B',
+        muted: '#94A3B8',
         text: '#F1F5F9',
       }
     },
