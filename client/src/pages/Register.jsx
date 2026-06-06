@@ -14,7 +14,6 @@ const Register = () => {
   const handleSubmit = e => {
     e.preventDefault()
     setLoading(true)
-    // Mock register for Week 1
     setTimeout(() => {
       login({ 
         _id: '1', 
@@ -35,13 +34,13 @@ const Register = () => {
         <div>
           <label className="block text-sm font-medium mb-2">Name</label>
           <div className="relative">
-            <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-muted w-5 h-5" />
+            <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" />
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
               required
-              className="w-full pl-10 pr-4 py-3 bg-surface rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full pl-10 pr-4 py-3 bg-black border border-red-900/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               placeholder="John Doe"
             />
           </div>
@@ -50,13 +49,13 @@ const Register = () => {
         <div>
           <label className="block text-sm font-medium mb-2">Email</label>
           <div className="relative">
-            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted w-5 h-5" />
+            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" />
             <input
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
-              className="w-full pl-10 pr-4 py-3 bg-surface rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full pl-10 pr-4 py-3 bg-black border border-red-900/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               placeholder="you@example.com"
             />
           </div>
@@ -65,13 +64,13 @@ const Register = () => {
         <div>
           <label className="block text-sm font-medium mb-2">Password</label>
           <div className="relative">
-            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted w-5 h-5" />
+            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" />
             <input
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
-              className="w-full pl-10 pr-4 py-3 bg-surface rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full pl-10 pr-4 py-3 bg-black border border-red-900/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               placeholder="••••••••"
             />
           </div>
@@ -80,14 +79,14 @@ const Register = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-primary text-background py-3 rounded-lg font-semibold hover:opacity-90 transition disabled:opacity-50"
+          className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-500 transition disabled:opacity-50"
         >
           {loading ? 'Loading...' : 'Register'}
         </button>
         
-        <p className="text-center text-muted">
+        <p className="text-center text-red-300/60">
           Already have an account?{' '}
-          <Link to="/login" className="text-primary hover:underline">
+          <Link to="/login" className="text-red-500 hover:underline">
             Login
           </Link>
         </p>

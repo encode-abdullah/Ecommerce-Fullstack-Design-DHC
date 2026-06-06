@@ -61,7 +61,7 @@ const Header = () => {
   const totalCartQty = cartItems.reduce((acc, item) => acc + item.quantity, 0)
 
   return (
-    <header className="bg-surface/90 backdrop-blur-md border-b border-gray-700 sticky top-0 z-50 transition-colors">
+    <header className="bg-black/90 backdrop-blur-md border-b border-red-900/30 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           
@@ -72,14 +72,14 @@ const Header = () => {
             <Popover>
               <PopoverTrigger asChild>
                 <Button
-                  className="group size-9 md:hidden border border-gray-700 hover:bg-gray-800"
+                  className="group size-9 md:hidden border border-red-900/50 hover:bg-red-900/20"
                   variant="ghost"
                   size="icon"
                 >
                   <FiMenu className="w-5 h-5 text-text" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent align="start" className="w-64 p-3 md:hidden bg-surface border-gray-700">
+              <PopoverContent align="start" className="w-64 p-3 md:hidden bg-black border-red-900/30">
                 <nav className="flex flex-col gap-3">
                   <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-1">Navigation</div>
                   <Link to="/products" className="py-1 text-sm font-medium hover:text-primary transition">All Products</Link>
@@ -120,8 +120,8 @@ const Header = () => {
             </Popover>
 
             {/* Brand Logo */}
-            <Link to="/" className="flex items-center space-x-2 text-xl font-bold tracking-wider text-primary hover:opacity-90">
-              <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">GameGear</span>
+             <Link to="/" className="flex items-center space-x-2 text-xl font-bold tracking-wider text-red-500 hover:opacity-90">
+               <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">GameGear</span>
             </Link>
 
             {/* Desktop Navigation Menu */}
@@ -132,12 +132,12 @@ const Header = () => {
                   {/* Products Link */}
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <NavLink
-                        to="/products"
-                        className={({ isActive }) => 
-                          `text-sm font-medium px-3 py-2 rounded-md hover:text-primary transition-colors ${isActive ? 'text-primary' : 'text-text/80'}`
-                        }
-                      >
+                     <NavLink
+                         to="/products"
+                         className={({ isActive }) => 
+                           `text-sm font-medium px-3 py-2 rounded-md text-red-300 hover:text-red-400 transition-colors ${isActive ? 'text-red-500' : 'text-text/80'}`
+                         }
+                       >
                         Products
                       </NavLink>
                     </NavigationMenuLink>
@@ -145,11 +145,11 @@ const Header = () => {
 
                   {/* Categories Dropdown */}
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-sm font-medium text-text/80 hover:text-primary bg-transparent py-2">
+                     <NavigationMenuTrigger className="text-sm font-medium text-text/80 hover:text-red-500 bg-transparent py-2">
                       Categories
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-surface border border-gray-700 rounded-lg">
+                       <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-black border border-red-900/30 rounded-lg">
                         {categoriesList.map((cat) => (
                           <li key={cat.slug}>
                             <NavigationMenuLink asChild>
@@ -157,7 +157,7 @@ const Header = () => {
                                 to={`/products?category=${cat.slug}`}
                                 className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none hover:bg-gray-800 transition"
                               >
-                                <div className="text-sm font-semibold text-primary">{cat.name}</div>
+                                <div className="text-sm font-semibold text-red-500">{cat.name}</div>
                                 <p className="line-clamp-2 text-xs leading-snug text-muted mt-1">
                                   {cat.desc}
                                 </p>
@@ -172,10 +172,10 @@ const Header = () => {
                   {/* Deals Link */}
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <Link
-                        to="/products?category=mouse"
-                        className="text-sm font-medium px-3 py-2 text-text/80 hover:text-primary transition-colors"
-                      >
+                       <Link
+                         to="/products?category=mouse"
+                         className="text-sm font-medium px-3 py-2 text-text/80 hover:text-red-500 transition-colors"
+                       >
                         Deals
                       </Link>
                     </NavigationMenuLink>
@@ -189,14 +189,14 @@ const Header = () => {
 
           {/* Center Search Bar (Desktop) */}
           <form onSubmit={handleSearchSubmit} className="hidden md:flex relative max-w-xs w-full">
-            <Input
-              id={searchId}
-              type="search"
-              placeholder="Search gear..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-9 ps-8 pe-4 bg-background border-gray-700 hover:border-gray-600 focus-visible:ring-primary w-full text-xs"
-            />
+             <Input
+               id={searchId}
+               type="search"
+               placeholder="Search gear..."
+               value={searchQuery}
+               onChange={(e) => setSearchQuery(e.target.value)}
+               className="h-9 ps-8 pe-4 bg-black border-red-900/50 hover:border-red-500/50 focus-visible:ring-red-500 w-full text-xs"
+             />
             <div className="absolute inset-y-0 start-0 flex items-center justify-center ps-2.5 text-muted pointer-events-none">
               <FiSearch className="w-4 h-4" />
             </div>
@@ -205,30 +205,30 @@ const Header = () => {
           {/* Right Side Actions */}
           <div className="flex items-center gap-1 sm:gap-2">
             
-            {/* Mobile Search Toggle */}
-            <button
-              onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
-              className="p-2 rounded-lg hover:bg-gray-800 text-text/80 hover:text-primary transition md:hidden"
-              aria-label="Search"
-            >
+             {/* Mobile Search Toggle */}
+             <button
+               onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+               className="p-2 rounded-lg hover:bg-red-900/20 text-text/80 hover:text-red-500 transition md:hidden"
+               aria-label="Search"
+             >
               <FiSearch className="w-5 h-5" />
             </button>
 
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-gray-800 text-text/80 hover:text-primary transition"
-              aria-label="Toggle theme"
-            >
+             {/* Theme Toggle */}
+             <button
+               onClick={toggleTheme}
+               className="p-2 rounded-lg hover:bg-red-900/20 text-text/80 hover:text-red-500 transition"
+               aria-label="Toggle theme"
+             >
               {isDark ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
             </button>
 
-            {/* Wishlist Link */}
-            <Link 
-              to="/wishlist" 
-              className="relative p-2 rounded-lg hover:bg-gray-800 text-text/80 hover:text-primary transition"
-              aria-label="Wishlist"
-            >
+             {/* Wishlist Link */}
+             <Link 
+               to="/wishlist" 
+               className="relative p-2 rounded-lg hover:bg-red-900/20 text-text/80 hover:text-red-500 transition"
+               aria-label="Wishlist"
+             >
               <FiHeart className="w-5 h-5" />
               {wishlist.length > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-primary text-background text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center animate-pulse">
@@ -237,12 +237,12 @@ const Header = () => {
               )}
             </Link>
 
-            {/* Cart Link */}
-            <Link 
-              to="/cart" 
-              className="relative p-2 rounded-lg hover:bg-gray-800 text-text/80 hover:text-primary transition"
-              aria-label="Cart"
-            >
+             {/* Cart Link */}
+             <Link 
+               to="/cart" 
+               className="relative p-2 rounded-lg hover:bg-red-900/20 text-text/80 hover:text-red-500 transition"
+               aria-label="Cart"
+             >
               <FiShoppingCart className="w-5 h-5" />
               {totalCartQty > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-primary text-background text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center animate-pulse">
@@ -256,10 +256,10 @@ const Header = () => {
               {isAuthenticated ? (
                 <div className="flex items-center gap-3">
                   <div className="text-xs text-text/80">
-                    Hello, <span className="font-semibold text-primary">{user?.name}</span>
+                    Hello, <span className="font-semibold text-red-500">{user?.name}</span>
                   </div>
                   {user?.isAdmin && (
-                    <Link to="/admin/dashboard" className="text-xs bg-accent/20 text-accent border border-accent/30 px-2 py-1 rounded hover:bg-accent hover:text-white transition">
+                    <Link to="/admin/dashboard" className="text-xs bg-red-600/20 text-red-500 border border-red-600/30 px-2 py-1 rounded hover:bg-red-600 hover:text-white transition">
                       Admin
                     </Link>
                   )}
@@ -294,7 +294,7 @@ const Header = () => {
               placeholder="Search gear..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-9 ps-8 pe-4 bg-background border-gray-700 focus-visible:ring-primary w-full text-xs"
+              className="h-9 ps-8 pe-4 bg-black border-red-900/50 focus-visible:ring-red-500 w-full text-xs"
             />
             <div className="absolute inset-y-0 start-0 flex items-center justify-center ps-2.5 text-muted pointer-events-none">
               <FiSearch className="w-4 h-4" />

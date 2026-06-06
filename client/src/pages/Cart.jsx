@@ -13,7 +13,7 @@ const Cart = () => {
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold mb-4">Your cart is empty</h2>
-        <Link to="/products" className="inline-flex items-center space-x-2 text-primary hover:underline">
+        <Link to="/products" className="inline-flex items-center space-x-2 text-red-500 hover:underline">
           <FiArrowLeft className="w-4 h-4" />
           <span>Continue Shopping</span>
         </Link>
@@ -25,7 +25,7 @@ const Cart = () => {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2 space-y-4">
         {cartItems.map(item => (
-          <div key={item.product._id} className="bg-surface rounded-lg p-4 flex items-center space-x-4">
+          <div key={item.product._id} className="bg-black border border-red-900/30 rounded-lg p-4 flex items-center space-x-4">
             <img 
               src={item.product.images[0] || '/placeholder.jpg'} 
               alt={item.product.name}
@@ -33,23 +33,23 @@ const Cart = () => {
             />
             
             <div className="flex-1">
-              <Link to={`/products/${item.product._id}`} className="font-medium hover:text-primary">
+              <Link to={`/products/${item.product._id}`} className="font-medium hover:text-red-500">
                 {item.product.name}
               </Link>
-              <p className="text-primary font-bold">${item.product.price}</p>
+              <p className="text-red-500 font-bold">${item.product.price}</p>
             </div>
             
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => updateQuantity(item.product._id, Math.max(1, item.quantity - 1))}
-                className="p-1 rounded bg-gray-700 hover:bg-gray-600"
+                className="p-1 rounded bg-red-900/20 hover:bg-red-900/40 border border-red-900/30"
               >
                 <FiMinus className="w-3 h-3" />
               </button>
               <span className="w-8 text-center">{item.quantity}</span>
               <button
                 onClick={() => updateQuantity(item.product._id, Math.min(item.product.stock, item.quantity + 1))}
-                className="p-1 rounded bg-gray-700 hover:bg-gray-600"
+                className="p-1 rounded bg-red-900/20 hover:bg-red-900/40 border border-red-900/30"
               >
                 <FiPlus className="w-3 h-3" />
               </button>
@@ -57,7 +57,7 @@ const Cart = () => {
             
             <button
               onClick={() => removeItem(item.product._id)}
-              className="p-2 text-red-400 hover:text-red-300"
+              className="p-2 text-red-500 hover:text-red-400"
             >
               <FiTrash2 className="w-4 h-4" />
             </button>
@@ -65,10 +65,10 @@ const Cart = () => {
         ))}
       </div>
 
-      <div className="bg-surface rounded-lg p-6 h-fit">
+      <div className="bg-black border border-red-900/30 rounded-lg p-6 h-fit">
         <h2 className="text-xl font-bold mb-4">Order Summary</h2>
         
-        <div className="space-y-3 border-b border-gray-700 pb-4">
+        <div className="space-y-3 border-b border-red-900/20 pb-4">
           <div className="flex justify-between">
             <span>Subtotal</span>
             <span>${subtotal.toFixed(2)}</span>
@@ -86,7 +86,7 @@ const Cart = () => {
         
         <Link 
           to="/checkout"
-          className="w-full block text-center bg-primary text-background py-3 rounded-lg font-semibold hover:opacity-90 transition"
+          className="w-full block text-center bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-500 transition"
         >
           Proceed to Checkout
         </Link>

@@ -8,13 +8,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#0F172A',
-        surface: '#1E293B',
-        primary: '#06B6D4',
-        accent: '#8B5CF6',
-        muted: '#94A3B8',
-        text: '#F1F5F9',
-      }
+        background: '#030303',
+        surface: '#0A0A0A',
+        primary: '#EF4444',
+        accent: '#F97316',
+        muted: '#FCA5A5',
+        text: '#FEF2F2',
+      },
+      keyframes: {
+        'pulse-slow': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.5' },
+        },
+      },
+      animation: {
+        'pulse-slow': 'pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
     },
   },
   plugins: [],

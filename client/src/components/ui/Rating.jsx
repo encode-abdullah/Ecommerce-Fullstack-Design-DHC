@@ -7,7 +7,7 @@ const Rating = ({ value, text, readOnly = false, onRatingChange }) => {
         <FiStar
           key={star}
           className={`w-4 h-4 cursor-${readOnly ? 'default' : 'pointer'} ${
-            star <= value ? 'text-primary fill-primary' : 'text-gray-500'
+            star <= value ? 'text-primary fill-primary' : 'text-red-900/40'
           }`}
           onClick={() => !readOnly && onRatingChange && onRatingChange(star)}
         />

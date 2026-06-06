@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 body {
-  background-color: #0F172A;
-  color: #F1F5F9;
+  background-color: #050505;
+  color: #FEF2F2;
+}
+
+.particle {
+  will-change: transform;
+  position: absolute;
+  border-radius: 9999px;
 }

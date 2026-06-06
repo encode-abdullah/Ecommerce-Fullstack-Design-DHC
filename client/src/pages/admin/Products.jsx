@@ -24,15 +24,15 @@ const AdminProducts = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Products</h1>
-        <button className="flex items-center space-x-2 bg-primary text-background px-4 py-2 rounded-lg">
+        <button className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-500 transition">
           <FiPlus className="w-4 h-4" />
           <span>Add Product</span>
         </button>
       </div>
 
-      <div className="bg-surface rounded-lg overflow-x-auto">
+      <div className="bg-black border border-red-900/30 rounded-lg overflow-x-auto">
         <table className="w-full min-w-full">
-          <thead className="border-b border-gray-700">
+          <thead className="border-b border-red-900/30">
             <tr>
               <th className="text-left px-4 py-3">Name</th>
               <th className="text-left px-4 py-3">Price</th>
@@ -43,16 +43,16 @@ const AdminProducts = () => {
           </thead>
           <tbody>
             {products.map(product => (
-              <tr key={product._id} className="border-b border-gray-700">
+              <tr key={product._id} className="border-b border-red-900/20">
                 <td className="px-4 py-3">{product.name}</td>
                 <td className="px-4 py-3">${product.price}</td>
                 <td className="px-4 py-3">{product.stock}</td>
                 <td className="px-4 py-3">{product.category}</td>
                 <td className="px-4 py-3 text-right">
-                  <button className="p-2 text-primary hover:bg-gray-700 rounded">
+                  <button className="p-2 text-red-500 hover:bg-red-900/20 rounded">
                     <FiEdit className="w-4 h-4" />
                   </button>
-                  <button className="p-2 text-red-400 hover:bg-gray-700 rounded">
+                  <button className="p-2 text-red-500 hover:bg-red-900/20 rounded">
                     <FiTrash2 className="w-4 h-4" />
                   </button>
                 </td>
