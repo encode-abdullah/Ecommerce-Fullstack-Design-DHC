@@ -23,9 +23,3 @@ npm run dev
 ```
 
 Visit http://localhost:5173
-
-## Week 2 (Backend - coming soon)
-- MongoDB integration
-- Express.js API
-- JWT authentication
-- Dynamic product data
