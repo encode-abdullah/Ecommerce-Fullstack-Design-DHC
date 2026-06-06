@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ParticleHero } from '../components-ui/animated-hero.jsx'
 import ProductCard from '../components/product/ProductCard.jsx'
 import { getProducts } from '../services/api.js'
 import { ProductCardSkeleton } from '../components/ui/Skeleton.jsx'
@@ -80,23 +79,32 @@ const Home = () => {
 
   return (
     <div className="space-y-12">
-      {/* Interactive Cyber Hero Section */}
-      <ParticleHero
-        title="GAMEGEAR"
-        subtitle="Cyber Command Center"
-        description="Equip yourself with elite performance peripherals. Built for champions, styled for players."
-        particleCount={12}
-        interactiveHint="Hover to Interact with Particle Field"
-        primaryButton={{
-          text: "Shop Keyboards",
-          onClick: () => navigate("/products?category=keyboard")
-        }}
-        secondaryButton={{
-          text: "Browse All Gear",
-          onClick: () => navigate("/products")
-        }}
-        className="rounded-3xl"
-      />
+      {/* Hero Section - Gaming Themed */}
+      <section className="relative min-h-[70vh] bg-gradient-to-br from-background via-surface to-background rounded-3xl overflow-hidden">
+        <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
+        <div className="relative z-10 flex flex-col items-center justify-center text-center py-20 px-4">
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-extrabold mb-6 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+            GAMEGEAR
+          </h1>
+          <p className="text-xl md:text-2xl text-muted max-w-2xl mb-8">
+            Elite gaming peripherals engineered for champions. Dominate every match with pro-grade gear.
+          </p>
+          <div className="flex gap-4">
+            <button 
+              onClick={() => navigate("/products?category=keyboard")}
+              className="px-8 py-3 bg-primary text-white rounded-lg font-semibold hover:opacity-90 transition"
+            >
+              Shop Keyboards
+            </button>
+            <button 
+              onClick={() => navigate("/products")}
+              className="px-8 py-3 border border-gray-700 text-text rounded-lg font-semibold hover:border-primary transition"
+            >
+              Browse All Gear
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* Horizontal Category Pill Bar */}
       <section className="bg-surface/50 border border-gray-700/60 p-4 rounded-2xl">

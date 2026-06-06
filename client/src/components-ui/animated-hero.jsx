@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { Gamepad2 } from 'lucide-react'
-import { cn } from '../../lib/utils.js'
+import { cn } from '../lib/utils.js'
 import { useState, useEffect, useRef } from 'react'
 
 export const ParticleHero = ({
