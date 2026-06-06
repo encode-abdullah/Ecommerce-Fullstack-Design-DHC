@@ -21,6 +21,7 @@ export const useCartStore = create(
   persist(
     (set, get) => ({
       cartItems: [],
+      savedItems: [],
       totalItems: 0,
       totalPrice: 0,
       setCart: (items) => set({ cartItems: items }),
@@ -45,7 +46,32 @@ export const useCartStore = create(
           i.product._id === productId ? { ...i, quantity } : i
         )
       })),
-      clearCart: () => set({ cartItems: [] })
+      clearCart: () => set({ cartItems: [] }),
+      saveForLater: (productId) => set((state) => {
+        const itemToSave = state.cartItems.find(i => i.product._id === productId)
+        if (!itemToSave) return {}
+        const filteredCart = state.cartItems.filter(i => i.product._id !== productId)
+        const alreadySaved = state.savedItems.some(i => i._id === itemToSave.product._id)
+        const newSaved = alreadySaved ? state.savedItems : [...state.savedItems, itemToSave.product]
+        return {
+          cartItems: filteredCart,
+          savedItems: newSaved
+        }
+      }),
+      moveToCart: (product) => set((state) => {
+        const filteredSaved = state.savedItems.filter(i => i._id !== product._id)
+        const existing = state.cartItems.find(i => i.product._id === product._id)
+        const newCart = existing 
+          ? state.cartItems.map(i => i.product._id === product._id ? { ...i, quantity: i.quantity + 1 } : i)
+          : [...state.cartItems, { product, quantity: 1 }]
+        return {
+          cartItems: newCart,
+          savedItems: filteredSaved
+        }
+      }),
+      removeSavedItem: (productId) => set((state) => ({
+        savedItems: state.savedItems.filter(i => i._id !== productId)
+      }))
     }),
     {
       name: 'cart-storage'
