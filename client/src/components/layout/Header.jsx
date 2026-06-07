@@ -18,6 +18,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '../ui/popover'
+import Menu from './Menu.jsx'
 
 const Header = () => {
   const navigate = useNavigate()
@@ -58,152 +59,46 @@ const Header = () => {
     { name: 'Gaming Chairs', slug: 'chair', desc: 'Ergonomic lumbar support for long marathon sessions.' },
   ]
 
+  const menuList = [
+    { id: 1, title: 'Products', url: '/products' },
+    { id: 2, title: 'Categories', url: '#', dropdown: true, items: categoriesList.map((cat, i) => ({ id: i + 1, title: cat.name, url: `/products?category=${cat.slug}` })) },
+    { id: 3, title: 'Deals', url: '/products?category=mouse' },
+  ]
+
   const totalCartQty = cartItems.reduce((acc, item) => acc + item.quantity, 0)
 
   return (
     <header className="bg-black/90 backdrop-blur-md border-b border-red-900/30 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between gap-4">
+        <div className="flex h-16 items-center gap-4">
           
-          {/* Left Side: Logo & Main Navigation */}
-          <div className="flex items-center gap-6 flex-1">
-            
-            {/* Mobile Menu Trigger (Popover) */}
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  className="group size-9 md:hidden border border-red-900/50 hover:bg-red-900/20"
-                  variant="ghost"
-                  size="icon"
-                >
-                  <FiMenu className="w-5 h-5 text-text" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent align="start" className="w-64 p-3 md:hidden bg-black border-red-900/30">
-                <nav className="flex flex-col gap-3">
-                  <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-1">Navigation</div>
-                  <Link to="/products" className="py-1 text-sm font-medium hover:text-primary transition">All Products</Link>
-                  
-                  <div className="text-xs font-semibold text-muted uppercase tracking-wider mt-2 mb-1">Categories</div>
-                  <div className="grid grid-cols-1 gap-1 pl-2 border-l border-gray-700">
-                    {categoriesList.map(cat => (
-                      <Link 
-                        key={cat.slug} 
-                        to={`/products?category=${cat.slug}`}
-                        className="py-1 text-xs hover:text-primary transition"
-                      >
-                        {cat.name}
-                      </Link>
-                    ))}
-                  </div>
+          {/* Logo - fixed width, single line */}
+          <Link to="/" className="flex-shrink-0 text-lg font-bold tracking-wider text-red-500 hover:opacity-90 whitespace-nowrap">
+            <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">Flux Digital Inferno</span>
+          </Link>
 
-                  <div className="border-t border-gray-700 my-2" />
-                  
-                  {isAuthenticated ? (
-                    <div className="space-y-2">
-                      <div className="text-xs text-muted">Signed in as <span className="text-text font-medium">{user?.name}</span></div>
-                      {user?.isAdmin && (
-                        <Link to="/admin/dashboard" className="block text-xs text-accent hover:underline">Admin Panel</Link>
-                      )}
-                      <Button onClick={logout} variant="destructive" size="sm" className="w-full justify-start gap-2">
-                        <FiLogOut className="w-4 h-4" />
-                        <span>Logout</span>
-                      </Button>
-                    </div>
-                  ) : (
-                    <Link to="/login">
-                      <Button className="w-full text-xs" size="sm">Sign In</Button>
-                    </Link>
-                  )}
-                </nav>
-              </PopoverContent>
-            </Popover>
-
-            {/* Brand Logo */}
-             <Link to="/" className="flex items-center space-x-2 text-xl font-bold tracking-wider text-red-500 hover:opacity-90">
-               <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">GameGear</span>
-            </Link>
-
-            {/* Desktop Navigation Menu */}
-            <div className="hidden md:flex items-center">
-              <NavigationMenu>
-                <NavigationMenuList className="gap-2">
-                  
-                  {/* Products Link */}
-                  <NavigationMenuItem>
-                    <NavigationMenuLink asChild>
-                     <NavLink
-                         to="/products"
-                         className={({ isActive }) => 
-                           `text-sm font-medium px-3 py-2 rounded-md text-red-300 hover:text-red-400 transition-colors ${isActive ? 'text-red-500' : 'text-text/80'}`
-                         }
-                       >
-                        Products
-                      </NavLink>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-
-                  {/* Categories Dropdown */}
-                  <NavigationMenuItem>
-                     <NavigationMenuTrigger className="text-sm font-medium text-text/80 hover:text-red-500 bg-transparent py-2">
-                      Categories
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                       <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-black border border-red-900/30 rounded-lg">
-                        {categoriesList.map((cat) => (
-                          <li key={cat.slug}>
-                            <NavigationMenuLink asChild>
-                              <Link
-                                to={`/products?category=${cat.slug}`}
-                                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none hover:bg-gray-800 transition"
-                              >
-                                <div className="text-sm font-semibold text-red-500">{cat.name}</div>
-                                <p className="line-clamp-2 text-xs leading-snug text-muted mt-1">
-                                  {cat.desc}
-                                </p>
-                              </Link>
-                            </NavigationMenuLink>
-                          </li>
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-
-                  {/* Deals Link */}
-                  <NavigationMenuItem>
-                    <NavigationMenuLink asChild>
-                       <Link
-                         to="/products?category=mouse"
-                         className="text-sm font-medium px-3 py-2 text-text/80 hover:text-red-500 transition-colors"
-                       >
-                        Deals
-                      </Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-
-                </NavigationMenuList>
-                <NavigationMenuViewport />
-              </NavigationMenu>
-            </div>
+          {/* Desktop Navigation - flexible */}
+          <div className="hidden md:flex items-center flex-1 min-w-0">
+            <Menu list={menuList} />
           </div>
-
-          {/* Center Search Bar (Desktop) */}
-          <form onSubmit={handleSearchSubmit} className="hidden md:flex relative max-w-xs w-full">
-             <Input
-               id={searchId}
-               type="search"
-               placeholder="Search gear..."
-               value={searchQuery}
-               onChange={(e) => setSearchQuery(e.target.value)}
-               className="h-9 ps-8 pe-4 bg-black border-red-900/50 hover:border-red-500/50 focus-visible:ring-red-500 w-full text-xs"
-             />
-            <div className="absolute inset-y-0 start-0 flex items-center justify-center ps-2.5 text-muted pointer-events-none">
-              <FiSearch className="w-4 h-4" />
-            </div>
-          </form>
-
-          {/* Right Side Actions */}
-          <div className="flex items-center gap-1 sm:gap-2">
+          
+          {/* Search + Actions */}
+          <div className="flex items-center gap-2 flex-1 justify-end">
+            <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xs min-w-[120px]">
+              <div className="relative">
+                <Input
+                  id={searchId}
+                  type="search"
+                  placeholder="Search gear..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-8 ps-8 pe-3 bg-black border-red-900/50 hover:border-red-500/50 focus-visible:ring-red-500 w-full text-xs"
+                />
+                <div className="absolute inset-y-0 start-0 flex items-center justify-center ps-2 text-red-400/50 pointer-events-none">
+                  <FiSearch className="w-3.5 h-3.5" />
+                </div>
+              </div>
+            </form>
             
              {/* Mobile Search Toggle */}
              <button

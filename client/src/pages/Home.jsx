@@ -63,7 +63,7 @@ export default function Home() {
       <ParticleHero
         title="FLUX"
         subtitle="Digital Inferno"
-        description="Experience the mesmerizing dance of light and motion."
+        description="The Ultimate Catalyst for Your Setup"
         primaryButton={{
           text: "Shop Keyboards",
           onClick: () => navigate("/products?category=keyboard"),

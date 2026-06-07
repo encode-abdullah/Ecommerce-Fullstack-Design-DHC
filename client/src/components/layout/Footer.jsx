@@ -11,7 +11,7 @@ const Footer = () => {
           
           <div className="space-y-4">
             <h3 className="font-bold text-xl tracking-wider text-red-500">
-              <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">GameGear</span>
+              <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">Flux Digital Inferno</span>
             </h3>
             <p className="text-red-300/60 text-sm leading-relaxed">
               Equip yourself with premium battle station gear. Engineered for absolute accuracy, speed, and durability.
@@ -89,7 +89,7 @@ const Footer = () => {
         </div>
         
         <div className="border-t border-red-900/30 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-red-300/60">
-          <p>&copy; {new Date().getFullYear()} GameGear. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Flux Digital Inferno. All rights reserved.</p>
           <div className="flex space-x-4">
             <a href="#" className="hover:text-red-500">Privacy Policy</a>
             <a href="#" className="hover:text-red-500">Terms of Service</a>
