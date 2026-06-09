@@ -150,7 +150,7 @@ const ParticleHero = ({
         {children ? (
           children
         ) : (
-          <div className="text-center max-w-6xl mx-auto select-none">
+          <article className="text-center max-w-7xl mx-auto select-none px-2">
             <div className="mb-16">
               <h1 className="text-7xl md:text-[9rem] lg:text-[12rem] xl:text-[14rem] font-black tracking-tighter leading-[0.85] mb-8">
                 <span className="bg-gradient-to-b from-red-300 via-red-500 to-red-800 bg-clip-text text-transparent">
@@ -201,7 +201,7 @@ const ParticleHero = ({
                 </div>
               )}
             </div>
-          </div>
+          </article>
         )}
       </div>
 

@@ -29,7 +29,7 @@ const Footer = () => {
             </div>
           </div>
           
-          <div>
+          <nav aria-label="Shop categories">
             <h4 className="font-bold text-sm tracking-wider uppercase text-text/90 mb-4">Shop Categories</h4>
             <ul className="space-y-2.5 text-sm">
               <li>
@@ -45,9 +45,9 @@ const Footer = () => {
                 <Link to="/products?category=monitor" className="text-red-300/60 hover:text-red-500 transition">Monitors</Link>
               </li>
             </ul>
-          </div>
+          </nav>
           
-          <div>
+          <nav aria-label="Support and FAQ">
             <h4 className="font-bold text-sm tracking-wider uppercase text-text/90 mb-4">Support & FAQ</h4>
             <ul className="space-y-2.5 text-sm">
               <li>
@@ -63,10 +63,10 @@ const Footer = () => {
                 <a href="#" className="text-red-300/60 hover:text-red-500 transition">Contact Support</a>
               </li>
             </ul>
-          </div>
+          </nav>
           
-          <div className="space-y-4">
-            <h4 className="font-bold text-sm tracking-wider uppercase text-text/90 mb-4">Join the Guild</h4>
+          <section aria-labelledby="newsletter-heading" className="space-y-4">
+            <h4 id="newsletter-heading" className="font-bold text-sm tracking-wider uppercase text-text/90 mb-4">Join the Guild</h4>
             <p className="text-red-300/60 text-sm leading-relaxed">
               Subscribe to get notified about beta items, hardware deals, and tournament updates.
             </p>
@@ -78,22 +78,22 @@ const Footer = () => {
                   className="bg-black border-red-900/50 focus-visible:ring-red-500 h-9 w-full text-xs ps-8"
                 />
                 <div className="absolute inset-y-0 start-0 flex items-center justify-center ps-2.5 text-muted pointer-events-none">
-                  <FiMail className="w-3.5 h-3.5" />
+                  <FiMail className="w-3.5 h-3.5" aria-hidden="true" />
                 </div>
               </div>
               <Button type="submit" size="sm" className="h-9 px-3 text-xs font-semibold bg-red-600 hover:bg-red-500">
                 Join
               </Button>
             </form>
-          </div>
+          </section>
         </div>
         
         <div className="border-t border-red-900/30 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-red-300/60">
           <p>&copy; {new Date().getFullYear()} Flux Digital Inferno. All rights reserved.</p>
-          <div className="flex space-x-4">
+          <nav aria-label="Legal links" className="flex space-x-4">
             <a href="#" className="hover:text-red-500">Privacy Policy</a>
             <a href="#" className="hover:text-red-500">Terms of Service</a>
-          </div>
+          </nav>
         </div>
       </div>
     </footer>

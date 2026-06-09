@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ProductCard from '../components/product/ProductCard.jsx'
 import { getProducts } from '../services/api.js'
-import { ProductCardSkeleton } from '../components/ui/Skeleton.jsx'
-import { FiZap, FiShield, FiTruck, FiCpu, FiMessageSquare, FiArrowRight } from 'react-icons/fi'
+import { FiZap, FiShield, FiTruck } from 'react-icons/fi'
 import toast from 'react-hot-toast'
-import ParticleHero from '../components/hero/ParticleHero.jsx'
+import { SparklesCore } from '../components/ui/SparklesCore.jsx'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -60,34 +59,56 @@ export default function Home() {
 
   return (
     <div className="space-y-12">
-      <ParticleHero
-        title="FLUX"
-        subtitle="Digital Inferno"
-        description="The Ultimate Catalyst for Your Setup"
-        primaryButton={{
-          text: "Shop Keyboards",
-          onClick: () => navigate("/products?category=keyboard"),
-        }}
-        secondaryButton={{
-          text: "Browse All Gear",
-          onClick: () => navigate("/products"),
-        }}
-        particleCount={15}
-      />
+      <section className="relative w-full min-h-[70vh] overflow-hidden">
+        <SparklesCore
+          background="#000000"
+          minSize={0.6}
+          maxSize={1.4}
+          speed={1}
+          particleColor="#ef4444"
+          particleDensity={120}
+          className="absolute inset-0"
+        />
+        <div className="relative z-10 min-h-[70vh] flex flex-col items-center justify-center px-6 text-center">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-white mb-4">
+            FLUX
+          </h1>
+          <p className="text-red-200/80 text-lg md:text-2xl font-light tracking-[0.25em] uppercase mb-6">
+            Digital Inferno
+          </p>
+          <p className="text-red-100/60 max-w-2xl mx-auto mb-10">
+            The Ultimate Catalyst for Your Setup
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={() => navigate('/products?category=keyboard')}
+              className="px-10 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-500 transition"
+            >
+              Shop Keyboards
+            </button>
+            <button
+              onClick={() => navigate('/products')}
+              className="px-10 py-3 border border-white/20 text-white rounded-full font-semibold hover:border-red-400 hover:text-red-400 transition backdrop-blur-sm"
+            >
+              Browse All Gear
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* Categories */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
+      <nav aria-label="Categories" className="flex gap-2 overflow-x-auto pb-2">
         {categories.map((cat, i) => (
           <button key={i} onClick={() => navigate(cat.slug ? `/products?category=${cat.slug}` : '/products')}
             className="px-4 py-2 bg-black border border-red-900/50 text-red-200 rounded-full text-sm whitespace-nowrap hover:border-red-500 hover:text-white transition-colors">
             {cat.name}
           </button>
         ))}
-      </div>
+      </nav>
 
       {/* Flash Deals */}
-      <section className="bg-black border border-red-900/30 rounded-3xl p-6">
-        <h2 className="text-2xl font-bold text-red-500 mb-4">FLASH DEALS</h2>
+      <section aria-labelledby="flash-deals-heading">
+        <h2 id="flash-deals-heading" className="text-2xl font-bold text-red-500 mb-4">FLASH DEALS</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {loading ? (
             <div className="col-span-4">Loading...</div>
@@ -107,8 +128,8 @@ export default function Home() {
 
       {/* Two Column Grids */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <section className="bg-black border border-red-900/30 rounded-3xl p-6">
-          <h3 className="text-xl font-bold text-white mb-4">PRO ACCESSORIES</h3>
+        <section aria-labelledby="pro-accessories-heading" className="bg-black border border-red-900/30 rounded-3xl p-6">
+          <h3 id="pro-accessories-heading" className="text-xl font-bold text-white mb-4">PRO ACCESSORIES</h3>
           <div className="grid grid-cols-3 gap-2">
             {accessoriesProducts.map(p => (
               <Link key={p._id} to={`/products/${p._id}`} className="bg-black border border-red-900/30 rounded-lg p-2 text-center hover:border-red-500/50 transition-colors">
@@ -120,8 +141,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-black border border-red-900/30 rounded-3xl p-6">
-          <h3 className="text-xl font-bold text-white mb-4">BATTLE STATION</h3>
+        <section aria-labelledby="battle-station-heading" className="bg-black border border-red-900/30 rounded-3xl p-6">
+          <h3 id="battle-station-heading" className="text-xl font-bold text-white mb-4">BATTLE STATION</h3>
           <div className="grid grid-cols-3 gap-2">
             {setupProducts.map(p => (
               <Link key={p._id} to={`/products/${p._id}`} className="bg-black border border-red-900/30 rounded-lg p-2 text-center hover:border-red-500/50 transition-colors">
@@ -135,17 +156,18 @@ export default function Home() {
       </div>
 
       {/* Inquiry Form */}
-      <section className="bg-black border border-red-900/30 rounded-3xl p-6">
-        <h3 className="text-xl font-bold text-white mb-4">REQUEST CUSTOM CONFIGS</h3>
+      <section aria-labelledby="inquiry-heading" className="bg-black border border-red-900/30 rounded-3xl p-6">
+        <h3 id="inquiry-heading" className="text-xl font-bold text-white mb-4">REQUEST CUSTOM CONFIGS</h3>
         <form onSubmit={handleInquirySubmit} className="flex flex-col sm:flex-row gap-2">
-          <input value={inquiryText} onChange={e => setInquiryText(e.target.value)} placeholder="What specs are you looking for?" className="flex-grow bg-black border border-red-900/50 text-white rounded-lg px-3 py-2 placeholder:text-red-400/40 focus:border-red-500 focus:outline-none" />
+          <label htmlFor="inquiry-input" className="sr-only">What specs are you looking for?</label>
+          <input id="inquiry-input" value={inquiryText} onChange={e => setInquiryText(e.target.value)} placeholder="What specs are you looking for?" className="flex-grow bg-black border border-red-900/50 text-white rounded-lg px-3 py-2 placeholder:text-red-400/40 focus:border-red-500 focus:outline-none" />
           <button type="submit" className="px-6 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg font-semibold transition-colors">Send</button>
         </form>
       </section>
 
       {/* Recommended */}
-      <section>
-        <h3 className="text-2xl font-bold text-white mb-6">RECOMMENDED GEAR</h3>
+      <section aria-labelledby="recommended-heading">
+        <h3 id="recommended-heading" className="text-2xl font-bold text-white mb-6">RECOMMENDED GEAR</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {loading ? <div>Loading...</div> : recommendedProducts.map(product => (
             <ProductCard key={product._id} product={product} />
@@ -154,29 +176,31 @@ export default function Home() {
       </section>
 
       {/* Guarantees */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-black border border-red-900/30 rounded-xl p-4 flex items-center gap-3">
-          <FiZap className="text-red-500 w-8 h-8" />
-          <div>
-            <h4 className="font-bold text-white">Fast Shipping</h4>
-            <p className="text-red-300/60 text-sm">24hr dispatch</p>
-          </div>
+      <section aria-label="Service guarantees">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <article className="bg-black border border-red-900/30 rounded-xl p-4 flex items-center gap-3">
+            <FiZap className="text-red-500 w-8 h-8" aria-hidden="true" />
+            <div>
+              <h4 className="font-bold text-white">Fast Shipping</h4>
+              <p className="text-red-300/60 text-sm">24hr dispatch</p>
+            </div>
+          </article>
+          <article className="bg-black border border-red-900/30 rounded-xl p-4 flex items-center gap-3">
+            <FiShield className="text-orange-500 w-8 h-8" aria-hidden="true" />
+            <div>
+              <h4 className="font-bold text-white">Warranty</h4>
+              <p className="text-red-300/60 text-sm">3-year backing</p>
+            </div>
+          </article>
+          <article className="bg-black border border-red-900/30 rounded-xl p-4 flex items-center gap-3">
+            <FiTruck className="text-red-400 w-8 h-8" aria-hidden="true" />
+            <div>
+              <h4 className="font-bold text-white">Easy Returns</h4>
+              <p className="text-red-300/60 text-sm">30-day trial</p>
+            </div>
+          </article>
         </div>
-        <div className="bg-black border border-red-900/30 rounded-xl p-4 flex items-center gap-3">
-          <FiShield className="text-orange-500 w-8 h-8" />
-          <div>
-            <h4 className="font-bold text-white">Warranty</h4>
-            <p className="text-red-300/60 text-sm">3-year backing</p>
-          </div>
-        </div>
-        <div className="bg-black border border-red-900/30 rounded-xl p-4 flex items-center gap-3">
-          <FiTruck className="text-red-400 w-8 h-8" />
-          <div>
-            <h4 className="font-bold text-white">Easy Returns</h4>
-            <p className="text-red-300/60 text-sm">30-day trial</p>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   )
 }

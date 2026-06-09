@@ -1,4 +1,5 @@
 import { FiPackage, FiUsers, FiBarChart2, FiShoppingBag } from 'react-icons/fi'
+import { Link } from 'react-router-dom'
 
 const AdminDashboard = () => {
   const stats = [
@@ -9,35 +10,37 @@ const AdminDashboard = () => {
   ]
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <main className="space-y-8">
+      <header>
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+      </header>
+
+      <section aria-label="Stats" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map(stat => (
-          <div key={stat.label} className="bg-black border border-red-900/30 rounded-xl p-6">
+          <article key={stat.label} className="bg-black border border-red-900/30 rounded-xl p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-red-300/60 text-sm">{stat.label}</p>
                 <p className="text-2xl font-bold mt-1">{stat.value}</p>
               </div>
-              <stat.icon className={`w-10 h-10 ${stat.color}`} />
+              <stat.icon className={`w-10 h-10 ${stat.color}`} aria-hidden="true" />
             </div>
-          </div>
+          </article>
         ))}
-      </div>
+      </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <a href="/admin/products" className="bg-black border border-red-900/30 rounded-xl p-6 hover:border-red-500/50 transition">
+      <section aria-label="Admin quick actions" className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Link to="/admin/products" className="bg-black border border-red-900/30 rounded-xl p-6 hover:border-red-500/50 transition">
           <h3 className="font-semibold mb-2">Manage Products</h3>
           <p className="text-red-300/60">Add, edit, or remove products</p>
-        </a>
+        </Link>
         
-        <a href="/admin/orders" className="bg-black border border-red-900/30 rounded-xl p-6 hover:border-red-500/50 transition">
+        <Link to="/admin/orders" className="bg-black border border-red-900/30 rounded-xl p-6 hover:border-red-500/50 transition">
           <h3 className="font-semibold mb-2">View Orders</h3>
           <p className="text-red-300/60">Manage customer orders</p>
-        </a>
-      </div>
-    </div>
+        </Link>
+      </section>
+    </main>
   )
 }
 

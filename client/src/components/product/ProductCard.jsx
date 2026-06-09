@@ -25,7 +25,7 @@ const ProductCard = ({ product }) => {
   }
 
   return (
-    <div className="bg-black rounded-lg overflow-hidden group transition-transform hover:scale-[1.02] border border-red-900/30">
+    <article className="bg-black rounded-lg overflow-hidden group transition-transform hover:scale-[1.02] border border-red-900/30">
       <Link to={`/products/${product._id}`}>
         <div className="relative h-48 overflow-hidden">
           <img 
@@ -34,12 +34,14 @@ const ProductCard = ({ product }) => {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
           />
           <button
+            type="button"
             onClick={handleWishlist}
             className={`absolute top-2 right-2 p-2 rounded-full ${
               isWishlisted ? 'bg-red-500' : 'bg-black/50 border border-red-900/40'
             } transition`}
+            aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
           >
-            <FiHeart className={`w-4 h-4 ${isWishlisted ? 'text-white' : 'text-red-200'}`} />
+            <FiHeart className={`w-4 h-4 ${isWishlisted ? 'text-white' : 'text-red-200'}`} aria-hidden="true" />
           </button>
         </div>
         
@@ -49,15 +51,16 @@ const ProductCard = ({ product }) => {
           <Rating value={product.rating} text={`${product.numReviews} reviews`} />
           
           <button
+            type="button"
             onClick={handleAddToCart}
             className="mt-4 w-full flex items-center justify-center space-x-2 bg-red-600 text-white py-2 rounded-lg hover:bg-red-500 transition"
           >
-            <FiShoppingCart className="w-4 h-4" />
+            <FiShoppingCart className="w-4 h-4" aria-hidden="true" />
             <span>Add to Cart</span>
           </button>
         </div>
       </Link>
-    </div>
+    </article>
   )
 }
 

@@ -1,9 +1,10 @@
+"use client"
+
 import { useEffect, useState } from 'react'
 import { useLocation, Link, useNavigate } from 'react-router-dom'
 import ProductCard from '../components/product/ProductCard.jsx'
 import ProductListCard from '../components/product/ProductListCard.jsx'
 import { getProducts } from '../services/api.js'
-import { ProductCardSkeleton } from '../components/ui/Skeleton.jsx'
 import { FiGrid, FiList, FiSearch, FiSliders, FiX, FiCheck } from 'react-icons/fi'
 import { Button } from '../components/ui/button'
 
@@ -99,7 +100,7 @@ const Products = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-red-900/30 pb-6">
+      <header className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-red-900/30 pb-6">
         <div>
           <h1 className="text-3xl font-extrabold tracking-wide text-text">
             {selectedCategory 
@@ -115,7 +116,7 @@ const Products = () => {
         <div className="flex items-center gap-3 w-full md:w-auto">
           <div className="relative flex-grow md:w-64">
             <input
-              type="text"
+              type="search"
               placeholder="Search gear catalog..."
               value={keyword}
               onChange={e => {
@@ -150,9 +151,9 @@ const Products = () => {
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide border-b border-red-900/20">
+      <nav aria-label="Category filters" className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide border-b border-red-900/20">
         {categories.map(cat => (
           <button
             key={cat.slug}
@@ -175,9 +176,9 @@ const Products = () => {
             {cat.name}
           </button>
         ))}
-      </div>
+      </nav>
 
-      <div className="flex items-center justify-between bg-black border border-red-900/30 px-4 py-3 rounded-xl">
+      <section className="flex items-center justify-between bg-black border border-red-900/30 px-4 py-3 rounded-xl">
         <div className="flex items-center gap-2">
           <Button
             onClick={() => setIsFilterDrawerOpen(true)}
@@ -207,10 +208,10 @@ const Products = () => {
         <div className="text-xs text-red-300/60">
           Found <span className="font-bold text-text">{filteredProducts.length}</span> items
         </div>
-      </div>
+      </section>
 
       {getActiveFilterCount() > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2" role="status" aria-live="polite">
           <span className="text-xs text-red-300/60">Active filters:</span>
           {selectedCategory && (
             <span className="inline-flex items-center gap-1 bg-black border border-red-900/40 px-2.5 py-1 rounded-full text-xs font-medium">
@@ -388,23 +389,23 @@ const Products = () => {
         </div>
       </div>
 
-      <section className="border-t border-red-900/20 pt-10 mt-12 space-y-6">
-        <h3 className="text-xl font-bold tracking-wide text-text/90">YOU MAY ALSO LIKE</h3>
+      <section aria-labelledby="suggested-heading" className="border-t border-red-900/20 pt-10 mt-12 space-y-6">
+        <h3 id="suggested-heading" className="text-xl font-bold tracking-wide text-text/90">YOU MAY ALSO LIKE</h3>
         <div className="flex space-x-5 overflow-x-auto pb-4 scrollbar-hide">
           {suggestedProducts.map(p => (
-            <div key={p._id} className="min-w-[180px] w-[180px] bg-black/30 border border-red-900/20 rounded-xl p-3 text-center shrink-0 hover:border-red-500/50 transition">
+            <article key={p._id} className="min-w-[180px] w-[180px] bg-black/30 border border-red-900/20 rounded-xl p-3 text-center shrink-0 hover:border-red-500/50 transition">
               <Link to={`/products/${p._id}`}>
                 <img src={p.images[0]} alt={p.name} className="w-full h-24 object-cover rounded-lg mb-2" />
                 <span className="block text-xs font-bold text-text/90 truncate">{p.name}</span>
                 <span className="block text-xs font-bold text-red-500 mt-1">${p.price}</span>
               </Link>
-            </div>
+            </article>
           ))}
         </div>
       </section>
 
       {isFilterDrawerOpen && (
-        <div className="fixed inset-0 z-50 flex md:hidden bg-black/60 backdrop-blur-sm">
+        <aside aria-label="Filter drawer" className="fixed inset-0 z-50 flex md:hidden bg-black/60 backdrop-blur-sm">
           <div className="w-64 max-w-sm bg-black h-full p-5 flex flex-col justify-between border-r border-red-900/30">
             <div className="space-y-6 overflow-y-auto pr-1">
               <div className="flex items-center justify-between border-b border-red-900/30 pb-3">
@@ -505,7 +506,7 @@ const Products = () => {
               Apply Filters ({getActiveFilterCount()})
             </Button>
           </div>
-        </div>
+        </aside>
       )}
     </div>
   )

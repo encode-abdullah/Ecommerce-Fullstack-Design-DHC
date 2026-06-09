@@ -35,7 +35,6 @@ const Header = () => {
     document.documentElement.classList.toggle('dark', isDark)
   }, [isDark])
 
-  // Sync search input with URL params
   useEffect(() => {
     const params = new URLSearchParams(location.search)
     setSearchQuery(params.get('keyword') || '')
@@ -72,17 +71,14 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center gap-4">
           
-          {/* Logo - fixed width, single line */}
-          <Link to="/" className="flex-shrink-0 text-lg font-bold tracking-wider text-red-500 hover:opacity-90 whitespace-nowrap">
+          <Link to="/" className="flex-shrink-0 text-lg font-bold tracking-wider text-red-500 hover:opacity-90 whitespace-nowrap overflow-hidden">
             <span className="bg-gradient-to-r from-red-400 to-orange-500 bg-clip-text text-transparent">Flux Digital Inferno</span>
           </Link>
 
-          {/* Desktop Navigation - flexible */}
-          <div className="hidden md:flex items-center flex-1 min-w-0">
+          <nav className="hidden md:flex items-center flex-1 min-w-0" aria-label="Main navigation">
             <Menu list={menuList} />
-          </div>
+          </nav>
           
-          {/* Search + Actions */}
           <div className="flex items-center gap-2 flex-1 justify-end">
             <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xs min-w-[120px]">
               <div className="relative">
@@ -95,12 +91,11 @@ const Header = () => {
                   className="h-8 ps-8 pe-3 bg-black border-red-900/50 hover:border-red-500/50 focus-visible:ring-red-500 w-full text-xs"
                 />
                 <div className="absolute inset-y-0 start-0 flex items-center justify-center ps-2 text-red-400/50 pointer-events-none">
-                  <FiSearch className="w-3.5 h-3.5" />
+                  <FiSearch className="w-3.5 h-3.5" aria-hidden="true" />
                 </div>
               </div>
             </form>
             
-             {/* Mobile Search Toggle */}
              <button
                onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
                className="p-2 rounded-lg hover:bg-red-900/20 text-text/80 hover:text-red-500 transition md:hidden"
@@ -109,7 +104,6 @@ const Header = () => {
               <FiSearch className="w-5 h-5" />
             </button>
 
-             {/* Theme Toggle */}
              <button
                onClick={toggleTheme}
                className="p-2 rounded-lg hover:bg-red-900/20 text-text/80 hover:text-red-500 transition"
@@ -118,7 +112,6 @@ const Header = () => {
               {isDark ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
             </button>
 
-             {/* Wishlist Link */}
              <Link 
                to="/wishlist" 
                className="relative p-2 rounded-lg hover:bg-red-900/20 text-text/80 hover:text-red-500 transition"
@@ -132,7 +125,6 @@ const Header = () => {
               )}
             </Link>
 
-             {/* Cart Link */}
              <Link 
                to="/cart" 
                className="relative p-2 rounded-lg hover:bg-red-900/20 text-text/80 hover:text-red-500 transition"
@@ -146,7 +138,6 @@ const Header = () => {
               )}
             </Link>
 
-            {/* Desktop User Section */}
             <div className="hidden md:flex items-center pl-2">
               {isAuthenticated ? (
                 <div className="flex items-center gap-3">
@@ -181,7 +172,6 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Search Bar Expansion */}
         {isMobileSearchOpen && (
           <form onSubmit={handleSearchSubmit} className="md:hidden pb-3 relative">
             <Input
@@ -192,7 +182,7 @@ const Header = () => {
               className="h-9 ps-8 pe-4 bg-black border-red-900/50 focus-visible:ring-red-500 w-full text-xs"
             />
             <div className="absolute inset-y-0 start-0 flex items-center justify-center ps-2.5 text-muted pointer-events-none">
-              <FiSearch className="w-4 h-4" />
+              <FiSearch className="w-4 h-4" aria-hidden="true" />
             </div>
           </form>
         )}

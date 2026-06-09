@@ -11,21 +11,21 @@ const Cart = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="text-center py-12">
+      <main className="text-center py-12">
         <h2 className="text-2xl font-bold mb-4">Your cart is empty</h2>
         <Link to="/products" className="inline-flex items-center space-x-2 text-red-500 hover:underline">
-          <FiArrowLeft className="w-4 h-4" />
+          <FiArrowLeft className="w-4 h-4" aria-hidden="true" />
           <span>Continue Shopping</span>
         </Link>
-      </div>
+      </main>
     )
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div className="lg:col-span-2 space-y-4">
+    <main className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <section aria-label="Cart items" className="lg:col-span-2 space-y-4">
         {cartItems.map(item => (
-          <div key={item.product._id} className="bg-black border border-red-900/30 rounded-lg p-4 flex items-center space-x-4">
+          <article key={item.product._id} className="bg-black border border-red-900/30 rounded-lg p-4 flex items-center space-x-4">
             <img 
               src={item.product.images[0] || '/placeholder.jpg'} 
               alt={item.product.name}
@@ -41,32 +41,38 @@ const Cart = () => {
             
             <div className="flex items-center space-x-2">
               <button
+                type="button"
                 onClick={() => updateQuantity(item.product._id, Math.max(1, item.quantity - 1))}
                 className="p-1 rounded bg-red-900/20 hover:bg-red-900/40 border border-red-900/30"
+                aria-label="Decrease quantity"
               >
                 <FiMinus className="w-3 h-3" />
               </button>
               <span className="w-8 text-center">{item.quantity}</span>
               <button
+                type="button"
                 onClick={() => updateQuantity(item.product._id, Math.min(item.product.stock, item.quantity + 1))}
                 className="p-1 rounded bg-red-900/20 hover:bg-red-900/40 border border-red-900/30"
+                aria-label="Increase quantity"
               >
                 <FiPlus className="w-3 h-3" />
               </button>
             </div>
             
             <button
+              type="button"
               onClick={() => removeItem(item.product._id)}
               className="p-2 text-red-500 hover:text-red-400"
+              aria-label={`Remove ${item.product.name} from cart`}
             >
               <FiTrash2 className="w-4 h-4" />
             </button>
-          </div>
+          </article>
         ))}
-      </div>
+      </section>
 
-      <div className="bg-black border border-red-900/30 rounded-lg p-6 h-fit">
-        <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+      <section aria-labelledby="order-summary" className="bg-black border border-red-900/30 rounded-lg p-6 h-fit">
+        <h2 id="order-summary" className="text-xl font-bold mb-4">Order Summary</h2>
         
         <div className="space-y-3 border-b border-red-900/20 pb-4">
           <div className="flex justify-between">
@@ -90,8 +96,8 @@ const Cart = () => {
         >
           Proceed to Checkout
         </Link>
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }
 

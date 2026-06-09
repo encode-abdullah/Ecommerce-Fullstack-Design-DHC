@@ -3,7 +3,7 @@ import Rating from '../ui/Rating.jsx'
 
 const ProductListCard = ({ product }) => {
   return (
-    <div className="bg-black rounded-lg overflow-hidden flex flex-col sm:flex-row border border-red-900/30">
+    <article className="bg-black rounded-lg overflow-hidden flex flex-col sm:flex-row border border-red-900/30">
       <Link to={`/products/${product._id}`} className="sm:w-48 flex-shrink-0">
         <img 
           src={product.images[0] || '/placeholder.jpg'} 
@@ -20,7 +20,7 @@ const ProductListCard = ({ product }) => {
         <Rating value={product.rating} text={`${product.numReviews} reviews`} />
         <p className="text-red-500 font-bold mt-2">${product.price}</p>
       </div>
-    </div>
+    </article>
   )
 }
 

@@ -21,17 +21,18 @@ const AdminProducts = () => {
   }, [])
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <main className="space-y-6">
+      <header className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Products</h1>
         <button className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-500 transition">
-          <FiPlus className="w-4 h-4" />
+          <FiPlus className="w-4 h-4" aria-hidden="true" />
           <span>Add Product</span>
         </button>
-      </div>
+      </header>
 
-      <div className="bg-black border border-red-900/30 rounded-lg overflow-x-auto">
+      <section aria-label="Product table" className="bg-black border border-red-900/30 rounded-lg overflow-x-auto">
         <table className="w-full min-w-full">
+          <caption className="sr-only">Product inventory</caption>
           <thead className="border-b border-red-900/30">
             <tr>
               <th className="text-left px-4 py-3">Name</th>
@@ -49,10 +50,10 @@ const AdminProducts = () => {
                 <td className="px-4 py-3">{product.stock}</td>
                 <td className="px-4 py-3">{product.category}</td>
                 <td className="px-4 py-3 text-right">
-                  <button className="p-2 text-red-500 hover:bg-red-900/20 rounded">
+                  <button className="p-2 text-red-500 hover:bg-red-900/20 rounded" aria-label={`Edit ${product.name}`}>
                     <FiEdit className="w-4 h-4" />
                   </button>
-                  <button className="p-2 text-red-500 hover:bg-red-900/20 rounded">
+                  <button className="p-2 text-red-500 hover:bg-red-900/20 rounded" aria-label={`Delete ${product.name}`}>
                     <FiTrash2 className="w-4 h-4" />
                   </button>
                 </td>
@@ -60,8 +61,8 @@ const AdminProducts = () => {
             ))}
           </tbody>
         </table>
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }
 

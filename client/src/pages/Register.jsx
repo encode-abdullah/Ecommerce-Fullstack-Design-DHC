@@ -27,15 +27,18 @@ const Register = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto">
-      <h1 className="text-3xl font-bold mb-8 text-center">Create Account</h1>
+    <main className="max-w-md mx-auto">
+      <header>
+        <h1 className="text-3xl font-bold mb-8 text-center">Create Account</h1>
+      </header>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium mb-2">Name</label>
+          <label htmlFor="name" className="block text-sm font-medium mb-2">Name</label>
           <div className="relative">
-            <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" />
+            <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" aria-hidden="true" />
             <input
+              id="name"
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
@@ -47,10 +50,11 @@ const Register = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium mb-2">Email</label>
+          <label htmlFor="register-email" className="block text-sm font-medium mb-2">Email</label>
           <div className="relative">
-            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" />
+            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" aria-hidden="true" />
             <input
+              id="register-email"
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
@@ -62,10 +66,11 @@ const Register = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium mb-2">Password</label>
+          <label htmlFor="register-password" className="block text-sm font-medium mb-2">Password</label>
           <div className="relative">
-            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" />
+            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" aria-hidden="true" />
             <input
+              id="register-password"
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
@@ -91,7 +96,7 @@ const Register = () => {
           </Link>
         </p>
       </form>
-    </div>
+    </main>
   )
 }
 

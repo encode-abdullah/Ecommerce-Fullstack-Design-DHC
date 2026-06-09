@@ -20,11 +20,14 @@ const AdminOrders = () => {
   }, [])
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Orders</h1>
+    <main className="space-y-6">
+      <header>
+        <h1 className="text-3xl font-bold">Orders</h1>
+      </header>
 
-      <div className="bg-black border border-red-900/30 rounded-lg overflow-x-auto">
+      <section aria-label="Orders table" className="bg-black border border-red-900/30 rounded-lg overflow-x-auto">
         <table className="w-full min-w-full">
+          <caption className="sr-only">Customer orders</caption>
           <thead className="border-b border-red-900/30">
             <tr>
               <th className="text-left px-4 py-3">ID</th>
@@ -52,8 +55,8 @@ const AdminOrders = () => {
             ))}
           </tbody>
         </table>
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }
 

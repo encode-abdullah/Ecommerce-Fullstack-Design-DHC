@@ -26,15 +26,16 @@ const Login = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto">
+    <main className="max-w-md mx-auto">
       <h1 className="text-3xl font-bold mb-8 text-center">Login</h1>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium mb-2">Email</label>
+          <label htmlFor="email" className="block text-sm font-medium mb-2">Email</label>
           <div className="relative">
-            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" />
+            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" aria-hidden="true" />
             <input
+              id="email"
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
@@ -46,10 +47,11 @@ const Login = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium mb-2">Password</label>
+          <label htmlFor="password" className="block text-sm font-medium mb-2">Password</label>
           <div className="relative">
-            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" />
+            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300/60 w-5 h-5" aria-hidden="true" />
             <input
+              id="password"
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
@@ -75,7 +77,7 @@ const Login = () => {
           </Link>
         </p>
       </form>
-    </div>
+    </main>
   )
 }
 

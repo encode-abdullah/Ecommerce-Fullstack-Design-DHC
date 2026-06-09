@@ -36,18 +36,22 @@ const ProductDetail = () => {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <main className="space-y-6">
         <TextSkeleton lines={5} />
-      </div>
+      </main>
     )
   }
 
   if (!product) {
-    return <div className="text-center py-12">Product not found</div>
+    return (
+      <main className="text-center py-12" role="alert">
+        <p>Product not found</p>
+      </main>
+    )
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <main className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="space-y-4">
         <div className="relative h-96 bg-black rounded-xl overflow-hidden border border-red-900/20">
           <img 
@@ -57,11 +61,13 @@ const ProductDetail = () => {
           />
           <button
             onClick={handleWishlist}
+            type="button"
             className={`absolute top-4 right-4 p-3 rounded-full ${
               wishlist.some(i => i._id === product._id) ? 'bg-red-600' : 'bg-black/80 border border-red-900/40'
             } transition`}
+            aria-label={wishlist.some(i => i._id === product._id) ? 'Remove from wishlist' : 'Add to wishlist'}
           >
-            <FiHeart className={`w-5 h-5 ${wishlist.some(i => i._id === product._id) ? 'text-white' : 'text-red-200'}`} />
+            <FiHeart className={`w-5 h-5 ${wishlist.some(i => i._id === product._id) ? 'text-white' : 'text-red-200'}`} aria-hidden="true" />
           </button>
         </div>
         
@@ -77,8 +83,8 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold">{product.name}</h1>
+      <section aria-labelledby="product-title" className="space-y-6">
+        <h1 id="product-title" className="text-3xl font-bold">{product.name}</h1>
         
         <div className="flex items-center space-x-4">
           <Rating value={product.rating} text={`${product.numReviews} reviews`} />
@@ -90,12 +96,13 @@ const ProductDetail = () => {
         <p className="text-red-300/60">{product.description}</p>
 
         <div className="border-t border-red-900/30 pt-4">
-          <h3 className="font-semibold mb-3">Specifications</h3>
+          <h2 className="font-semibold mb-3">Specifications</h2>
           <table className="w-full text-sm">
+            <caption className="sr-only">Product specifications</caption>
             <tbody>
               {Object.entries(product.specs || {}).map(([key, value]) => (
                 <tr key={key} className="border-b border-red-900/20">
-                  <td className="py-2 text-red-300/60">{key}</td>
+                  <th scope="row" className="py-2 text-left text-red-300/60 font-normal">{key}</th>
                   <td className="py-2 font-medium">{value}</td>
                 </tr>
               ))}
@@ -107,15 +114,19 @@ const ProductDetail = () => {
           <span className="text-sm font-medium">Quantity:</span>
           <div className="flex items-center space-x-2">
             <button
+              type="button"
               onClick={() => setQuantity(q => Math.max(1, q - 1))}
               className="p-2 rounded-lg bg-black border border-red-900/30 hover:border-red-500"
+              aria-label="Decrease quantity"
             >
               <FiMinus className="w-4 h-4" />
             </button>
             <span className="w-12 text-center">{quantity}</span>
             <button
+              type="button"
               onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
               className="p-2 rounded-lg bg-black border border-red-900/30 hover:border-red-500"
+              aria-label="Increase quantity"
             >
               <FiPlus className="w-4 h-4" />
             </button>
@@ -125,10 +136,11 @@ const ProductDetail = () => {
 
         <div className="flex space-x-4">
           <button
+            type="button"
             onClick={handleAddToCart}
             className="flex-1 flex items-center justify-center space-x-2 bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-500 transition"
           >
-            <FiShoppingCart className="w-5 h-5" />
+            <FiShoppingCart className="w-5 h-5" aria-hidden="true" />
             <span>Add to Cart</span>
           </button>
           <Link 
@@ -138,8 +150,8 @@ const ProductDetail = () => {
             <span>Buy Now</span>
           </Link>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }
 
