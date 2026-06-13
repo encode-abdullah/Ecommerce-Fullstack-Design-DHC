@@ -1,0 +1,20 @@
+export const fallbackProduct = {
+  id: 0,
+  name: 'Razer BlackWidow V4 Pro',
+  category: 'Keyboards',
+  price: 229.99,
+  originalPrice: 279.99,
+  rating: 4.8,
+  reviews: 2341,
+  image: 'https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=600&q=80',
+  badge: 'Top Deal',
+  description: 'The ultimate mechanical gaming keyboard with Razer HyperSpeed Wireless technology, Chroma RGB lighting, and premium Razer Yellow mechanical switches.',
+  features: [
+    'Razer HyperSpeed Wireless',
+    'Razer Chroma RGB',
+    'Razer Yellow Switches',
+    'Magnetic Wrist Rest',
+    'Macro Support',
+  ],
+  inStock: true,
+}
