@@ -2,8 +2,8 @@ const asyncHandler = require('express-async-handler');
 const Product = require('../models/Product');
 
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 12;
-  const page = Number(req.query.pageNumber) || 1;
+  const pageSize = Number(req.query.pageSize) || 12;
+  const page = Number(req.query.pageNumber) || Number(req.query.page) || 1;
 
   const keyword = req.query.keyword
     ? { name: { $regex: req.query.keyword, $options: 'i' } }
