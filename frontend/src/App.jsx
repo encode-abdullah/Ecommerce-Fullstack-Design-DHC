@@ -18,9 +18,9 @@ function App() {
     <AuthProvider>
       <CartProvider>
         <Router>
-        <div className="flex flex-col min-h-screen">
+        <div className="app-root flex flex-col min-h-screen">
           <Navbar />
-          <main className="flex-grow">
+          <main className="app-main flex-grow">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/products" element={<Products />} />

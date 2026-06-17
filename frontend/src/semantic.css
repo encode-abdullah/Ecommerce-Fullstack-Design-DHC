@@ -1,0 +1,364 @@
+/* ==========================================================================
+   Semantic Classes - Master CSS Override File
+   ==========================================================================
+   This file contains all semantic class selectors used across the codebase.
+   Use these selectors to override Tailwind CSS with raw CSS rules.
+   
+   Naming convention: .component-element--modifier
+   ========================================================================== */
+
+/* ==========================================================================
+   1. APP ROOT (App.jsx)
+   ========================================================================== */
+.app-root {}
+.app-main {}
+
+/* ==========================================================================
+   2. LOADING STATES (ProtectedRoute, Products, ProductDetails, Cart, Admin)
+   ========================================================================== */
+.loading-container {}
+.loading-spinner {}
+
+/* ==========================================================================
+   3. SITE HEADER (Header.jsx)
+   ========================================================================== */
+.site-header {}
+.site-header-container {}
+.site-logo {}
+.site-logo-icon {}
+.site-logo-text {}
+.site-search {}
+.site-search-input {}
+.site-search-category {}
+.site-search-category-text {}
+.site-search-category-icon {}
+.site-search-btn {}
+.site-nav-icons {}
+.site-nav-icon-item {}
+.site-nav-icon {}
+.site-nav-icon-label {}
+
+/* ==========================================================================
+   4. NAVBAR (Navbar.jsx)
+   ========================================================================== */
+.navbar {}
+.navbar-container {}
+.navbar-links {}
+.navbar-link {}
+.navbar-link--active {}
+.navbar-link-icon {}
+.navbar-link-dropdown {}
+.navbar-settings {}
+.navbar-language {}
+.navbar-language-icon {}
+.navbar-ship-to {}
+.navbar-flag {}
+.navbar-flag-svg {}
+.navbar-ship-to-icon {}
+
+/* ==========================================================================
+   5. FOOTER (Footer.jsx)
+   ========================================================================== */
+.site-footer {}
+.site-footer-container {}
+.site-footer-grid {}
+.site-footer-brand {}
+.site-footer-brand-logo {}
+.site-footer-brand-icon {}
+.site-footer-brand-name {}
+.site-footer-brand-description {}
+.site-footer-social {}
+.site-footer-social-link {}
+.site-footer-links {}
+.site-footer-links-title {}
+.site-footer-links-list {}
+.site-footer-link {}
+.site-footer-app {}
+.site-footer-app-title {}
+.site-footer-app-buttons {}
+.site-footer-app-badge {}
+.site-footer-bottom {}
+.site-footer-bottom-content {}
+.site-footer-copyright {}
+.site-footer-bottom-actions {}
+.site-footer-language {}
+
+/* ==========================================================================
+   6. HOME PAGE (Home.jsx)
+   ========================================================================== */
+.home-page {}
+.home-main {}
+.home-content {}
+
+/* Hero Section */
+.hero-section {}
+.hero-sidebar {}
+.hero-sidebar-link {}
+.hero-sidebar-link--active {}
+.hero-banner {}
+.hero-banner-image {}
+.hero-banner-content {}
+.hero-banner-title {}
+.hero-banner-cta {}
+.hero-right {}
+.hero-user-card {}
+.hero-user-info {}
+.hero-user-avatar {}
+.hero-user-greeting {}
+.hero-user-message {}
+.hero-user-join {}
+.hero-user-login {}
+.hero-promo-card {}
+.hero-promo-card--orange {}
+.hero-promo-card--teal {}
+.hero-promo-text {}
+
+/* Deals Section */
+.deals-section { background: bisque; }
+.deals-header {}
+.deals-title {}
+.deals-subtitle {}
+.deals-countdown {}
+.deals-grid {}
+
+/* Countdown Timer */
+.countdown-timer {}
+.countdown-timer-item {}
+.countdown-timer-digit {}
+.countdown-timer-label {}
+
+/* Product Card */
+.product-card {}
+.product-card-image-wrapper {}
+.product-card-image {}
+.product-card-name {}
+.product-card-discount {}
+.product-card-price {}
+
+/* Home & Outdoor Section */
+.home-outdoor-section {}
+.home-outdoor-content {}
+.home-outdoor-banner {}
+.home-outdoor-banner-card {}
+.home-outdoor-banner-title {}
+.home-outdoor-banner-cta {}
+.home-outdoor-banner-image-wrapper {}
+.home-outdoor-banner-image {}
+.home-outdoor-products {}
+.home-outdoor-grid {}
+
+/* Consumer Electronics Section */
+.consumer-section {}
+.consumer-content {}
+.consumer-banner {}
+.consumer-banner-card {}
+.consumer-banner-title {}
+.consumer-banner-cta {}
+.consumer-banner-image-wrapper {}
+.consumer-banner-image {}
+.consumer-products {}
+.consumer-grid {}
+
+/* Quote Section */
+.quote-section {}
+.quote-content {}
+.quote-info {}
+.quote-title {}
+.quote-description {}
+.quote-form-wrapper {}
+.quote-form {}
+.quote-form-title {}
+.quote-form-fields {}
+.quote-form-input {}
+.quote-form-textarea {}
+.quote-form-row {}
+.quote-form-quantity {}
+.quote-form-unit {}
+.quote-form-submit {}
+
+/* Recommended Section */
+.recommended-section {}
+.recommended-title {}
+.recommended-grid {}
+
+/* Services Section */
+.services-section {}
+.services-title {}
+.services-grid {}
+.service-card {}
+.service-card-bg {}
+.service-card-content {}
+.service-card-icon {}
+.service-card-title {}
+.service-icon {}
+
+/* Suppliers Section */
+.suppliers-section {}
+.suppliers-title {}
+.suppliers-grid {}
+.supplier-tag {}
+.supplier-flag {}
+.supplier-name {}
+.supplier-domain {}
+
+/* Newsletter Section */
+.newsletter-section {}
+.newsletter-icon {}
+.newsletter-title {}
+.newsletter-description {}
+.newsletter-form {}
+.newsletter-input {}
+.newsletter-submit {}
+
+/* ==========================================================================
+   7. LOGIN PAGE (Login.jsx)
+   ========================================================================== */
+.login-page {}
+.login-card {}
+.login-header {}
+.login-title {}
+.login-subtitle {}
+.login-register-link {}
+.login-form {}
+.login-field {}
+.login-label {}
+.login-input {}
+.login-submit {}
+
+/* ==========================================================================
+   8. REGISTER PAGE (Register.jsx)
+   ========================================================================== */
+.register-page {}
+.register-card {}
+.register-header {}
+.register-title {}
+.register-subtitle {}
+.register-login-link {}
+.register-form {}
+.register-field {}
+.register-label {}
+.register-input {}
+.register-submit {}
+
+/* ==========================================================================
+   9. PRODUCT DETAILS PAGE (ProductDetails.jsx)
+   ========================================================================== */
+.product-details-page {}
+.product-details-grid {}
+.product-details-image-wrapper {}
+.product-details-image {}
+.product-details-info {}
+.product-details-title {}
+.product-details-rating {}
+.product-details-rating-star {}
+.product-details-rating-text {}
+.product-details-description {}
+.product-details-price-wrapper {}
+.product-details-price {}
+.product-details-quantity-wrapper {}
+.product-details-quantity-label {}
+.product-details-quantity-select {}
+.product-details-add-to-cart {}
+.product-not-found {}
+.product-not-found-text {}
+
+/* ==========================================================================
+   10. PRODUCTS PAGE (Products.jsx)
+   ========================================================================== */
+.products-page {}
+.products-header {}
+.products-title {}
+.products-filters {}
+.products-search {}
+.products-search-input {}
+.products-search-icon {}
+.products-category-select {}
+.products-sort-select {}
+.products-empty {}
+.products-empty-text {}
+.products-grid {}
+.product-card {}
+.product-card-image {}
+.product-card-body {}
+.product-card-name {}
+.product-card-description {}
+.product-card-footer {}
+.product-card-price {}
+.product-card-add-to-cart {}
+.products-pagination {}
+.products-pagination-btn {}
+.products-pagination-btn--active {}
+.products-pagination-btn--inactive {}
+
+/* ==========================================================================
+   11. CART PAGE (Cart.jsx)
+   ========================================================================== */
+.cart-page {}
+.cart-page-title {}
+.cart-empty {}
+.cart-empty-icon {}
+.cart-empty-text {}
+.cart-empty-continue {}
+.cart-content {}
+.cart-items-section {}
+.cart-table-wrapper {}
+.cart-table {}
+.cart-table-header {}
+.cart-table-th {}
+.cart-table-body {}
+.cart-table-row {}
+.cart-table-td {}
+.cart-product-info {}
+.cart-product-image {}
+.cart-product-name {}
+.cart-quantity-select {}
+.cart-remove-btn {}
+.cart-clear-wrapper {}
+.cart-clear-btn {}
+.cart-summary-section {}
+.cart-summary {}
+.cart-summary-title {}
+.cart-summary-row {}
+.cart-summary-total-wrapper {}
+.cart-summary-total {}
+.cart-checkout-btn {}
+
+/* ==========================================================================
+   12. ADMIN PRODUCTS PAGE (Admin/Products/Products.jsx)
+   ========================================================================== */
+.admin-products-page {}
+.admin-products-header {}
+.admin-products-title {}
+.admin-products-add-btn {}
+.admin-products-table-wrapper {}
+.admin-products-table {}
+.admin-products-table-header {}
+.admin-products-th {}
+.admin-products-table-body {}
+.admin-products-row {}
+.admin-products-td {}
+.admin-products-image {}
+.admin-products-featured-badge {}
+.admin-products-featured-badge--yes {}
+.admin-products-featured-badge--no {}
+.admin-products-actions {}
+.admin-products-edit-btn {}
+.admin-products-delete-btn {}
+
+/* ==========================================================================
+   13. ADMIN CATEGORIES PAGE (Admin/Categories/Categories.jsx)
+   ========================================================================== */
+.admin-categories-page {}
+.admin-categories-header {}
+.admin-categories-title {}
+.admin-categories-add-btn {}
+.admin-categories-table-wrapper {}
+.admin-categories-table {}
+.admin-categories-table-header {}
+.admin-categories-th {}
+.admin-categories-table-body {}
+.admin-categories-row {}
+.admin-categories-td {}
+.admin-categories-actions {}
+.admin-categories-edit-btn {}
+.admin-categories-delete-btn {}
