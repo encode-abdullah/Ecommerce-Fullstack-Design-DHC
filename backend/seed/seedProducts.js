@@ -19,6 +19,7 @@ const seedProducts = async () => {
       {
         name: 'ASUS ROG Strix Scar 16',
         price: 2899,
+        originalPrice: 3299,
         image: 'https://picsum.photos/id/0/300/200',
         description: 'Intel Core i9-13980HX, RTX 4090',
         category: categories[0]._id,
@@ -28,6 +29,7 @@ const seedProducts = async () => {
       {
         name: 'Logitech G Pro X Superlight',
         price: 159,
+        originalPrice: 199,
         image: 'https://picsum.photos/id/1/300/200',
         description: 'Wireless Gaming Mouse',
         category: categories[1]._id,
@@ -37,6 +39,7 @@ const seedProducts = async () => {
       {
         name: 'Samsung Odyssey G9',
         price: 1299,
+        originalPrice: 1499,
         image: 'https://picsum.photos/id/2/300/200',
         description: '49" Curved QLED Monitor',
         category: categories[2]._id,
@@ -46,6 +49,7 @@ const seedProducts = async () => {
       {
         name: 'Corsair K100 RGB',
         price: 229,
+        originalPrice: 249,
         image: 'https://picsum.photos/id/3/300/200',
         description: 'Optical-Mechanical Keyboard',
         category: categories[3]._id,
@@ -55,6 +59,7 @@ const seedProducts = async () => {
       {
         name: 'INNO3D RTX 5090',
         price: 2199,
+        originalPrice: 2499,
         image: 'https://picsum.photos/id/8/300/200',
         description: 'Next-gen GPU with AI capabilities',
         category: categories[5]._id,
@@ -64,6 +69,7 @@ const seedProducts = async () => {
       {
         name: 'MSI MPG 321URX',
         price: 1099,
+        originalPrice: 1299,
         image: 'https://picsum.photos/id/9/300/200',
         description: '4K 240Hz QD-OLED',
         category: categories[2]._id,
