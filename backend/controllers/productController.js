@@ -13,11 +13,17 @@ const getProducts = asyncHandler(async (req, res) => {
     ? { category: req.query.category }
     : {};
 
+  const featuredFilter = req.query.featured === 'true'
+    ? { featured: true }
+    : {};
+
   const sort = req.query.sort || '-createdAt';
 
-  const count = await Product.countDocuments({ ...keyword, ...categoryFilter });
+  const filter = { ...keyword, ...categoryFilter, ...featuredFilter };
 
-  const products = await Product.find({ ...keyword, ...categoryFilter })
+  const count = await Product.countDocuments(filter);
+
+  const products = await Product.find(filter)
     .populate('category', 'name')
     .sort(sort)
     .limit(pageSize)

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Menu,
   MapPin,
@@ -12,27 +13,7 @@ import {
   Search,
   ShoppingCart,
 } from 'lucide-react';
-import Header from '../../components/Header/Header';
-
-const categories = [
-  'Automobiles',
-  'Clothes and wear',
-  'Home interiors',
-  'Computer and tech',
-  'Tools, equipments',
-  'Sports and outdoor',
-  'Animal and pets',
-  'Machinery tools',
-  'More category',
-];
-
-const trendingProducts = [
-  { name: 'Smart watches', discount: '-25%', image: '/images/tech/8.png', price: '$10.30' },
-  { name: 'Laptops', discount: '-15%', image: '/images/tech/7.png', price: '$12.50' },
-  { name: 'GoPro cameras', discount: '-40%', image: '/images/tech/6.png', price: '$8.99' },
-  { name: 'Headphones', discount: '-25%', image: '/images/tech/9.png', price: '$99.00' },
-  { name: 'Canon cameras', discount: '-25%', image: '/images/tech/4.png', price: '$9.99' },
-];
+import { fetchProducts, fetchCategories } from '../../api';
 
 const homeOutdoorProducts = [
   { name: 'Soft chairs', price: 'USD 19', image: '/images/interior/1.png' },
@@ -143,10 +124,35 @@ const ProductCard = ({ item, type = 'discount' }) => (
 
 export default function Home() {
   const [quoteQuantity, setQuoteQuantity] = useState('');
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadFeatured = async () => {
+      try {
+        const data = await fetchProducts({ featured: 'true', pageSize: 5 });
+        setFeaturedProducts(data.products || []);
+      } catch (error) {
+        console.error('Failed to load featured products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    const loadCategories = async () => {
+      try {
+        const data = await fetchCategories();
+        setCategories(data || []);
+      } catch (error) {
+        console.error('Failed to load categories:', error);
+      }
+    };
+    loadFeatured();
+    loadCategories();
+  }, []);
 
   return (
     <div className="home-page min-h-screen bg-gray-50 font-sans text-gray-800">
-      <Header />
 
       <main className="home-main max-w-7xl mx-auto px-4 md:px-8 py-4">
         <div className="home-content space-y-6">
@@ -156,15 +162,15 @@ export default function Home() {
             {/* Left - Category Sidebar */}
             <div className="hero-sidebar w-56 bg-white border-r border-gray-100 flex-shrink-0 hidden md:block">
               {categories.map((cat, idx) => (
-                <a
-                  key={idx}
-                  href="#"
+                <Link
+                  key={cat._id}
+                  to={`/products?category=${cat._id}`}
                   className={`hero-sidebar-link block px-5 py-2.5 text-sm hover:bg-blue-50 hover:text-blue-600 transition-colors ${
                     idx === 0 ? 'hero-sidebar-link--active text-blue-600 font-medium bg-blue-50' : 'text-gray-600'
                   }`}
                 >
-                  {cat}
-                </a>
+                  {cat.name}
+                </Link>
               ))}
             </div>
 
@@ -233,11 +239,32 @@ export default function Home() {
                 <CountdownTimer />
               </div>
             </div>
-            <div className="deals-grid grid grid-cols-2 md:grid-cols-5 gap-4">
-              {trendingProducts.map((item, idx) => (
-                <ProductCard key={idx} item={item} type="discount" />
-              ))}
-            </div>
+            {loading ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              </div>
+            ) : (
+              <div className="deals-grid grid grid-cols-2 md:grid-cols-5 gap-4">
+                {featuredProducts.map((product) => (
+                  <Link to={`/products/${product._id}`} key={product._id}>
+                    <div className="product-card bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
+                      <div className="product-card-image-wrapper w-full h-28 bg-gray-50 rounded-md flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors overflow-hidden p-2">
+                        <img src={product.image} alt={product.name} className="product-card-image max-h-full max-w-full object-contain" />
+                      </div>
+                      <h3 className="product-card-name text-xs font-medium text-gray-800 mb-1 line-clamp-2">{product.name}</h3>
+                      <span className="product-card-price text-gray-900 font-bold text-xs">${product.price}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+            {featuredProducts.length > 0 && (
+              <div className="text-center mt-4">
+                <Link to="/products" className="text-blue-500 text-sm font-medium hover:underline">
+                  View all products
+                </Link>
+              </div>
+            )}
           </section>
 
           {/* Home and outdoor */}

@@ -74,7 +74,7 @@ export default function Header() {
           <span className="site-logo-text text-2xl font-bold text-blue-500">Brand</span>
         </div>
 
-        <form onSubmit={handleSearch} className="site-search flex-1 max-w-3xl flex items-center border-2 border-blue-500 rounded-lg overflow-hidden">
+        <form onSubmit={handleSearch} className="site-search flex-1 max-w-3xl flex items-center border-2 border-blue-500 rounded-lg">
           <input
             type="text"
             placeholder="Search"
@@ -93,7 +93,7 @@ export default function Header() {
             </div>
 
             {showDropdown && (
-              <div className="category-dropdown absolute top-full right-0 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-72 overflow-y-auto">
+              <div className="category-dropdown absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-72 overflow-y-auto">
                 <div className="category-dropdown-header flex items-center justify-between px-3 py-2 border-b border-gray-100">
                   <span className="text-xs font-medium text-gray-500">Select categories</span>
                   {selectedCategories.length > 0 && (
