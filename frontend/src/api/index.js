@@ -27,8 +27,8 @@ export const fetchProductById = async (id) => {
   return response.data;
 };
 
-export const fetchCategories = async () => {
-  const response = await api.get('/categories');
+export const fetchCategories = async (params = {}) => {
+  const response = await api.get('/categories', { params });
   return response.data;
 };
 

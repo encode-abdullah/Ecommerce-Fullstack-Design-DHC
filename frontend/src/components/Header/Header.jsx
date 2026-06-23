@@ -15,7 +15,7 @@ export default function Header() {
     const loadCategories = async () => {
       try {
         const data = await fetchCategories();
-        setCategories(data || []);
+        setCategories((data || []).filter(c => !c.parent));
       } catch (error) {
         console.error('Failed to load categories:', error);
       }
@@ -37,7 +37,8 @@ export default function Header() {
     e.preventDefault();
     const params = new URLSearchParams();
     if (searchQuery.trim()) params.set('keyword', searchQuery.trim());
-    if (selectedCategories.length > 0) params.set('category', selectedCategories.join(','));
+    if (selectedCategories.length === 1) params.set('parentCategory', selectedCategories[0]);
+    else if (selectedCategories.length > 1) params.set('parentCategory', selectedCategories[0]);
     navigate(`/products?${params.toString()}`);
     setShowDropdown(false);
   };

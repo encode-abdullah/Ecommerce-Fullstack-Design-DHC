@@ -2,20 +2,25 @@ const asyncHandler = require('express-async-handler');
 const Category = require('../models/Category');
 
 const getCategories = asyncHandler(async (req, res) => {
-  const categories = await Category.find({});
+  const filter = req.query.parent === 'null'
+    ? { parent: null }
+    : req.query.parent
+      ? { parent: req.query.parent }
+      : {};
+  const categories = await Category.find(filter).populate('parent', 'name slug');
   res.json(categories);
 });
 
 const createCategory = asyncHandler(async (req, res) => {
-  const { name, slug, description } = req.body;
+  const { name, slug, description, parent } = req.body;
 
-  const categoryExists = await Category.findOne({ $or: [{ name }, { slug }] });
+  const categoryExists = await Category.findOne({ name, parent: parent || null });
   if (categoryExists) {
     res.status(400);
     throw new Error('Category already exists');
   }
 
-  const category = await Category.create({ name, slug, description });
+  const category = await Category.create({ name, slug, description, parent: parent || null });
   res.status(201).json(category);
 });
 

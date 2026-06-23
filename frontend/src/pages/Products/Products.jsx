@@ -21,56 +21,64 @@ const FilterSection = ({ title, children, defaultOpen = true }) => {
   );
 };
 
-const ProductGridCard = ({ product, renderStars }) => (
-  <div className="product-grid-card bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-    <Link to={`/products/${product._id}`} className="product-grid-card-image block p-4">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-48 object-contain"
-      />
-    </Link>
-    <div className="product-grid-card-body px-4 pb-4">
-      <div className="flex items-start justify-between mb-1">
-        <div className="product-grid-card-price flex items-center gap-2">
-          <span className="text-lg font-bold text-gray-900">${product.price}</span>
-          {product.originalPrice && (
-            <span className="text-sm text-gray-400 line-through">${product.originalPrice}</span>
-          )}
+const ProductGridCard = ({ product, renderStars }) => {
+  const hasDiscount = product.originalPrice && product.originalPrice > product.price;
+  const discountPct = hasDiscount ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
+
+  return (
+    <div className="product-grid-card bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+      <Link to={`/products/${product._id}`} className="product-grid-card-image block p-4 relative">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-48 object-contain"
+          onError={(e) => { e.target.src = '/placeholder.png'; }}
+        />
+        {hasDiscount && (
+          <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded">
+            -{discountPct}%
+          </span>
+        )}
+      </Link>
+      <div className="product-grid-card-body px-4 pb-4">
+        <div className="flex items-start justify-between mb-1">
+          <div className="product-grid-card-price flex items-center gap-2">
+            <span className="text-lg font-bold text-gray-900">${product.price}</span>
+            {hasDiscount && (
+              <span className="text-sm text-gray-400 line-through">${product.originalPrice}</span>
+            )}
+          </div>
+          <button className="product-grid-card-wishlist text-gray-300 hover:text-red-500 transition-colors">
+            <Heart className="w-5 h-5" />
+          </button>
         </div>
-        <button className="product-grid-card-wishlist text-gray-300 hover:text-red-500 transition-colors">
-          <Heart className="w-5 h-5" />
-        </button>
+        <div className="product-grid-card-rating flex items-center gap-1 mb-2">
+          {renderStars(4)}
+          <span className="text-sm text-gray-500 ml-1">7.5</span>
+        </div>
+        <p className="product-grid-card-name text-sm text-gray-700 line-clamp-2">
+          {product.name}
+        </p>
       </div>
-      <div className="product-grid-card-rating flex items-center gap-1 mb-2">
-        {renderStars(4)}
-        <span className="text-sm text-gray-500 ml-1">7.5</span>
-      </div>
-      <p className="product-grid-card-name text-sm text-gray-700 line-clamp-2">
-        {product.name}
-      </p>
     </div>
-  </div>
-);
+  );
+};
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
   const [pages, setPages] = useState(1);
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
   const [category, setCategory] = useState('');
+  const [parentCategory, setParentCategory] = useState('');
   const [sort, setSort] = useState('createdAt');
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
-  const [verifiedOnly, setVerifiedOnly] = useState(false);
-  const [showCount, setShowCount] = useState(10);
+  const [showCount, setShowCount] = useState(12);
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
-  const [selectedCondition, setSelectedCondition] = useState('any');
-  const [selectedRatings, setSelectedRatings] = useState([]);
-  const [selectedBrands, setSelectedBrands] = useState([]);
-  const [selectedFeatures, setSelectedFeatures] = useState([]);
   const { addToCart } = useCart();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -80,6 +88,7 @@ const Products = () => {
       try {
         const params = { page, keyword, sort, pageSize: showCount };
         if (category) params.category = category;
+        else if (parentCategory) params.parentCategory = parentCategory;
         const data = await fetchProducts(params);
         setProducts(data.products || []);
         setPages(data.pages || 1);
@@ -91,13 +100,14 @@ const Products = () => {
       }
     };
     loadProducts();
-  }, [page, keyword, category, sort, showCount]);
+  }, [page, keyword, category, parentCategory, sort, showCount]);
 
   useEffect(() => {
     const loadCategories = async () => {
       try {
         const data = await fetchCategories();
-        setCategories(data || []);
+        const cats = data || [];
+        setCategories(cats.filter(c => !c.parent));
       } catch (error) {
         console.error('Failed to load categories:', error);
       }
@@ -106,16 +116,34 @@ const Products = () => {
   }, []);
 
   useEffect(() => {
+    if (parentCategory) {
+      const loadSubCats = async () => {
+        try {
+          const data = await fetchCategories({ parent: parentCategory });
+          setSubCategories(data || []);
+        } catch (error) {
+          console.error('Failed to load sub-categories:', error);
+        }
+      };
+      loadSubCats();
+    } else {
+      setSubCategories([]);
+    }
+  }, [parentCategory]);
+
+  useEffect(() => {
     const urlKeyword = searchParams.get('keyword') || '';
     const urlCategory = searchParams.get('category') || '';
+    const urlParentCategory = searchParams.get('parentCategory') || '';
     setKeyword(urlKeyword);
     if (urlCategory) setCategory(urlCategory);
+    if (urlParentCategory) setParentCategory(urlParentCategory);
   }, [searchParams]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     setPage(1);
-    setSearchParams({ keyword, category, sort });
+    setSearchParams({ keyword, category, parentCategory, sort });
   };
 
   const handleSort = (e) => {
@@ -123,22 +151,24 @@ const Products = () => {
     setPage(1);
   };
 
-  const toggleRating = (rating) => {
-    setSelectedRatings(prev =>
-      prev.includes(rating) ? prev.filter(r => r !== rating) : [...prev, rating]
-    );
+  const handleParentCatClick = (catId) => {
+    if (parentCategory === catId) {
+      setParentCategory('');
+      setCategory('');
+    } else {
+      setParentCategory(catId);
+      setCategory('');
+    }
+    setPage(1);
   };
 
-  const toggleBrand = (brand) => {
-    setSelectedBrands(prev =>
-      prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]
-    );
-  };
-
-  const toggleFeature = (feature) => {
-    setSelectedFeatures(prev =>
-      prev.includes(feature) ? prev.filter(f => f !== feature) : [...prev, feature]
-    );
+  const handleSubCatClick = (catId) => {
+    if (category === catId) {
+      setCategory('');
+    } else {
+      setCategory(catId);
+    }
+    setPage(1);
   };
 
   const renderStars = (rating) => {
@@ -166,70 +196,71 @@ const Products = () => {
     <div className="products-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
       {/* Breadcrumb */}
       <nav className="products-breadcrumb flex items-center gap-2 text-sm text-gray-500 mb-4">
-        <a href="/" className="hover:text-blue-500 transition-colors">Home</a>
+        <Link to="/" className="hover:text-red-500 transition-colors">Home</Link>
         <ChevronRight className="w-3 h-3" />
-        <a href="/products" className="hover:text-blue-500 transition-colors">Clothings</a>
-        <ChevronRight className="w-3 h-3" />
-        <span className="text-gray-400">Men's wear</span>
-        <ChevronRight className="w-3 h-3" />
-        <span className="text-gray-400">Summer clothing</span>
+        <Link to="/products" className="hover:text-red-500 transition-colors">Products</Link>
+        {parentCategory && (
+          <>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-gray-700 font-medium">
+              {categories.find(c => c._id === parentCategory)?.name || ''}
+            </span>
+          </>
+        )}
+        {category && (
+          <>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-gray-500">
+              {subCategories.find(c => c._id === category)?.name || ''}
+            </span>
+          </>
+        )}
       </nav>
 
       <div className="products-layout flex gap-6">
         {/* Left Sidebar Filters */}
         <aside className="products-sidebar w-64 flex-shrink-0 hidden lg:block">
-          {/* Category */}
-          <FilterSection title="Category">
+          {/* Categories */}
+          <FilterSection title="Categories">
             <div className="space-y-2">
-              {['Mobile accessory', 'Electronics', 'Smartphones', 'Modern tech'].map((cat) => (
-                <label key={cat} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="category"
-                    checked={category === cat}
-                    onChange={() => setCategory(cat)}
-                    className="w-4 h-4 text-blue-500"
-                  />
-                  <span className="text-sm text-gray-600">{cat}</span>
-                </label>
+              {categories.map((cat) => (
+                <div key={cat._id}>
+                  <label
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => handleParentCatClick(cat._id)}
+                  >
+                    <input
+                      type="radio"
+                      name="category"
+                      checked={parentCategory === cat._id}
+                      readOnly
+                      className="w-4 h-4 text-red-500"
+                    />
+                    <span className={`text-sm ${parentCategory === cat._id ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
+                      {cat.name}
+                    </span>
+                  </label>
+                  {parentCategory === cat._id && subCategories.length > 0 && (
+                    <div className="ml-5 mt-1 space-y-1">
+                      <button
+                        onClick={() => setCategory('')}
+                        className={`block text-xs ${!category ? 'text-red-500 font-semibold' : 'text-gray-500 hover:text-red-500'}`}
+                      >
+                        All
+                      </button>
+                      {subCategories.map((sub) => (
+                        <button
+                          key={sub._id}
+                          onClick={() => handleSubCatClick(sub._id)}
+                          className={`block text-xs ${category === sub._id ? 'text-red-500 font-semibold' : 'text-gray-500 hover:text-red-500'}`}
+                        >
+                          {sub.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
-              <button className="text-sm text-blue-500 hover:text-blue-600">See all</button>
-            </div>
-          </FilterSection>
-
-          {/* Brands */}
-          <FilterSection title="Brands">
-            <div className="space-y-2">
-              {['Samsung', 'Apple', 'Huawei', 'Pocoo', 'Lenovo'].map((brand) => (
-                <label key={brand} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={selectedBrands.includes(brand)}
-                    onChange={() => toggleBrand(brand)}
-                    className="w-4 h-4 text-blue-500 rounded"
-                  />
-                  <span className="text-sm text-gray-600">{brand}</span>
-                </label>
-              ))}
-              <button className="text-sm text-blue-500 hover:text-blue-600">See all</button>
-            </div>
-          </FilterSection>
-
-          {/* Features */}
-          <FilterSection title="Features">
-            <div className="space-y-2">
-              {['Metallic', 'Plastic cover', '8GB Ram', 'Super power', 'Large Memory'].map((feature) => (
-                <label key={feature} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={selectedFeatures.includes(feature)}
-                    onChange={() => toggleFeature(feature)}
-                    className="w-4 h-4 text-blue-500 rounded"
-                  />
-                  <span className="text-sm text-gray-600">{feature}</span>
-                </label>
-              ))}
-              <button className="text-sm text-blue-500 hover:text-blue-600">See all</button>
             </div>
           </FilterSection>
 
@@ -242,37 +273,31 @@ const Products = () => {
                   placeholder="Min"
                   value={priceMin}
                   onChange={(e) => setPriceMin(e.target.value)}
-                  className="w-1/2 px-3 py-1.5 border border-gray-200 rounded text-sm outline-none focus:border-blue-500"
+                  className="w-1/2 px-3 py-1.5 border border-gray-200 rounded text-sm outline-none focus:border-red-500"
                 />
                 <input
                   type="number"
                   placeholder="Max"
                   value={priceMax}
                   onChange={(e) => setPriceMax(e.target.value)}
-                  className="w-1/2 px-3 py-1.5 border border-gray-200 rounded text-sm outline-none focus:border-blue-500"
+                  className="w-1/2 px-3 py-1.5 border border-gray-200 rounded text-sm outline-none focus:border-red-500"
                 />
               </div>
-              <div className="flex justify-between text-xs text-gray-400">
-                <span>{priceMin || '0'}</span>
-                <span>{priceMax || '999999'}</span>
-              </div>
-              <button className="w-full py-1.5 border border-gray-200 rounded text-sm text-blue-500 hover:bg-blue-50 transition-colors">
+              <button className="w-full py-1.5 border border-gray-200 rounded text-sm text-red-500 hover:bg-red-50 transition-colors">
                 Apply
               </button>
             </div>
           </FilterSection>
 
           {/* Condition */}
-          <FilterSection title="Condition">
+          <FilterSection title="Condition" defaultOpen={false}>
             <div className="space-y-2">
               {['Any', 'Refurbished', 'Brand new', 'Old items'].map((cond) => (
                 <label key={cond} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
                     name="condition"
-                    checked={selectedCondition === cond.toLowerCase()}
-                    onChange={() => setSelectedCondition(cond.toLowerCase())}
-                    className="w-4 h-4 text-blue-500"
+                    className="w-4 h-4 text-red-500"
                   />
                   <span className="text-sm text-gray-600">{cond}</span>
                 </label>
@@ -281,32 +306,17 @@ const Products = () => {
           </FilterSection>
 
           {/* Ratings */}
-          <FilterSection title="Ratings">
+          <FilterSection title="Ratings" defaultOpen={false}>
             <div className="space-y-2">
               {[5, 4, 3, 2].map((rating) => (
                 <label key={rating} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={selectedRatings.includes(rating)}
-                    onChange={() => toggleRating(rating)}
-                    className="w-4 h-4 text-blue-500 rounded"
+                    className="w-4 h-4 text-red-500 rounded"
                   />
                   {renderStars(rating)}
                 </label>
               ))}
-            </div>
-          </FilterSection>
-
-          {/* Manufacturer */}
-          <FilterSection title="Manufacturer" defaultOpen={false}>
-            <div className="space-y-2">
-              {['Samsung', 'Apple', 'Huawei', 'Xiaomi', 'Sony'].map((mfr) => (
-                <label key={mfr} className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 text-blue-500 rounded" />
-                  <span className="text-sm text-gray-600">{mfr}</span>
-                </label>
-              ))}
-              <button className="text-sm text-blue-500 hover:text-blue-600">See all</button>
             </div>
           </FilterSection>
         </aside>
@@ -317,27 +327,24 @@ const Products = () => {
           <div className="products-topbar flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
             <div className="products-result-count text-sm text-gray-600">
               <span className="font-semibold text-gray-900">{products.length || 0}</span> items in{' '}
-              <span className="font-semibold text-gray-900">{keyword || 'all products'}</span>
+              <span className="font-semibold text-gray-900">
+                {category
+                  ? subCategories.find(c => c._id === category)?.name || 'all products'
+                  : parentCategory
+                    ? categories.find(c => c._id === parentCategory)?.name || 'all products'
+                    : 'all products'
+                }
+              </span>
             </div>
             <div className="products-topbar-actions flex items-center gap-4">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={verifiedOnly}
-                  onChange={(e) => setVerifiedOnly(e.target.checked)}
-                  className="w-4 h-4 text-blue-500 rounded"
-                />
-                <span className="text-sm text-gray-600">Verified only</span>
-              </label>
               <select
                 value={sort}
                 onChange={handleSort}
-                className="products-sort-select px-3 py-1.5 border border-gray-200 rounded text-sm outline-none focus:border-blue-500 bg-white"
+                className="products-sort-select px-3 py-1.5 border border-gray-200 rounded text-sm outline-none focus:border-red-500 bg-white"
               >
-                <option value="createdAt">Featured</option>
+                <option value="createdAt">Newest</option>
                 <option value="price">Price: Low to High</option>
                 <option value="-price">Price: High to Low</option>
-                <option value="-createdAt">Newest</option>
               </select>
               <div className="products-view-toggle flex border border-gray-200 rounded overflow-hidden">
                 <button
@@ -356,39 +363,49 @@ const Products = () => {
             </div>
           </div>
 
-          {/* Filter Chips */}
-          {(selectedBrands.length > 0 || selectedFeatures.length > 0 || selectedRatings.length > 0) && (
-            <div className="filter-chips flex flex-wrap items-center gap-2 mb-4">
-              {selectedBrands.map((brand) => (
-                <span key={brand} className="filter-chip flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-sm text-gray-700">
-                  {brand}
-                  <button onClick={() => toggleBrand(brand)} className="hover:text-red-500">
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </span>
-              ))}
-              {selectedFeatures.map((feature) => (
-                <span key={feature} className="filter-chip flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-sm text-gray-700">
-                  {feature}
-                  <button onClick={() => toggleFeature(feature)} className="hover:text-red-500">
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </span>
-              ))}
-              {selectedRatings.map((rating) => (
-                <span key={rating} className="filter-chip flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-sm text-gray-700">
-                  {rating} star
-                  <button onClick={() => toggleRating(rating)} className="hover:text-red-500">
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </span>
-              ))}
+          {/* Mobile Category Tabs */}
+          <div className="lg:hidden flex gap-2 overflow-x-auto mb-4 pb-2">
+            {categories.map((cat) => (
               <button
-                onClick={() => { setSelectedBrands([]); setSelectedFeatures([]); setSelectedRatings([]); }}
-                className="text-sm text-blue-500 hover:text-blue-600 ml-1"
+                key={cat._id}
+                onClick={() => handleParentCatClick(cat._id)}
+                className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
+                  parentCategory === cat._id
+                    ? 'bg-red-500 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
               >
-                Clear all filter
+                {cat.name}
               </button>
+            ))}
+          </div>
+
+          {/* Sub-category Tabs */}
+          {parentCategory && subCategories.length > 0 && (
+            <div className="flex gap-2 overflow-x-auto mb-4 pb-2">
+              <button
+                onClick={() => setCategory('')}
+                className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
+                  !category
+                    ? 'bg-red-500 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                All
+              </button>
+              {subCategories.map((sub) => (
+                <button
+                  key={sub._id}
+                  onClick={() => handleSubCatClick(sub._id)}
+                  className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
+                    category === sub._id
+                      ? 'bg-red-500 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {sub.name}
+                </button>
+              ))}
             </div>
           )}
 
@@ -413,7 +430,8 @@ const Products = () => {
                         <img
                           src={product.image}
                           alt={product.name}
-                          className="w-36 h-36 object-cover rounded-lg"
+                          className="w-36 h-36 object-contain rounded-lg bg-gray-50"
+                          onError={(e) => { e.target.src = '/placeholder.png'; }}
                         />
                       </Link>
                       <div className="product-list-card-info flex-1">
@@ -425,7 +443,7 @@ const Products = () => {
                         </div>
                         <div className="product-list-card-price flex items-center gap-2 mb-1">
                           <span className="text-lg font-bold text-gray-900">${product.price}</span>
-                          {product.originalPrice && (
+                          {product.originalPrice > 0 && (
                             <span className="text-sm text-gray-400 line-through">${product.originalPrice}</span>
                           )}
                         </div>
@@ -434,17 +452,13 @@ const Products = () => {
                             {renderStars(4)}
                             <span className="text-sm text-gray-500 ml-1">7.5</span>
                           </div>
-                          <span className="text-sm text-gray-400">•</span>
-                          <span className="text-sm text-gray-500">154 orders</span>
-                          <span className="text-sm text-gray-400">•</span>
-                          <span className="text-sm text-green-500 font-medium">Free Shipping</span>
                         </div>
                         <p className="product-list-card-description text-sm text-gray-500 mb-3 line-clamp-2">
-                          {product.description || 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'}
+                          {product.description || ''}
                         </p>
                         <Link
                           to={`/products/${product._id}`}
-                          className="product-list-card-link text-sm text-blue-500 hover:text-blue-600 font-medium"
+                          className="product-list-card-link text-sm text-red-500 hover:text-red-600 font-medium"
                         >
                           View details
                         </Link>
@@ -461,10 +475,10 @@ const Products = () => {
                   <select
                     value={showCount}
                     onChange={(e) => { setShowCount(Number(e.target.value)); setPage(1); }}
-                    className="px-2 py-1 border border-gray-200 rounded text-sm outline-none focus:border-blue-500 bg-white"
+                    className="px-2 py-1 border border-gray-200 rounded text-sm outline-none focus:border-red-500 bg-white"
                   >
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
+                    <option value={12}>12</option>
+                    <option value={24}>24</option>
                     <option value={50}>50</option>
                   </select>
                 </div>
@@ -475,19 +489,22 @@ const Products = () => {
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                {[...Array(Math.min(pages, 3)).keys()].map((x) => (
-                  <button
-                    key={x + 1}
-                    onClick={() => setPage(x + 1)}
-                    className={`pagination-btn w-8 h-8 rounded text-sm ${
-                      page === x + 1
-                        ? 'pagination-btn--active bg-blue-500 text-white'
-                        : 'pagination-btn--inactive border border-gray-200 text-gray-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    {x + 1}
-                  </button>
-                ))}
+                {[...Array(Math.min(pages, 5)).keys()].map((x) => {
+                  const pageNum = x + 1;
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setPage(pageNum)}
+                      className={`pagination-btn w-8 h-8 rounded text-sm ${
+                        page === pageNum
+                          ? 'pagination-btn--active bg-red-500 text-white'
+                          : 'pagination-btn--inactive border border-gray-200 text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
                 <button
                   onClick={() => setPage(Math.min(pages, page + 1))}
                   disabled={page === pages}

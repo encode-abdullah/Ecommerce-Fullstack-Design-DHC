@@ -1,30 +1,36 @@
 const asyncHandler = require('express-async-handler');
 const Product = require('../models/Product');
+const Category = require('../models/Category');
 
 const getProducts = asyncHandler(async (req, res) => {
   const pageSize = Number(req.query.pageSize) || 12;
   const page = Number(req.query.pageNumber) || Number(req.query.page) || 1;
 
-  const keyword = req.query.keyword
-    ? { name: { $regex: req.query.keyword, $options: 'i' } }
-    : {};
+  const filter = {};
 
-  const categoryFilter = req.query.category
-    ? { category: req.query.category }
-    : {};
+  if (req.query.keyword) {
+    filter.name = { $regex: req.query.keyword, $options: 'i' };
+  }
 
-  const featuredFilter = req.query.featured === 'true'
-    ? { featured: true }
-    : {};
+  if (req.query.category) {
+    filter.category = req.query.category;
+  }
+
+  if (req.query.parentCategory) {
+    const subCats = await Category.find({ parent: req.query.parentCategory }).select('_id');
+    filter.category = { $in: subCats.map(c => c._id) };
+  }
+
+  if (req.query.featured === 'true') {
+    filter.featured = true;
+  }
 
   const sort = req.query.sort || '-createdAt';
-
-  const filter = { ...keyword, ...categoryFilter, ...featuredFilter };
 
   const count = await Product.countDocuments(filter);
 
   const products = await Product.find(filter)
-    .populate('category', 'name')
+    .populate({ path: 'category', populate: { path: 'parent', select: 'name slug' } })
     .sort(sort)
     .limit(pageSize)
     .skip(pageSize * (page - 1));
@@ -38,10 +44,10 @@ const getProducts = asyncHandler(async (req, res) => {
 });
 
 const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id).populate(
-    'category',
-    'name'
-  );
+  const product = await Product.findById(req.params.id).populate({
+    path: 'category',
+    populate: { path: 'parent', select: 'name slug' },
+  });
   if (product) {
     res.json(product);
   } else {

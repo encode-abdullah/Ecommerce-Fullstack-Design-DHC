@@ -142,7 +142,7 @@ export default function Home() {
     const loadCategories = async () => {
       try {
         const data = await fetchCategories();
-        setCategories(data || []);
+        setCategories((data || []).filter(c => !c.parent));
       } catch (error) {
         console.error('Failed to load categories:', error);
       }
@@ -164,7 +164,7 @@ export default function Home() {
               {categories.map((cat, idx) => (
                 <Link
                   key={cat._id}
-                  to={`/products?category=${cat._id}`}
+                  to={`/products?parentCategory=${cat._id}`}
                   className={`hero-sidebar-link block px-5 py-2.5 text-sm hover:bg-blue-50 hover:text-blue-600 transition-colors ${
                     idx === 0 ? 'hero-sidebar-link--active text-blue-600 font-medium bg-blue-50' : 'text-gray-600'
                   }`}

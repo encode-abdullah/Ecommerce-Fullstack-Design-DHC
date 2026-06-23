@@ -19,8 +19,11 @@ const ProductDetails = () => {
       try {
         const data = await fetchProductById(id);
         setProduct(data);
-        const related = await fetchProducts({ pageSize: 6 });
-        setRelatedProducts(related.products || []);
+        const related = await fetchProducts({
+          parentCategory: data.category?.parent?._id || data.category?._id,
+          pageSize: 6,
+        });
+        setRelatedProducts((related.products || []).filter(p => p._id !== id));
       } catch (error) {
         toast.error('Failed to load product');
       } finally {
@@ -62,19 +65,41 @@ const ProductDetails = () => {
     );
   }
 
-  const thumbnails = [product.image, product.image, product.image, product.image, product.image, product.image];
+  const thumbnails = product.images && product.images.length > 0
+    ? product.images
+    : [product.image];
 
   return (
     <div className="product-details-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-        <Link to="/" className="hover:text-blue-500 transition-colors">Home</Link>
+        <Link to="/" className="hover:text-red-500 transition-colors">Home</Link>
         <ChevronRight className="w-3 h-3" />
-        <Link to="/products" className="hover:text-blue-500 transition-colors">Clothings</Link>
-        <ChevronRight className="w-3 h-3" />
-        <span className="text-gray-400">Men's wear</span>
-        <ChevronRight className="w-3 h-3" />
-        <span className="text-gray-400">Summer clothing</span>
+        <Link to="/products" className="hover:text-red-500 transition-colors">Products</Link>
+        {product.category && (
+          <>
+            <ChevronRight className="w-3 h-3" />
+            {product.category.parent ? (
+              <>
+                <Link
+                  to={`/products?parentCategory=${product.category.parent._id}`}
+                  className="hover:text-red-500 transition-colors"
+                >
+                  {product.category.parent.name}
+                </Link>
+                <ChevronRight className="w-3 h-3" />
+                <span className="text-gray-500">{product.category.name}</span>
+              </>
+            ) : (
+              <Link
+                to={`/products?parentCategory=${product.category._id}`}
+                className="hover:text-red-500 transition-colors"
+              >
+                {product.category.name}
+              </Link>
+            )}
+          </>
+        )}
       </nav>
 
       {/* Main Product Section */}
@@ -87,6 +112,7 @@ const ProductDetails = () => {
                 src={thumbnails[selectedThumbnail]}
                 alt={product.name}
                 className="w-full h-72 object-contain"
+                onError={(e) => { e.target.src = '/placeholder.png'; }}
               />
             </div>
             <div className="product-thumbnails flex gap-2">
@@ -94,9 +120,14 @@ const ProductDetails = () => {
                 <button
                   key={idx}
                   onClick={() => setSelectedThumbnail(idx)}
-                  className={`w-14 h-14 rounded-lg border-2 overflow-hidden ${selectedThumbnail === idx ? 'border-blue-500' : 'border-gray-200'}`}
+                  className={`w-14 h-14 rounded-lg border-2 overflow-hidden ${selectedThumbnail === idx ? 'border-red-500' : 'border-gray-200'}`}
                 >
-                  <img src={thumb} alt="" className="w-full h-full object-cover" />
+                  <img
+                    src={thumb}
+                    alt=""
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.src = '/placeholder.png'; }}
+                  />
                 </button>
               ))}
             </div>
@@ -239,41 +270,20 @@ const ProductDetails = () => {
               {activeTab === 'description' && (
                 <div>
                   <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    {product.description || 'No description available for this product.'}
                   </p>
 
-                  {/* Specs Table */}
-                  <table className="w-full text-sm mb-6 border border-gray-200">
-                    <tbody>
-                      {[
-                        ['Model', '#8786867'],
-                        ['Style', 'Classic style'],
-                        ['Certificate', 'ISO-898921212'],
-                        ['Size', '34mm x 450mm x 19mm'],
-                        ['Memory', '36GB RAM'],
-                      ].map(([label, value], idx) => (
-                        <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50' : ''}>
-                          <td className="px-4 py-2 border-r border-gray-200 text-gray-500 w-32">{label}</td>
-                          <td className="px-4 py-2 text-gray-900">{value}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-
                   {/* Features */}
-                  <div className="space-y-2">
-                    {[
-                      'Some great feature name here',
-                      'Lorem ipsum dolor sit amet, consectetur',
-                      'Duis aute irure dolor in reprehenderit',
-                      'Some great feature name here',
-                    ].map((feature, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm text-gray-600">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
+                  {product.description && (
+                    <div className="space-y-2">
+                      {product.description.split(',').map((feature, idx) => (
+                        <div key={idx} className="flex items-center gap-2">
+                          <Check className="w-4 h-4 text-gray-400" />
+                          <span className="text-sm text-gray-600">{feature.trim()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
               {activeTab === 'reviews' && (
@@ -294,20 +304,19 @@ const ProductDetails = () => {
           <div className="bg-white rounded-lg border border-gray-100 p-4">
             <h3 className="font-semibold text-gray-900 mb-3">You may like</h3>
             <div className="space-y-3">
-              {[
-                { name: 'Men Blazers Sets Elegant Formal', price: '$7.00 - $99.50', img: 'https://picsum.photos/id/10/60/60' },
-                { name: 'Men Shirt Sleeve Polo Contrast', price: '$7.00 - $99.50', img: 'https://picsum.photos/id/11/60/60' },
-                { name: 'Apple Watch Series Space Gray', price: '$7.00 - $99.50', img: 'https://picsum.photos/id/12/60/60' },
-                { name: 'Basketball Crew Socks Long Stuff', price: '$7.00 - $99.50', img: 'https://picsum.photos/id/13/60/60' },
-                { name: "New Summer Men's castrol T-Shirts", price: '$7.00 - $99.50', img: 'https://picsum.photos/id/14/60/60' },
-              ].map((item, idx) => (
-                <div key={idx} className="flex gap-3 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                  <img src={item.img} alt={item.name} className="w-12 h-12 object-cover rounded" />
+              {relatedProducts.filter(p => p._id !== product._id).slice(0, 5).map((item) => (
+                <Link key={item._id} to={`/products/${item._id}`} className="flex gap-3 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-12 h-12 object-contain rounded bg-gray-50"
+                    onError={(e) => { e.target.src = '/placeholder.png'; }}
+                  />
                   <div>
                     <p className="text-xs text-gray-700 line-clamp-2">{item.name}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{item.price}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">${item.price}</p>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
