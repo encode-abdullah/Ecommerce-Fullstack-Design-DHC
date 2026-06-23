@@ -19,7 +19,7 @@ function App() {
     <AuthProvider>
       <CartProvider>
         <Router>
-        <div className="app-root flex flex-col min-h-screen">
+        <div className="app-root flex flex-col min-h-screen overflow-x-hidden">
           <Header />
           <Navbar />
           <main className="app-main flex-grow">

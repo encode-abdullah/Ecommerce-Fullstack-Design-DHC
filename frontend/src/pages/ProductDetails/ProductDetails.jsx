@@ -109,10 +109,10 @@ const ProductDetails = () => {
           <div className="md:col-span-4">
             <div className="product-main-image bg-gray-50 rounded-lg p-4 mb-3">
               <img
-                src={thumbnails[selectedThumbnail]}
+                src={encodeURI(thumbnails[selectedThumbnail])}
                 alt={product.name}
                 className="w-full h-72 object-contain"
-                onError={(e) => { e.target.src = '/placeholder.png'; }}
+                onError={(e) => { e.target.src = '/placeholder.svg'; }}
               />
             </div>
             <div className="product-thumbnails flex gap-2">
@@ -123,10 +123,10 @@ const ProductDetails = () => {
                   className={`w-14 h-14 rounded-lg border-2 overflow-hidden ${selectedThumbnail === idx ? 'border-red-500' : 'border-gray-200'}`}
                 >
                   <img
-                    src={thumb}
+                    src={encodeURI(thumb)}
                     alt=""
                     className="w-full h-full object-cover"
-                    onError={(e) => { e.target.src = '/placeholder.png'; }}
+                    onError={(e) => { e.target.src = '/placeholder.svg'; }}
                   />
                 </button>
               ))}
@@ -307,10 +307,10 @@ const ProductDetails = () => {
               {relatedProducts.filter(p => p._id !== product._id).slice(0, 5).map((item) => (
                 <Link key={item._id} to={`/products/${item._id}`} className="flex gap-3 cursor-pointer hover:bg-gray-50 p-1 rounded">
                   <img
-                    src={item.image}
+                    src={encodeURI(item.image)}
                     alt={item.name}
                     className="w-12 h-12 object-contain rounded bg-gray-50"
-                    onError={(e) => { e.target.src = '/placeholder.png'; }}
+                    onError={(e) => { e.target.src = '/placeholder.svg'; }}
                   />
                   <div>
                     <p className="text-xs text-gray-700 line-clamp-2">{item.name}</p>
@@ -330,7 +330,7 @@ const ProductDetails = () => {
           {relatedProducts.slice(0, 6).map((p) => (
             <Link key={p._id} to={`/products/${p._id}`} className="group">
               <div className="bg-gray-50 rounded-lg p-3 mb-2">
-                <img src={p.image} alt={p.name} className="w-full h-28 object-contain group-hover:scale-105 transition-transform" />
+                <img src={encodeURI(p.image)} alt={p.name} className="w-full h-28 object-contain group-hover:scale-105 transition-transform" onError={(e) => { e.target.src = '/placeholder.svg'; }} />
               </div>
               <p className="text-xs text-gray-700 line-clamp-1">{p.name}</p>
               <p className="text-xs text-gray-500">${p.price}</p>
