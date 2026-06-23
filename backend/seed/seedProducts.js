@@ -3,7 +3,7 @@ const path = require('path');
 const Product = require('../models/Product');
 const Category = require('../models/Category');
 
-const PRODUCTS_ROOT = path.join(__dirname, '..', '..', '..', 'Products');
+const PRODUCTS_ROOT = path.join(__dirname, '..', '..', 'Products');
 
 function parseProductsTxt(filePath) {
   if (!fs.existsSync(filePath)) return [];
@@ -36,7 +36,24 @@ function findProductImages(productFolder) {
     .map(f => `/products/${path.relative(PRODUCTS_ROOT, path.join(productFolder, f)).replace(/\\/g, '/')}`);
 }
 
+function slugify(text) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
 const seedProducts = async () => {
+  try {
+    const conn = Category.db;
+    const indexes = await conn.collection('categories').indexes();
+    for (const idx of indexes) {
+      if (idx.name !== '_id_') {
+        await conn.collection('categories').dropIndex(idx.name);
+        console.log(`Dropped old index: ${idx.name}`);
+      }
+    }
+  } catch (e) {
+    // index may not exist, ignore
+  }
+
   try {
     await Product.deleteMany({});
     await Category.deleteMany({});
@@ -48,13 +65,17 @@ const seedProducts = async () => {
 
     console.log(`Found parent categories: ${parentFolders.join(', ')}`);
 
+    const catMap = {};
+
     for (const parentName of parentFolders) {
       const parentPath = path.join(PRODUCTS_ROOT, parentName);
-      const parentCat = await Category.create({
-        name: parentName,
-        slug: parentName.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        description: `${parentName} products`,
-      });
+      const slug = slugify(parentName);
+      const parentCat = await Category.findOneAndUpdate(
+        { name: parentName },
+        { name: parentName, slug, description: `${parentName} products`, parent: null },
+        { upsert: true, new: true }
+      );
+      catMap[parentName] = parentCat;
       console.log(`Created parent category: ${parentName}`);
 
       const subFolders = fs.readdirSync(parentPath, { withFileTypes: true })
@@ -63,12 +84,12 @@ const seedProducts = async () => {
 
       for (const subName of subFolders) {
         const subPath = path.join(parentPath, subName);
-        const subCat = await Category.create({
-          name: subName,
-          slug: subName.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-          description: '',
-          parent: parentCat._id,
-        });
+        const subSlug = slugify(`${parentName}-${subName}`);
+        const subCat = await Category.findOneAndUpdate(
+          { name: subName, parent: parentCat._id },
+          { name: subName, slug: subSlug, description: '', parent: parentCat._id },
+          { upsert: true, new: true }
+        );
         console.log(`  Created sub-category: ${subName}`);
 
         const productsTxtPath = path.join(subPath, 'products.txt');
@@ -92,7 +113,7 @@ const seedProducts = async () => {
             name,
             price,
             originalPrice: 0,
-            image: images[0] || '',
+            image: images[0] || '/placeholder.png',
             images,
             description: desc,
             category: subCat._id,

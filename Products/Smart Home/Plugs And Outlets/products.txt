@@ -1,0 +1,27 @@
+PRODUCTS - Smart Home Plugs & Outlets
+(All available on Amazon, ship to Pakistan via Amazon Global)
+
+1. Amazon Smart Plug (Works with Alexa)
+   ASIN: B089DR29S3
+   Price: ~$25 USD
+   Note: Compact, 2.4GHz WiFi, no hub, voice control, schedules
+
+2. Kasa Smart Plug Mini EP25 (4-pack, Matter)
+   ASIN: B0BXJWSMF9
+   Price: ~$35 USD
+   Note: 15A, Matter over WiFi, Alexa/Google/Apple Home
+
+3. TP-Link Kasa KP303 Smart Strip (3 outlets + 2 USB)
+   ASIN: B083JGBWFZ
+   Price: ~$35 USD
+   Note: Individual outlet control, energy monitoring, no hub
+
+4. Meross Smart Plug US 16A (4-pack)
+   ASIN: B07RNW4KSS
+   Price: ~$30 USD
+   Note: Apple HomeKit + Alexa + Google, timer, power monitoring
+
+5. Lutron Caseta Wireless Smart Plug-in Lamp Dimmer
+   ASIN: B00JG2PFZA
+   Price: ~$50 USD
+   Note: No neutral wire needed, Alexa/Google/Apple, up to 300W LED

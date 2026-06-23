@@ -1,0 +1,22 @@
+PRODUCTS - Servers
+(All available on Amazon, ship to Pakistan via Amazon Global)
+
+1. Synology DS223j 2-Bay Diskstation NAS
+   ASIN: B0BKG9S7WP
+   Price: ~$500 USD
+   Note: AMD Ryzen, 4GB ECC RAM, 1GbE x2, expandable
+
+2. HP ProLiant MicroServer Gen10 Plus
+   ASIN: B086VXHXX6
+   Price: ~$650 USD
+   Note: Intel Xeon E, 16GB ECC, 4-bay, iLO management
+
+3. QNAP TS-453E-8G 4-Bay NAS
+   ASIN: B08BXRX8VV
+   Price: ~$470 USD
+   Note: 2.5GbE x2, Intel Celeron J4125, 4GB DDR4
+
+4. Dell PowerEdge T320 Tower Server
+   ASIN: B07P7VHQDM
+   Price: ~$500 USD
+   Note: Intel Xeon E-2224G, 8GB, 1TB SATA, RAID

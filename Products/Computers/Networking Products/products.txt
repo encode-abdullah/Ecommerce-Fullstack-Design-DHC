@@ -1,0 +1,27 @@
+PRODUCTS - Networking Products
+(All available on Amazon, ship to Pakistan via Amazon Global)
+
+1. TP-Link AX3000 WiFi 6 Router (Archer AX55)
+   ASIN: B09HKV4TVS
+   Price: ~$100 USD
+   Note: Dual-band, OFDMA, MU-MIMO, 4 antennas
+
+2. TP-Link TL-SG108S-M2 | 8-Port Multi-Gigabit 2.5G Ethernet Switch
+   ASIN: B07PFYM5MZ
+   Price: ~$28 USD
+   Note: Plug & play, desktop/wall mount, GS308
+
+3. TP-Link AC1200 WiFi Extender - 1.2Gbps Home Signal Booster
+   ASIN: B00JZF3VI8
+   Price: ~$20 USD
+   Note: 300Mbps, Ethernet port, easy setup
+
+4. Cable Matters 10Gbps USB-C to 2.5G Ethernet Adapter
+   ASIN: B09JMCQMQ6
+   Price: ~$35 USD
+   Note: USB-C 3.1, compatible with MacBook, Windows, Linux
+
+5. Ubiquiti UniFi 6 Lite Access Point (U6-Lite)
+   ASIN: B08MKXSFBC
+   Price: ~$99 USD
+   Note: WiFi 6, dual-band, 1.5 Gbps, PoE powered

@@ -1,0 +1,27 @@
+PRODUCTS - Smart Home WiFi & Networking
+(All available on Amazon, ship to Pakistan via Amazon Global)
+
+1. Eero Pro 6E Mesh WiFi 6E Router (3-pack)
+   ASIN: B09HJJN7MS
+   Price: ~$600 USD
+   Note: Tri-band, 160MHz, 6GHz, covers 6000 sq ft, Alexa
+
+2. TP-Link Deco XE75 Pro WiFi 6E Mesh System (3-pack)
+   ASIN: B09V5KX9LN
+   Price: ~$350 USD
+   Note: Tri-band, 5400Mbps, 7500 sq ft coverage, 2.5G port
+
+3. NETGEAR Orbi RBK753 WiFi 6 System (3-pack)
+   ASIN: B08CJJGXHG
+   Price: ~$400 USD
+   Note: AX4200, 7500 sq ft, OFDMA, 40-device support
+
+4. Google Nest WiFi Pro 6E (3-pack)
+   ASIN: B09NT3DYK6
+   Price: ~$400 USD
+   Note: WiFi 6E, Matter hub, Google Home integration, self-organizing
+
+5. Amazon Eero 6+ Mesh Router (Single, AX3000)
+   ASIN: B08ZK8BKXH
+   Price: ~$140 USD
+   Note: WiFi 6, 140 devices, Alexa, Zigbee hub built-in

@@ -1,0 +1,27 @@
+PRODUCTS - Computer Components
+(All available on Amazon, ship to Pakistan via Amazon Global)
+
+1. AMD Ryzen 5 5600X Processor
+   ASIN: B08166SLDF
+   Price: ~$150 USD
+   Note: 6-core, 12-thread, 3.7GHz base, AM4 socket
+
+2. Corsair Vengeance LPX 16GB DDR4 3200MHz RAM
+   ASIN: B0143UM4TC
+   Price: ~$42 USD
+   Note: 2x8GB kit, compatible with most Intel & AMD boards
+
+3. Samsung 970 EVO Plus 1TB NVMe M.2 SSD
+   ASIN: B07MFZY2F2
+   Price: ~$90 USD
+   Note: 3500MB/s read, PCIe 3.0
+
+4. ASUS ROG Strix B550-F Gaming Motherboard
+   ASIN: B089XYHQWV
+   Price: ~$180 USD
+   Note: ATX, AM4, PCIe 4.0, WiFi 6
+
+5. MSI MAG A650GL, Fully Modular Compact Gaming 650W Power Supply
+   ASIN: B08SW4NJNZ
+   Price: ~$95 USD
+   Note: 80+ Gold, fully modular, 10yr warranty
