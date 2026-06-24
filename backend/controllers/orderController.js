@@ -56,8 +56,32 @@ const getOrderById = asyncHandler(async (req, res) => {
   }
 });
 
+const cancelOrder = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (!order) {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+
+  if (order.user.toString() !== req.user._id.toString()) {
+    res.status(403);
+    throw new Error('Not authorized');
+  }
+
+  if (order.status !== 'pending' && order.status !== 'processing') {
+    res.status(400);
+    throw new Error('Order cannot be cancelled at this stage');
+  }
+
+  order.status = 'cancelled';
+  await order.save();
+  res.json(order);
+});
+
 module.exports = {
   createOrder,
   getMyOrders,
   getOrderById,
+  cancelOrder,
 };

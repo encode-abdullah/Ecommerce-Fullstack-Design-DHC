@@ -15,6 +15,9 @@ const getCart = asyncHandler(async (req, res) => {
   }
 });
 
+const populateCart = (cart) =>
+  cart.populate('items.product', 'name price image originalPrice');
+
 const addToCart = asyncHandler(async (req, res) => {
   const { productId, quantity } = req.body;
 
@@ -46,6 +49,7 @@ const addToCart = asyncHandler(async (req, res) => {
   }
 
   await cart.save();
+  await populateCart(cart);
   res.status(201).json(cart);
 });
 
@@ -66,6 +70,7 @@ const updateCart = asyncHandler(async (req, res) => {
   if (itemIndex > -1) {
     cart.items[itemIndex].quantity = quantity;
     await cart.save();
+    await populateCart(cart);
     res.json(cart);
   } else {
     res.status(404);
@@ -86,6 +91,7 @@ const removeFromCart = asyncHandler(async (req, res) => {
   );
 
   await cart.save();
+  await populateCart(cart);
   res.json(cart);
 });
 

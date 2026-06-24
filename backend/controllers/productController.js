@@ -27,13 +27,21 @@ const getProducts = asyncHandler(async (req, res) => {
 
   const sort = req.query.sort || '-createdAt';
 
-  const count = await Product.countDocuments(filter);
+  const isLightweight = req.query.featured === 'true' && Number(req.query.pageSize) <= 10;
 
   const products = await Product.find(filter)
-    .populate({ path: 'category', populate: { path: 'parent', select: 'name slug' } })
+    .select(isLightweight ? 'name price image originalPrice' : undefined)
+    .populate(isLightweight ? undefined : { path: 'category', populate: { path: 'parent', select: 'name slug' } })
     .sort(sort)
     .limit(pageSize)
-    .skip(pageSize * (page - 1));
+    .skip(pageSize * (page - 1))
+    .lean();
+
+  if (isLightweight) {
+    return res.json({ products, page: 1, pages: 1, count: products.length });
+  }
+
+  const count = await Product.countDocuments(filter);
 
   res.json({
     products,
@@ -57,14 +65,17 @@ const getProductById = asyncHandler(async (req, res) => {
 });
 
 const createProduct = asyncHandler(async (req, res) => {
+  const { name, price, originalPrice, image, description, category, stock, featured } = req.body;
+
   const product = new Product({
-    name: 'Sample Name',
-    price: 0,
-    description: 'Sample Description',
-    image: '/images/sample.jpg',
-    category: req.body.category,
-    stock: 0,
-    featured: false,
+    name,
+    price,
+    originalPrice: originalPrice || 0,
+    image: image || '',
+    description: description || '',
+    category,
+    stock: stock || 0,
+    featured: featured || false,
   });
 
   const createdProduct = await product.save();
@@ -77,6 +88,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   if (product) {
     product.name = req.body.name || product.name;
     product.price = req.body.price || product.price;
+    product.originalPrice = req.body.originalPrice !== undefined ? req.body.originalPrice : product.originalPrice;
     product.description = req.body.description || product.description;
     product.image = req.body.image || product.image;
     product.category = req.body.category || product.category;

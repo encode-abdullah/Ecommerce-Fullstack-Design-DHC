@@ -26,7 +26,7 @@ const ProductGridCard = ({ product, renderStars, onAddToCart }) => {
   const discountPct = hasDiscount ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
 
   return (
-    <div className="bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+    <div className="bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full">
       <Link to={`/products/${product._id}`} className="block relative">
         <div className="aspect-square bg-gray-50 flex items-center justify-center p-4">
           <img
@@ -42,7 +42,7 @@ const ProductGridCard = ({ product, renderStars, onAddToCart }) => {
           </span>
         )}
       </Link>
-      <div className="px-3 pb-3">
+      <div className="px-3 pb-3 flex flex-col flex-grow">
         <div className="flex items-start justify-between mb-1">
           <span className="text-lg font-bold text-gray-900">${product.price}</span>
           <button className="text-gray-300 hover:text-red-500 transition-colors">
@@ -53,18 +53,20 @@ const ProductGridCard = ({ product, renderStars, onAddToCart }) => {
           {renderStars(4)}
           <span className="text-sm text-gray-500 ml-1">7.5</span>
         </div>
-        <p className="text-sm text-gray-700 line-clamp-2">{product.name}</p>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            onAddToCart(product._id);
-            toast.success(`${product.name} added to cart`);
-          }}
-          className="mt-2 w-full flex items-center justify-center gap-1.5 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
-        >
-          <ShoppingCart className="w-4 h-4" />
-          Add to cart
-        </button>
+        <p className="text-sm text-gray-700 line-clamp-2 mb-3">{product.name}</p>
+        <div className="mt-auto">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              onAddToCart(product._id);
+              toast.success(`${product.name} added to cart`);
+            }}
+            className="w-full flex items-center justify-center gap-1.5 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            <ShoppingCart className="w-4 h-4" />
+            Add to cart
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -362,7 +364,7 @@ const Products = () => {
           ) : (
             <>
               {viewMode === 'grid' ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-fr">
                   {products.map((product) => (
                     <ProductGridCard key={product._id} product={product} renderStars={renderStars} onAddToCart={addToCart} />
                   ))}

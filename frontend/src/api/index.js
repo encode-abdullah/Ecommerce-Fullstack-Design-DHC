@@ -87,6 +87,11 @@ export const getMyOrders = async () => {
   return response.data;
 };
 
+export const cancelOrder = async (orderId) => {
+  const response = await api.put(`/orders/${orderId}/cancel`);
+  return response.data;
+};
+
 export const createProduct = async (productData) => {
   const response = await api.post('/products', productData);
   return response.data;

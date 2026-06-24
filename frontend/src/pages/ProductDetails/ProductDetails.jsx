@@ -234,9 +234,19 @@ const ProductDetails = () => {
               <button className="w-full py-2.5 border border-blue-500 text-blue-500 rounded-lg font-medium hover:bg-blue-50 transition-colors mb-3">
                 Seller's profile
               </button>
-              <button className="w-full flex items-center justify-center gap-2 text-gray-500 hover:text-red-500 transition-colors">
+              <button className="w-full flex items-center justify-center gap-2 text-gray-500 hover:text-red-500 transition-colors mb-3">
                 <Heart className="w-5 h-5" />
                 <span className="text-sm">Save for later</span>
+              </button>
+              <button
+                onClick={() => {
+                  addToCart(product._id, 1);
+                  toast.success(`${product.name} added to cart`);
+                }}
+                className="w-full py-2.5 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                Add to cart
               </button>
             </div>
           </div>

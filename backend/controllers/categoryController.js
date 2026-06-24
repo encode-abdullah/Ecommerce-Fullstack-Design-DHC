@@ -12,7 +12,9 @@ const getCategories = asyncHandler(async (req, res) => {
 });
 
 const createCategory = asyncHandler(async (req, res) => {
-  const { name, slug, description, parent } = req.body;
+  const { name, description, parent } = req.body;
+
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
   const categoryExists = await Category.findOne({ name, parent: parent || null });
   if (categoryExists) {
@@ -29,8 +31,11 @@ const updateCategory = asyncHandler(async (req, res) => {
 
   if (category) {
     category.name = req.body.name || category.name;
-    category.slug = req.body.slug || category.slug;
-    category.description = req.body.description || category.description;
+    if (req.body.name) {
+      category.slug = req.body.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+    category.description = req.body.description !== undefined ? req.body.description : category.description;
+    category.parent = req.body.parent !== undefined ? req.body.parent || null : category.parent;
 
     const updatedCategory = await category.save();
     res.json(updatedCategory);

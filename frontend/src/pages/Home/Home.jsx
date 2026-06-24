@@ -27,14 +27,14 @@ const homeOutdoorProducts = [
 ];
 
 const consumerElectronics = [
-  { name: 'Smart watches', price: 'USD 19', image: '/images/tech/8.png' },
-  { name: 'Cameras', price: 'USD 89', image: '/images/tech/6.png' },
-  { name: 'Headphones', price: 'USD 10', image: '/images/tech/9.png' },
-  { name: 'Smart watches', price: 'USD 10', image: '/images/tech/10.png' },
-  { name: 'Gaming set', price: 'USD 35', image: '/images/tech/5.png' },
-  { name: 'Laptops & PC', price: 'USD 340', image: '/images/tech/7.png' },
-  { name: 'Smartphones', price: 'USD 19', image: '/images/tech/3.png' },
-  { name: 'Electric kettle', price: 'USD 240', image: '/images/tech/10.png' },
+  { name: 'Cell Phones & Accessories', slug: 'Cell Phones & Accessories', image: '/products/Electronics/Cell%20Phones%20%26%20Accessories/Anker%20PowerCore%2010000mAh%20Power%20Bank/Anker%20PowerCore%2010000mAh%20Power%20Bank%201.jpg' },
+  { name: 'Camera & Photo', slug: 'Camera & Photo', image: '/products/Electronics/Camera%20%26%20Photo/Canon%20EOS%20M50%20Mark%20II%20Mirrorless%20(15-45mm%20Kit)/Canon%20EOS%20M50%20Mark%20II%20Mirrorless%20(15-45mm%20Kit)%201.jpg' },
+  { name: 'Headphones', slug: 'Headphones', image: '/products/Electronics/Headphones/Apple%20AirPods%20Pro%20(2nd%20Generation)/Apple%20AirPods%20Pro%20(2nd%20Generation)%201.jpg' },
+  { name: 'Computers & Accessories', slug: 'Computers & Accessories', image: '/products/Electronics/Computers%20%26%20Accessories/Blue%20Yeti%20USB%20Microphone/Blue%20Yeti%20USB%20Microphone%201.jpg' },
+  { name: 'Video Game Consoles', slug: 'Video Game Consoles & Accessories', image: '/products/Electronics/Video%20Game%20Consoles%20%26%20Accessories/DualSense%20Wireless%20Controller%20for%20PS5%20(White)/DualSense%20Wireless%20Controller%20for%20PS5%20(White)%201.jpg' },
+  { name: 'Wearable Technology', slug: 'Wearable Technology', image: '/products/Electronics/Wearable%20Technology/Amazfit%20GTR%203%20Smartwatch/Amazfit%20GTR%203%20Smartwatch%201.jpg' },
+  { name: 'Television & Video', slug: 'Television & Video', image: '/products/Electronics/Television%20%26%20Video/Amazon%20Fire%20TV%20Stick%204K%20Max%20(2nd%20Gen)/Amazon%20Fire%20TV%20Stick%204K%20Max%20(2nd%20Gen)%201.jpg' },
+  { name: 'Portable Audio & Video', slug: 'Portable Audio & Video', image: '/products/Electronics/Portable%20Audio%20%26%20Video/Amazon%20Fire%20HD%2010%20Tablet%20(32GB)%20for%20Media/Amazon%20Fire%20HD%2010%20Tablet%20(32GB)%20for%20Media%201.jpg' },
 ];
 
 const recommendedItems = [
@@ -108,16 +108,16 @@ function CountdownTimer() {
 }
 
 const ProductCard = ({ item, type = 'discount' }) => (
-  <div className="product-card bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
+  <div className="product-card bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col items-center text-center group cursor-pointer h-full">
     <div className="product-card-image-wrapper w-full h-28 bg-gray-50 rounded-md flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors overflow-hidden p-2">
       <img src={item.image} alt={item.name} className="product-card-image max-h-full max-w-full object-contain" />
     </div>
     <h3 className="product-card-name text-xs font-medium text-gray-800 mb-1 line-clamp-2">{item.name}</h3>
     {type === 'discount' && item.discount && (
-      <span className="product-card-discount text-red-500 font-bold text-xs">{item.discount}</span>
+      <span className="product-card-discount text-red-500 font-bold text-xs mt-auto">{item.discount}</span>
     )}
     {type === 'price' && item.price && (
-      <span className="product-card-price text-gray-900 font-bold text-xs">{item.price}</span>
+      <span className="product-card-price text-gray-900 font-bold text-xs mt-auto">{item.price}</span>
     )}
   </div>
 );
@@ -244,15 +244,15 @@ export default function Home() {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
               </div>
             ) : (
-              <div className="deals-grid grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="deals-grid grid grid-cols-2 md:grid-cols-5 gap-4 auto-rows-fr">
                 {featuredProducts.map((product) => (
                   <Link to={`/products/${product._id}`} key={product._id}>
-                    <div className="product-card bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
+                    <div className="product-card bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col items-center text-center group cursor-pointer h-full">
                       <div className="product-card-image-wrapper w-full h-28 bg-gray-50 rounded-md flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors overflow-hidden p-2">
                         <img src={product.image} alt={product.name} className="product-card-image max-h-full max-w-full object-contain" />
                       </div>
                       <h3 className="product-card-name text-xs font-medium text-gray-800 mb-1 line-clamp-2">{product.name}</h3>
-                      <span className="product-card-price text-gray-900 font-bold text-xs">${product.price}</span>
+                      <span className="product-card-price text-gray-900 font-bold text-xs mt-auto">${product.price}</span>
                     </div>
                   </Link>
                 ))}
@@ -287,7 +287,7 @@ export default function Home() {
 
               {/* Products grid */}
               <div className="home-outdoor-products flex-1">
-                <div className="home-outdoor-grid grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="home-outdoor-grid grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-fr">
                   {homeOutdoorProducts.map((item, idx) => (
                     <ProductCard key={idx} item={item} type="price" />
                   ))}
@@ -308,17 +308,21 @@ export default function Home() {
                       Source now
                     </button>
                   </div>
-                  <div className="consumer-banner-image-wrapper mt-4">
-                    <img src="/images/tech/9.png" alt="Consumer electronics" className="consumer-banner-image w-full h-28 object-contain" />
-                  </div>
                 </div>
               </div>
 
               {/* Products grid */}
               <div className="consumer-products flex-1">
-                <div className="consumer-grid grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="consumer-grid grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-fr">
                   {consumerElectronics.map((item, idx) => (
-                    <ProductCard key={idx} item={item} type="price" />
+                    <Link to={`/products?keyword=${encodeURIComponent(item.slug)}`} key={idx}>
+                      <div className="product-card bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col items-center text-center group cursor-pointer h-full">
+                        <div className="product-card-image-wrapper w-full h-28 bg-gray-50 rounded-md flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors overflow-hidden p-2">
+                          <img src={item.image} alt={item.name} className="product-card-image max-h-full max-w-full object-contain" />
+                        </div>
+                        <h3 className="product-card-name text-xs font-medium text-gray-800 line-clamp-2 mt-auto">{item.name}</h3>
+                      </div>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -375,7 +379,7 @@ export default function Home() {
           {/* Recommended Items */}
           <section className="recommended-section">
             <h2 className="recommended-title text-lg font-bold text-gray-900 mb-4">Recommended items</h2>
-            <div className="recommended-grid grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="recommended-grid grid grid-cols-2 md:grid-cols-5 gap-4 auto-rows-fr">
               {recommendedItems.map((item, idx) => (
                 <ProductCard key={idx} item={item} type="price" />
               ))}
