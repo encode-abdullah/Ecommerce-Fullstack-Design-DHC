@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { ChevronDown, ChevronRight, Star, Grid, List, Heart, ChevronLeft, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, Star, Grid, List, Heart, ChevronLeft, X, ShoppingCart } from 'lucide-react';
 import { fetchProducts, fetchCategories } from '../../api';
+import { useCart } from '../../context/CartContext';
 import { toast } from 'react-toastify';
 
 const FilterSection = ({ title, children, defaultOpen = true }) => {
@@ -20,7 +21,7 @@ const FilterSection = ({ title, children, defaultOpen = true }) => {
   );
 };
 
-const ProductGridCard = ({ product, renderStars }) => {
+const ProductGridCard = ({ product, renderStars, onAddToCart }) => {
   const hasDiscount = product.originalPrice && product.originalPrice > product.price;
   const discountPct = hasDiscount ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
 
@@ -53,6 +54,17 @@ const ProductGridCard = ({ product, renderStars }) => {
           <span className="text-sm text-gray-500 ml-1">7.5</span>
         </div>
         <p className="text-sm text-gray-700 line-clamp-2">{product.name}</p>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            onAddToCart(product._id);
+            toast.success(`${product.name} added to cart`);
+          }}
+          className="mt-2 w-full flex items-center justify-center gap-1.5 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
+        >
+          <ShoppingCart className="w-4 h-4" />
+          Add to cart
+        </button>
       </div>
     </div>
   );
@@ -74,6 +86,7 @@ const Products = () => {
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -351,7 +364,7 @@ const Products = () => {
               {viewMode === 'grid' ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                   {products.map((product) => (
-                    <ProductGridCard key={product._id} product={product} renderStars={renderStars} />
+                    <ProductGridCard key={product._id} product={product} renderStars={renderStars} onAddToCart={addToCart} />
                   ))}
                 </div>
               ) : (
@@ -386,12 +399,24 @@ const Products = () => {
                           <span className="text-sm text-gray-500 ml-1">7.5</span>
                         </div>
                         <p className="text-sm text-gray-500 mb-2 line-clamp-2">{product.description || ''}</p>
-                        <Link
-                          to={`/products/${product._id}`}
-                          className="text-sm text-red-500 hover:text-red-600 font-medium"
-                        >
-                          View details
-                        </Link>
+                        <div className="flex items-center gap-3">
+                          <Link
+                            to={`/products/${product._id}`}
+                            className="text-sm text-red-500 hover:text-red-600 font-medium"
+                          >
+                            View details
+                          </Link>
+                          <button
+                            onClick={() => {
+                              addToCart(product._id);
+                              toast.success(`${product.name} added to cart`);
+                            }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
+                          >
+                            <ShoppingCart className="w-3.5 h-3.5" />
+                            Add to cart
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}

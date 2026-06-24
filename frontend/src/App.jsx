@@ -10,6 +10,9 @@ import ProductDetails from './pages/ProductDetails/ProductDetails.jsx';
 import Cart from './pages/Cart/Cart.jsx';
 import Login from './pages/Login/Login.jsx';
 import Register from './pages/Register/Register.jsx';
+import Profile from './pages/Profile/Profile.jsx';
+import Orders from './pages/Orders/Orders.jsx';
+import OrderConfirmation from './pages/OrderConfirmation/OrderConfirmation.jsx';
 import AdminProducts from './pages/Admin/Products/Products.jsx';
 import AdminCategories from './pages/Admin/Categories/Categories.jsx';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
@@ -30,6 +33,30 @@ function App() {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/orders"
+                  element={
+                    <ProtectedRoute>
+                      <Orders />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/order-confirmation/:id"
+                  element={
+                    <ProtectedRoute>
+                      <OrderConfirmation />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
                   path="/admin/products"
                   element={

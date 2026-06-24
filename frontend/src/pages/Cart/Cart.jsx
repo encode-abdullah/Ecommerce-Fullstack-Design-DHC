@@ -1,13 +1,18 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, ArrowLeft, Truck, Shield, Headphones, CreditCard } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
+import { createOrder } from '../../api';
 import { toast } from 'react-toastify';
 
 const Cart = () => {
   const { cartItems, cartLoading, updateCart, removeFromCart, clearCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [coupon, setCoupon] = useState('');
   const [savedForLater, setSavedForLater] = useState([]);
+  const [checkingOut, setCheckingOut] = useState(false);
 
   const cartTotal = cartItems?.reduce(
     (sum, item) => sum + (item.product?.price || 0) * item.quantity,
@@ -45,6 +50,29 @@ const Cart = () => {
     toast.success('Moved to cart');
   };
 
+  const handleCheckout = async () => {
+    if (!isAuthenticated) {
+      toast.error('Please login to checkout');
+      navigate('/login');
+      return;
+    }
+    if (!cartItems || cartItems.length === 0) {
+      toast.error('Your cart is empty');
+      return;
+    }
+    setCheckingOut(true);
+    try {
+      const order = await createOrder();
+      toast.success('Order placed successfully!');
+      clearCart();
+      navigate(`/order-confirmation/${order._id}`);
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to place order');
+    } finally {
+      setCheckingOut(false);
+    }
+  };
+
   if (cartLoading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -76,17 +104,19 @@ const Cart = () => {
             <div className="bg-white rounded-lg border border-gray-100">
               {cartItems?.map((item, idx) => (
                 <div key={item.product?._id} className={`flex gap-4 p-5 ${idx > 0 ? 'border-t border-gray-100' : ''}`}>
-                  <img
-                    src={item.product?.image}
-                    alt={item.product?.name}
-                    className="w-20 h-20 object-cover rounded-lg flex-shrink-0"
-                  />
+                  <Link to={`/products/${item.product?._id}`} className="flex-shrink-0">
+                    <img
+                      src={item.product?.image ? encodeURI(item.product.image) : '/placeholder.svg'}
+                      alt={item.product?.name}
+                      className="w-20 h-20 object-contain rounded-lg flex-shrink-0"
+                      onError={(e) => { e.target.src = '/placeholder.svg'; }}
+                    />
+                  </Link>
                   <div className="flex-1">
                     <div className="flex items-start justify-between mb-1">
-                      <h3 className="text-sm font-medium text-gray-900">{item.product?.name}</h3>
+                      <Link to={`/products/${item.product?._id}`} className="text-sm font-medium text-gray-900 hover:text-blue-500">{item.product?.name}</Link>
                       <span className="text-sm font-bold text-gray-900">${item.product?.price}</span>
                     </div>
-                    <p className="text-xs text-gray-500 mb-1">Size: medium, Color: blue, Material: Plastic</p>
                     <p className="text-xs text-gray-500 mb-2">Seller: {item.product?.seller || 'Artel Market'}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex gap-2">
@@ -178,9 +208,18 @@ const Cart = () => {
                   <span className="font-bold text-gray-900">${total.toFixed(2)}</span>
                 </div>
               </div>
-              <button className="w-full mt-4 py-3 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition">
-                Checkout
+              <button
+                onClick={handleCheckout}
+                disabled={checkingOut || !cartItems || cartItems.length === 0}
+                className="w-full mt-4 py-3 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {checkingOut ? 'Processing...' : 'Checkout'}
               </button>
+              {!isAuthenticated && (
+                <p className="text-xs text-gray-500 text-center mt-2">
+                  <Link to="/login" className="text-blue-500 hover:text-blue-600">Login</Link> to complete your order
+                </p>
+              )}
               <div className="flex items-center justify-center gap-2 mt-3">
                 <div className="w-8 h-5 bg-gray-200 rounded flex items-center justify-center">
                   <CreditCard className="w-4 h-4 text-gray-500" />
@@ -206,9 +245,9 @@ const Cart = () => {
       {/* Trust Badges */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
         {[
-          { icon: <Shield className="w-6 h-6" />, title: 'Secure payment', desc: 'Have you ever finally just' },
-          { icon: <Headphones className="w-6 h-6" />, title: 'Customer support', desc: 'Have you ever finally just' },
-          { icon: <Truck className="w-6 h-6" />, title: 'Free delivery', desc: 'Have you ever finally just' },
+          { icon: <Shield className="w-6 h-6" />, title: 'Secure payment', desc: 'Your payment info is safe with us' },
+          { icon: <Headphones className="w-6 h-6" />, title: 'Customer support', desc: '24/7 support for your orders' },
+          { icon: <Truck className="w-6 h-6" />, title: 'Free delivery', desc: 'Free shipping on orders over $50' },
         ].map((badge, idx) => (
           <div key={idx} className="flex items-center gap-3 bg-white rounded-lg border border-gray-100 p-4">
             <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
@@ -230,9 +269,10 @@ const Cart = () => {
             {savedForLater.map((item) => (
               <div key={item.product._id} className="bg-white rounded-lg border border-gray-100 p-4">
                 <img
-                  src={item.product.image}
+                  src={item.product.image ? encodeURI(item.product.image) : '/placeholder.svg'}
                   alt={item.product.name}
                   className="w-full h-36 object-contain mb-3"
+                  onError={(e) => { e.target.src = '/placeholder.svg'; }}
                 />
                 <p className="text-lg font-bold text-gray-900 mb-1">${item.product.price}</p>
                 <p className="text-xs text-gray-700 line-clamp-2 mb-3">{item.product.name}</p>

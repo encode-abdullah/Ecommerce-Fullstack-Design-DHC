@@ -1,15 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ChevronDown, User, MessageSquare, ShoppingCart, X, Check } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Search, ChevronDown, User, MessageSquare, ShoppingCart, X, Check, LogOut, Settings } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 import { fetchCategories } from '../../api';
+import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const dropdownRef = useRef(null);
+  const userMenuRef = useRef(null);
   const navigate = useNavigate();
+  const { user, isAuthenticated, handleLogout } = useAuth();
+  const { cartItems } = useCart();
+
+  const cartCount = cartItems?.length || 0;
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -27,6 +35,9 @@ export default function Header() {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -62,6 +73,12 @@ export default function Header() {
       return cat ? cat.name : 'All category';
     }
     return `${selectedCategories.length} categories`;
+  };
+
+  const handleLogoutClick = () => {
+    handleLogout();
+    setShowUserMenu(false);
+    navigate('/');
   };
 
   return (
@@ -145,18 +162,82 @@ export default function Header() {
         </form>
 
         <div className="site-nav-icons flex items-center gap-6 flex-shrink-0">
-          <a href="/login" className="site-nav-icon-item flex flex-col items-center gap-1 text-gray-500 hover:text-blue-500 transition-colors">
-            <User className="site-nav-icon w-5 h-5" />
-            <span className="site-nav-icon-label text-xs">Profile</span>
-          </a>
+          {isAuthenticated ? (
+            <div className="relative" ref={userMenuRef}>
+              <button
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                className="site-nav-icon-item flex flex-col items-center gap-1 text-gray-500 hover:text-blue-500 transition-colors"
+              >
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                  {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                </div>
+                <span className="site-nav-icon-label text-xs">{user?.name?.split(' ')[0] || 'User'}</span>
+              </button>
+              {showUserMenu && (
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                  <div className="px-4 py-3 border-b border-gray-100">
+                    <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                    <p className="text-xs text-gray-500">{user?.email}</p>
+                  </div>
+                  <Link
+                    to="/profile"
+                    onClick={() => setShowUserMenu(false)}
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    <User className="w-4 h-4" />
+                    My Profile
+                  </Link>
+                  <Link
+                    to="/orders"
+                    onClick={() => setShowUserMenu(false)}
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    <Settings className="w-4 h-4" />
+                    My Orders
+                  </Link>
+                  {user?.role === 'admin' && (
+                    <>
+                      <Link
+                        to="/admin/products"
+                        onClick={() => setShowUserMenu(false)}
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 border-t border-gray-100"
+                      >
+                        <Settings className="w-4 h-4" />
+                        Admin Panel
+                      </Link>
+                    </>
+                  )}
+                  <button
+                    onClick={handleLogoutClick}
+                    className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 border-t border-gray-100"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link to="/login" className="site-nav-icon-item flex flex-col items-center gap-1 text-gray-500 hover:text-blue-500 transition-colors">
+              <User className="site-nav-icon w-5 h-5" />
+              <span className="site-nav-icon-label text-xs">Login</span>
+            </Link>
+          )}
           <button className="site-nav-icon-item flex flex-col items-center gap-1 text-gray-500 hover:text-blue-500 transition-colors">
             <MessageSquare className="site-nav-icon w-5 h-5" />
             <span className="site-nav-icon-label text-xs">Message</span>
           </button>
-          <a href="/cart" className="site-nav-icon-item flex flex-col items-center gap-1 text-gray-500 hover:text-blue-500 transition-colors">
-            <ShoppingCart className="site-nav-icon w-5 h-5" />
+          <Link to="/cart" className="site-nav-icon-item flex flex-col items-center gap-1 text-gray-500 hover:text-blue-500 transition-colors relative">
+            <div className="relative">
+              <ShoppingCart className="site-nav-icon w-5 h-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                  {cartCount > 99 ? '99+' : cartCount}
+                </span>
+              )}
+            </div>
             <span className="site-nav-icon-label text-xs">My cart</span>
-          </a>
+          </Link>
         </div>
 
       </div>

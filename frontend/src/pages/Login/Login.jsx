@@ -1,18 +1,24 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 import { toast } from 'react-toastify';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { handleLogin, loading } = useAuth();
+  const { syncLocalCartToServer } = useCart();
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       await handleLogin({ email, password });
+      const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
+      if (localCart.length > 0) {
+        await syncLocalCartToServer();
+      }
       navigate('/');
       toast.success('Login successful!');
     } catch (error) {

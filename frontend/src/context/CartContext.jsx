@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useAuth } from './AuthContext';
-import { fetchCart, addToCart, updateCart, removeFromCart, clearCart } from '../api';
+import { fetchCart, addToCart, updateCart, removeFromCart, clearCart, fetchProductById } from '../api';
 
 const CartContext = createContext();
 
@@ -9,33 +9,56 @@ export const CartProvider = ({ children }) => {
   const [cartLoading, setCartLoading] = useState(false);
   const { isAuthenticated, user } = useAuth();
 
-  useEffect(() => {
-    const loadCart = async () => {
-      if (isAuthenticated) {
-        setCartLoading(true);
-        try {
-          const cart = await fetchCart();
-          setCartItems(cart.items || []);
-        } catch (error) {
-          console.error('Failed to load cart:', error);
-          setCartItems([]);
-        }
-        setCartLoading(false);
-      } else {
-        const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
-        setCartItems(localCart);
-      }
-    };
+  const loadServerCart = useCallback(async () => {
+    setCartLoading(true);
+    try {
+      const cart = await fetchCart();
+      setCartItems(cart.items || []);
+    } catch (error) {
+      console.error('Failed to load cart:', error);
+      setCartItems([]);
+    }
+    setCartLoading(false);
+  }, []);
 
-    loadCart();
-  }, [isAuthenticated, user]);
+  const loadLocalCart = useCallback(async () => {
+    const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    if (localCart.length === 0) {
+      setCartItems([]);
+      return;
+    }
+    const enriched = await Promise.all(
+      localCart.map(async (item) => {
+        try {
+          const product = await fetchProductById(item.productId);
+          return { product, quantity: item.quantity };
+        } catch {
+          return null;
+        }
+      })
+    );
+    setCartItems(enriched.filter(Boolean));
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadServerCart();
+    } else {
+      loadLocalCart();
+    }
+  }, [isAuthenticated, user, loadServerCart, loadLocalCart]);
 
   const syncLocalCartToServer = async () => {
     const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
     for (const item of localCart) {
-      await addToCart(item.productId, item.quantity);
+      try {
+        await addToCart(item.productId, item.quantity);
+      } catch (e) {
+        console.error('Failed to sync item:', e);
+      }
     }
     localStorage.removeItem('cart');
+    await loadServerCart();
   };
 
   const handleAddToCart = async (productId, quantity = 1) => {
@@ -51,7 +74,7 @@ export const CartProvider = ({ children }) => {
         localCart.push({ productId, quantity });
       }
       localStorage.setItem('cart', JSON.stringify(localCart));
-      setCartItems(localCart);
+      await loadLocalCart();
     }
   };
 
@@ -65,7 +88,7 @@ export const CartProvider = ({ children }) => {
       if (item) {
         item.quantity = quantity;
         localStorage.setItem('cart', JSON.stringify(localCart));
-        setCartItems(localCart);
+        await loadLocalCart();
       }
     }
   };
@@ -78,7 +101,7 @@ export const CartProvider = ({ children }) => {
       const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
       const filtered = localCart.filter((item) => item.productId !== productId);
       localStorage.setItem('cart', JSON.stringify(filtered));
-      setCartItems(filtered);
+      await loadLocalCart();
     }
   };
 
@@ -107,6 +130,7 @@ export const CartProvider = ({ children }) => {
         removeFromCart: handleRemoveFromCart,
         clearCart: handleClearCart,
         syncLocalCartToServer,
+        refreshCart: isAuthenticated ? loadServerCart : loadLocalCart,
       }}
     >
       {children}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://static.render.com/render-schema.json",
+  "services": [
+    {
+      "type": "web",
+      "name": "inferno-ecommerce-api",
+      "env": "node",
+      "plan": "free",
+      "buildCommand": "cd backend && npm install",
+      "startCommand": "cd backend && node server.js",
+      "envVars": [
+        { "key": "NODE_ENV", "value": "production" },
+        { "key": "MONGO_URI", "sync": false },
+        { "key": "JWT_SECRET", "generateValue": true },
+        { "key": "FRONTEND_URL", "sync": false }
+      ]
+    }
+  ]
+}

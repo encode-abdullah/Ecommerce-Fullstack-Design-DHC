@@ -598,3 +598,31 @@ body {
   background: linear-gradient(359deg, #14b8a6, #ffffff);
 }
 
+/* Mobile responsive improvements */
+@media (max-width: 768px) {
+  .site-header-container {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .site-search {
+    order: 3;
+    max-width: 100%;
+    flex-basis: 100%;
+  }
+  .site-nav-icons {
+    gap: 16px;
+  }
+  .site-nav-icon-label {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-logo-text {
+    display: none;
+  }
+  .site-search-btn span {
+    display: none;
+  }
+}
+
