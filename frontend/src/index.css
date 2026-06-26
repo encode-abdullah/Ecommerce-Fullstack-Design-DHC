@@ -46,11 +46,18 @@ body {
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
 }
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+.animate-slide-in-left {
+  animation: slideInLeft 0.25s ease-out;
+}
 .category-dropdown-item:hover {
   background-color: #f3f4f6;
 }
 .category-dropdown-item input[type="checkbox"]:checked + span {
-  color: #2563eb;
+  color: #3b82f6;
 }
 
 /* Products Page */
@@ -330,8 +337,8 @@ body {
 
   /* Footer */
   .site-footer-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
   }
   .site-footer-brand {
     grid-column: span 2;
@@ -561,21 +568,8 @@ body {
     padding: 0 12px;
   }
   .site-footer-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  .site-footer-brand {
-    grid-column: span 1;
-    text-align: center;
-  }
-  .site-footer-brand-logo {
-    justify-content: center;
-  }
-  .site-footer-social {
-    justify-content: center;
-  }
-  .site-footer-links {
-    text-align: center;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
   }
   .site-footer-links-list {
     list-style: none;
@@ -596,6 +590,50 @@ body {
 
 .hero-right{
   background: linear-gradient(359deg, #14b8a6, #ffffff);
+  border:none;
+}
+
+.home-outdoor-section{
+  background: linear-gradient(89deg, #ddd7c5, #d7d7cb);
+  border:none;
+}
+
+.home-outdoor-banner-card{
+  background: linear-gradient(322deg, #d9d4c2, #ffffffbf);
+  border:none;
+}
+
+.deals-section{
+  background: linear-gradient(181deg, #9be0cb, #d7cebe);
+  border:none;
+}
+
+.consumer-section{
+  background: linear-gradient(94deg, #accdc2, #dbe3e0);
+  border:none;
+}
+
+.consumer-banner-card{
+  background: linear-gradient(132deg, #ebebeb, #a4cfc0);
+  border:none;
+}
+
+.services-section{
+  background: linear-gradient(178deg, #c7d7e5, #a1b0c3);
+    border: none;
+}
+
+.newsletter-section{
+  background: radial-gradient(#f7fbff, #a8aebb);
+    border: none;
+}
+.site-search-btn{
+  background: #52CABD;
+  /* border:none; */
+}
+
+.site-search{
+  border-color: #52CABD;
 }
 
 /* Mobile responsive improvements */

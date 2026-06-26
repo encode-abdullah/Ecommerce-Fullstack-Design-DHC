@@ -13,12 +13,17 @@ const getProducts = asyncHandler(async (req, res) => {
   }
 
   if (req.query.category) {
-    filter.category = req.query.category;
+    const children = await Category.find({ parent: req.query.category }).select('_id');
+    const childIds = children.map(c => c._id);
+    filter.category = { $in: [req.query.category, ...childIds] };
   }
 
   if (req.query.parentCategory) {
     const subCats = await Category.find({ parent: req.query.parentCategory }).select('_id');
-    filter.category = { $in: subCats.map(c => c._id) };
+    const subCatIds = subCats.map(c => c._id);
+    const grandSubCats = await Category.find({ parent: { $in: subCatIds } }).select('_id');
+    const allCatIds = [...subCatIds, ...grandSubCats.map(c => c._id)];
+    filter.category = { $in: allCatIds };
   }
 
   if (req.query.featured === 'true') {

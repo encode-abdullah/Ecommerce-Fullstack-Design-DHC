@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import Footer from './components/Footer/Footer.jsx';
 import Header from './components/Header/Header.jsx';
 import Navbar from './components/Navbar/Navbar.jsx';
+import CategorySidebar from './components/CategorySidebar/CategorySidebar.jsx';
 import Home from './pages/Home/Home.jsx';
 import Products from './pages/Products/Products.jsx';
 import ProductDetails from './pages/ProductDetails/ProductDetails.jsx';
@@ -18,13 +20,15 @@ import AdminCategories from './pages/Admin/Categories/Categories.jsx';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
 
 function App() {
+  const [showCategorySidebar, setShowCategorySidebar] = useState(false);
+
   return (
     <AuthProvider>
       <CartProvider>
         <Router>
         <div className="app-root flex flex-col min-h-screen overflow-x-hidden">
           <Header />
-          <Navbar />
+          <Navbar onOpenCategorySidebar={() => setShowCategorySidebar(true)} />
           <main className="app-main flex-grow">
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -77,6 +81,7 @@ function App() {
             </main>
             <Footer />
           </div>
+        <CategorySidebar isOpen={showCategorySidebar} onClose={() => setShowCategorySidebar(false)} />
         </Router>
       </CartProvider>
     </AuthProvider>

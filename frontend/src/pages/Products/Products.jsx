@@ -73,21 +73,23 @@ const ProductGridCard = ({ product, renderStars, onAddToCart }) => {
 };
 
 const Products = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [subSubCategories, setSubSubCategories] = useState([]);
   const [pages, setPages] = useState(1);
   const [page, setPage] = useState(1);
-  const [keyword, setKeyword] = useState('');
-  const [category, setCategory] = useState('');
-  const [parentCategory, setParentCategory] = useState('');
+  const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
+  const [category, setCategory] = useState(searchParams.get('category') || '');
+  const [parentCategory, setParentCategory] = useState(searchParams.get('parentCategory') || '');
+  const [selectedSubCat, setSelectedSubCat] = useState('');
   const [sort, setSort] = useState('createdAt');
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
   const [showCount, setShowCount] = useState(12);
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
-  const [searchParams, setSearchParams] = useSearchParams();
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -136,15 +138,33 @@ const Products = () => {
     } else {
       setSubCategories([]);
     }
+    setSubSubCategories([]);
+    setSelectedSubCat('');
   }, [parentCategory]);
+
+  useEffect(() => {
+    if (selectedSubCat) {
+      const loadSubSubCats = async () => {
+        try {
+          const data = await fetchCategories({ parent: selectedSubCat });
+          setSubSubCategories(data || []);
+        } catch (error) {
+          console.error('Failed to load sub-sub-categories:', error);
+        }
+      };
+      loadSubSubCats();
+    } else {
+      setSubSubCategories([]);
+    }
+  }, [selectedSubCat]);
 
   useEffect(() => {
     const urlKeyword = searchParams.get('keyword') || '';
     const urlCategory = searchParams.get('category') || '';
     const urlParentCategory = searchParams.get('parentCategory') || '';
     setKeyword(urlKeyword);
-    if (urlCategory) setCategory(urlCategory);
-    if (urlParentCategory) setParentCategory(urlParentCategory);
+    setCategory(urlCategory);
+    setParentCategory(urlParentCategory);
   }, [searchParams]);
 
   const handleParentCatClick = (catId) => {
@@ -159,6 +179,19 @@ const Products = () => {
   };
 
   const handleSubCatClick = (catId) => {
+    if (selectedSubCat === catId) {
+      setSelectedSubCat('');
+      setCategory('');
+      setSubSubCategories([]);
+    } else {
+      setSelectedSubCat(catId);
+      setCategory(catId);
+      setSubSubCategories([]);
+    }
+    setPage(1);
+  };
+
+  const handleSubSubCatClick = (catId) => {
     setCategory(category === catId ? '' : catId);
     setPage(1);
   };
@@ -209,12 +242,27 @@ const Products = () => {
 
       <div className="flex gap-6 min-w-0">
         {/* Left Sidebar */}
-        <aside className="w-56 flex-shrink-0 hidden lg:block">
+        <aside className="w-64 flex-shrink-0 hidden lg:block">
           <FilterSection title="Categories">
             <div className="space-y-2">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => { setParentCategory(''); setCategory(''); setPage(1); }}
+              >
+                <input
+                  type="radio"
+                  name="category"
+                  checked={!parentCategory}
+                  readOnly
+                  className="w-4 h-4 text-red-500 pointer-events-none"
+                />
+                <span className={`text-sm ${!parentCategory ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
+                  All Categories
+                </span>
+              </div>
               {categories.map((cat) => (
                 <div key={cat._id}>
-                  <label
+                  <div
                     className="flex items-center gap-2 cursor-pointer"
                     onClick={() => handleParentCatClick(cat._id)}
                   >
@@ -223,28 +271,36 @@ const Products = () => {
                       name="category"
                       checked={parentCategory === cat._id}
                       readOnly
-                      className="w-4 h-4 text-red-500"
+                      className="w-4 h-4 text-red-500 pointer-events-none"
                     />
                     <span className={`text-sm ${parentCategory === cat._id ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
                       {cat.name}
                     </span>
-                  </label>
+                  </div>
                   {parentCategory === cat._id && subCategories.length > 0 && (
                     <div className="ml-5 mt-1 space-y-1">
-                      <button
-                        onClick={() => setCategory('')}
-                        className={`block text-xs ${!category ? 'text-red-500 font-semibold' : 'text-gray-500 hover:text-red-500'}`}
-                      >
-                        All
-                      </button>
                       {subCategories.map((sub) => (
-                        <button
-                          key={sub._id}
-                          onClick={() => handleSubCatClick(sub._id)}
-                          className={`block text-xs ${category === sub._id ? 'text-red-500 font-semibold' : 'text-gray-500 hover:text-red-500'}`}
-                        >
-                          {sub.name}
-                        </button>
+                        <div key={sub._id}>
+                          <button
+                            onClick={() => handleSubCatClick(sub._id)}
+                            className={`block text-xs text-left w-full break-words ${selectedSubCat === sub._id ? 'text-red-500 font-semibold' : 'text-gray-500 hover:text-red-500'}`}
+                          >
+                            {sub.name}
+                          </button>
+                          {selectedSubCat === sub._id && subSubCategories.length > 0 && (
+                            <div className="ml-4 mt-1 space-y-1">
+                              {subSubCategories.map((subSub) => (
+                                <button
+                                  key={subSub._id}
+                                  onClick={() => handleSubSubCatClick(subSub._id)}
+                                  className={`block text-xs text-left w-full break-words ${category === subSub._id ? 'text-red-500 font-semibold' : 'text-gray-400 hover:text-red-500'}`}
+                                >
+                                  {subSub.name}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       ))}
                     </div>
                   )}
@@ -330,31 +386,6 @@ const Products = () => {
               </div>
             </div>
           </div>
-
-          {/* Sub-category Tabs */}
-          {parentCategory && subCategories.length > 0 && (
-            <div className="flex gap-2 overflow-x-auto mb-4 pb-2 flex-shrink-0">
-              <button
-                onClick={() => setCategory('')}
-                className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-colors ${
-                  !category ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                All
-              </button>
-              {subCategories.map((sub) => (
-                <button
-                  key={sub._id}
-                  onClick={() => handleSubCatClick(sub._id)}
-                  className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-colors ${
-                    category === sub._id ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
-                >
-                  {sub.name}
-                </button>
-              ))}
-            </div>
-          )}
 
           {/* Products */}
           {products.length === 0 ? (

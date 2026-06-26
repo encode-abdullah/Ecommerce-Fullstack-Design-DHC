@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Package, ArrowLeft, XCircle, X } from 'lucide-react';
 import { getMyOrders, cancelOrder } from '../../api';
 import { toast } from 'react-toastify';
@@ -9,6 +9,7 @@ const Orders = () => {
   const [loading, setLoading] = useState(true);
   const [cancellingId, setCancellingId] = useState(null);
   const [confirmModal, setConfirmModal] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadOrders = async () => {
@@ -53,6 +54,13 @@ const Orders = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors mb-6"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        <span className="text-sm font-medium">Back</span>
+      </button>
       <h1 className="text-2xl font-bold text-gray-900 mb-6">My Orders</h1>
 
       {orders.length === 0 ? (

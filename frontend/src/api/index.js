@@ -22,6 +22,13 @@ export const fetchProducts = async (params = {}) => {
   return response.data;
 };
 
+export const searchSuggestions = async (keyword) => {
+  const response = await api.get('/products', {
+    params: { keyword, pageSize: 8, page: 1 },
+  });
+  return response.data.products || [];
+};
+
 export const fetchProductById = async (id) => {
   const response = await api.get(`/products/${id}`);
   return response.data;

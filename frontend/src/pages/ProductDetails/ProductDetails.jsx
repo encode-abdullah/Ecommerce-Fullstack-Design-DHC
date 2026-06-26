@@ -153,10 +153,25 @@ const ProductDetails = () => {
               <span className="text-sm text-gray-500">154 sold</span>
             </div>
 
+            {/* Price */}
+            <div className="mb-4">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl font-bold text-red-500">${product.price.toFixed(2)}</span>
+                {product.originalPrice && (
+                  <span className="text-lg text-gray-400 line-through">${product.originalPrice.toFixed(2)}</span>
+                )}
+              </div>
+              {product.originalPrice && (
+                <span className="text-sm text-green-600 font-medium">
+                  Save ${(product.originalPrice - product.price).toFixed(2)} ({Math.round((1 - product.price / product.originalPrice) * 100)}% off)
+                </span>
+              )}
+            </div>
+
             {/* Tiered Pricing */}
             <div className="grid grid-cols-3 gap-4 mb-4 p-3 bg-gray-50 rounded-lg">
               <div className="text-center">
-                <span className="text-lg font-bold text-gray-900">${product.price}</span>
+                <span className="text-lg font-bold text-gray-900">${product.price.toFixed(2)}</span>
                 <p className="text-xs text-gray-500 mt-1">50-100 pcs</p>
               </div>
               <div className="text-center border-x border-gray-200">
@@ -279,13 +294,21 @@ const ProductDetails = () => {
             <div className="p-6">
               {activeTab === 'description' && (
                 <div>
-                  <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                    {product.description || 'No description available for this product.'}
-                  </p>
+                  {product.description ? (
+                    product.description.split('\n\n').map((paragraph, idx) => (
+                      <p key={idx} className="text-sm text-gray-600 mb-4 leading-relaxed">
+                        {paragraph.trim()}
+                      </p>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                      No description available for this product.
+                    </p>
+                  )}
 
-                  {/* Features */}
-                  {product.description && (
-                    <div className="space-y-2">
+                  {/* Features - only show if description contains commas (old short format) */}
+                  {product.description && !product.description.includes('\n\n') && product.description.includes(',') && (
+                    <div className="space-y-2 mt-4">
                       {product.description.split(',').map((feature, idx) => (
                         <div key={idx} className="flex items-center gap-2">
                           <Check className="w-4 h-4 text-gray-400" />

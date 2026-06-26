@@ -30,6 +30,7 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      profileImage: user.profileImage,
       token: generateToken(user._id),
     });
   } else {
@@ -49,6 +50,7 @@ const loginUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      profileImage: user.profileImage,
       token: generateToken(user._id),
     });
   } else {
@@ -63,6 +65,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
     name: req.user.name,
     email: req.user.email,
     role: req.user.role,
+    profileImage: req.user.profileImage || '',
   });
 });
 
@@ -75,6 +78,9 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     if (req.body.password) {
       user.password = req.body.password;
     }
+    if (req.body.profileImage !== undefined) {
+      user.profileImage = req.body.profileImage;
+    }
     const updatedUser = await user.save();
 
     res.json({
@@ -82,6 +88,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       name: updatedUser.name,
       email: updatedUser.email,
       role: updatedUser.role,
+      profileImage: updatedUser.profileImage || '',
       token: generateToken(updatedUser._id),
     });
   } else {

@@ -16,38 +16,38 @@ import {
 import { fetchProducts, fetchCategories } from '../../api';
 
 const homeOutdoorProducts = [
-  { name: 'Baby & Child Care', slug: 'Baby & Child Care', image: '/products/Health%20%26%20HouseHold/Baby%20%26%20Child%20Care/Baby%20Brezza%20Formula%20Pro%20One-Step%20Baby%20Formula%20Dispenser/Baby%20Brezza%20Formula%20Pro%20One-Step%20Baby%20Formula%20Dispenser%201.jpg' },
-  { name: 'Health Care', slug: 'Health Care', image: '/products/Health%20%26%20HouseHold/Health%20Care/Braun%20ThermoScan%207%20Ear%20Thermometer%20IRT6520/Braun%20ThermoScan%207%20Ear%20Thermometer%20IRT6520%201.jpg' },
-  { name: 'Household Supplies', slug: 'Household Supplies', image: '/products/Health%20%26%20HouseHold/Household%20Supplies/Bounty%20Select-A-Size%20Paper%20Towels%20(12%20Double%20Rolls)/Bounty%20Select-A-Size%20Paper%20Towels%20(12%20Double%20Rolls)%201.jpg' },
-  { name: 'Personal Care', slug: 'Personal Care', image: '/products/Health%20%26%20HouseHold/Personal%20Care/Dove%20Men%2BCare%20Body%20Wash%20Extra%20Fresh%20(30.6oz%2C%203-pack)/Dove%20Men%2BCare%20Body%20Wash%20Extra%20Fresh%20(30.6oz%2C%203-pack)%201.jpg' },
-  { name: 'Sports Nutrition', slug: 'Sports Nutrition', image: '/products/Health%20%26%20HouseHold/Sports%20Nutrition/BSN%20SYNTHA-6%20Protein%20Powder%204.56%20lb/BSN%20SYNTHA-6%20Protein%20Powder%204.56%20lb%201.jpg' },
-  { name: 'Vitamins & Supplements', slug: 'Vitamins & Dietary Supplements', image: '/products/Health%20%26%20HouseHold/Vitamins%20%26%20Dietary%20Supplements/Airborne%20Vitamin%20C%201000mg%20Supplement%20(116%20tablets)/Airborne%20Vitamin%20C%201000mg%20Supplement%20(116%20tablets)%201.jpg' },
-  { name: 'Oral Care', slug: 'Oral Care', image: '/products/Health%20%26%20HouseHold/Oral%20Care/ACT%20Restoring%20Anticavity%20Mouthwash%2033.8oz%20(2-pack)/ACT%20Restoring%20Anticavity%20Mouthwash%2033.8oz%20(2-pack)%201.jpg' },
-  { name: 'Wellness & Relaxation', slug: 'Wellness & Relaxation', image: '/products/Health%20%26%20HouseHold/Wellness%20%26%20Relaxation/Aenllosi%20Storage%20Organizer%20Hard%20Case/Aenllosi%20Storage%20Organizer%20Hard%20Case%201.jpg' },
+  { name: 'Baby & Child Care', categoryName: 'Baby & Child Care', parentName: 'Health & HouseHold', image: '/products/Health%20%26%20HouseHold/Baby%20%26%20Child%20Care/Baby%20Brezza%20Formula%20Pro%20One-Step%20Baby%20Formula%20Dispenser/Baby%20Brezza%20Formula%20Pro%20One-Step%20Baby%20Formula%20Dispenser%201.jpg' },
+  { name: 'Health Care', categoryName: 'Health Care', parentName: 'Health & HouseHold', image: '/products/Health%20%26%20HouseHold/Health%20Care/Braun%20ThermoScan%207%20Ear%20Thermometer%20IRT6520/Braun%20ThermoScan%207%20Ear%20Thermometer%20IRT6520%201.jpg' },
+  { name: 'Household Supplies', categoryName: 'Household Supplies', parentName: 'Health & HouseHold', image: '/products/Health%20%26%20HouseHold/Household%20Supplies/Bounty%20Select-A-Size%20Paper%20Towels%20(12%20Double%20Rolls)/Bounty%20Select-A-Size%20Paper%20Towels%20(12%20Double%20Rolls)%201.jpg' },
+  { name: 'Personal Care', categoryName: 'Personal Care', parentName: 'Health & HouseHold', image: '/products/Health%20%26%20HouseHold/Personal%20Care/Dove%20Men%2BCare%20Body%20Wash%20Extra%20Fresh%20(30.6oz%2C%203-pack)/Dove%20Men%2BCare%20Body%20Wash%20Extra%20Fresh%20(30.6oz%2C%203-pack)%201.jpg' },
+  { name: 'Sports Nutrition', categoryName: 'Sports Nutrition', parentName: 'Health & HouseHold', image: '/products/Health%20%26%20HouseHold/Sports%20Nutrition/BSN%20SYNTHA-6%20Protein%20Powder%204.56%20lb/BSN%20SYNTHA-6%20Protein%20Powder%204.56%20lb%201.jpg' },
+  { name: 'Vitamins & Supplements', categoryName: 'Vitamins & Dietary Supplements', parentName: 'Health & HouseHold', image: '/products/Health%20%26%20HouseHold/Vitamins%20%26%20Dietary%20Supplements/Airborne%20Vitamin%20C%201000mg%20Supplement%20(116%20tablets)/Airborne%20Vitamin%20C%201000mg%20Supplement%20(116%20tablets)%201.jpg' },
+  { name: 'Oral Care', categoryName: 'Oral Care', parentName: 'Health & HouseHold', image: '/products/Health%20%26%20HouseHold/Oral%20Care/ACT%20Restoring%20Anticavity%20Mouthwash%2033.8oz%20(2-pack)/ACT%20Restoring%20Anticavity%20Mouthwash%2033.8oz%20(2-pack)%201.jpg' },
+  { name: 'Wellness & Relaxation', categoryName: 'Wellness & Relaxation', parentName: 'Health & HouseHold', image: '/products/Health%20%26%20HouseHold/Wellness%20%26%20Relaxation/Aenllosi%20Storage%20Organizer%20Hard%20Case/Aenllosi%20Storage%20Organizer%20Hard%20Case%201.jpg' },
 ];
 
 const consumerElectronics = [
-  { name: 'Cell Phones & Accessories', slug: 'Cell Phones & Accessories', image: '/products/Electronics/Cell%20Phones%20%26%20Accessories/Anker%20PowerCore%2010000mAh%20Power%20Bank/Anker%20PowerCore%2010000mAh%20Power%20Bank%201.jpg' },
-  { name: 'Camera & Photo', slug: 'Camera & Photo', image: '/products/Electronics/Camera%20%26%20Photo/Canon%20EOS%20M50%20Mark%20II%20Mirrorless%20(15-45mm%20Kit)/Canon%20EOS%20M50%20Mark%20II%20Mirrorless%20(15-45mm%20Kit)%201.jpg' },
-  { name: 'Headphones', slug: 'Headphones', image: '/products/Electronics/Headphones/Apple%20AirPods%20Pro%20(2nd%20Generation)/Apple%20AirPods%20Pro%20(2nd%20Generation)%201.jpg' },
-  { name: 'Computers & Accessories', slug: 'Computers & Accessories', image: '/products/Electronics/Computers%20%26%20Accessories/Blue%20Yeti%20USB%20Microphone/Blue%20Yeti%20USB%20Microphone%201.jpg' },
-  { name: 'Video Game Consoles', slug: 'Video Game Consoles & Accessories', image: '/products/Electronics/Video%20Game%20Consoles%20%26%20Accessories/DualSense%20Wireless%20Controller%20for%20PS5%20(White)/DualSense%20Wireless%20Controller%20for%20PS5%20(White)%201.jpg' },
-  { name: 'Wearable Technology', slug: 'Wearable Technology', image: '/products/Electronics/Wearable%20Technology/Amazfit%20GTR%203%20Smartwatch/Amazfit%20GTR%203%20Smartwatch%201.jpg' },
-  { name: 'Television & Video', slug: 'Television & Video', image: '/products/Electronics/Television%20%26%20Video/Amazon%20Fire%20TV%20Stick%204K%20Max%20(2nd%20Gen)/Amazon%20Fire%20TV%20Stick%204K%20Max%20(2nd%20Gen)%201.jpg' },
-  { name: 'Portable Audio & Video', slug: 'Portable Audio & Video', image: '/products/Electronics/Portable%20Audio%20%26%20Video/Amazon%20Fire%20HD%2010%20Tablet%20(32GB)%20for%20Media/Amazon%20Fire%20HD%2010%20Tablet%20(32GB)%20for%20Media%201.jpg' },
+  { name: 'Cell Phones & Accessories', categoryName: 'Cell Phones & Accessories', parentName: 'Electronics', image: '/products/Electronics/Cell%20Phones%20%26%20Accessories/Anker%20PowerCore%2010000mAh%20Power%20Bank/Anker%20PowerCore%2010000mAh%20Power%20Bank%201.jpg' },
+  { name: 'Camera & Photo', categoryName: 'Camera & Photo', parentName: 'Electronics', image: '/products/Electronics/Camera%20%26%20Photo/Canon%20EOS%20M50%20Mark%20II%20Mirrorless%20(15-45mm%20Kit)/Canon%20EOS%20M50%20Mark%20II%20Mirrorless%20(15-45mm%20Kit)%201.jpg' },
+  { name: 'Headphones', categoryName: 'Headphones', parentName: 'Electronics', image: '/products/Electronics/Headphones/Apple%20AirPods%20Pro%20(2nd%20Generation)/Apple%20AirPods%20Pro%20(2nd%20Generation)%201.jpg' },
+  { name: 'Computers & Accessories', categoryName: 'Computers & Accessories', parentName: 'Electronics', image: '/products/Electronics/Computers%20%26%20Accessories/Blue%20Yeti%20USB%20Microphone/Blue%20Yeti%20USB%20Microphone%201.jpg' },
+  { name: 'Video Game Consoles', categoryName: 'Video Game Consoles & Accessories', parentName: 'Electronics', image: '/products/Electronics/Video%20Game%20Consoles%20%26%20Accessories/DualSense%20Wireless%20Controller%20for%20PS5%20(White)/DualSense%20Wireless%20Controller%20for%20PS5%20(White)%201.jpg' },
+  { name: 'Wearable Technology', categoryName: 'Wearable Technology', parentName: 'Electronics', image: '/products/Electronics/Wearable%20Technology/Amazfit%20GTR%203%20Smartwatch/Amazfit%20GTR%203%20Smartwatch%201.jpg' },
+  { name: 'Television & Video', categoryName: 'Television & Video', parentName: 'Electronics', image: '/products/Electronics/Television%20%26%20Video/Amazon%20Fire%20TV%20Stick%204K%20Max%20(2nd%20Gen)/Amazon%20Fire%20TV%20Stick%204K%20Max%20(2nd%20Gen)%201.jpg' },
+  { name: 'Portable Audio & Video', categoryName: 'Portable Audio & Video', parentName: 'Electronics', image: '/products/Electronics/Portable%20Audio%20%26%20Video/Amazon%20Fire%20HD%2010%20Tablet%20(32GB)%20for%20Media/Amazon%20Fire%20HD%2010%20Tablet%20(32GB)%20for%20Media%201.jpg' },
 ];
 
 const recommendedItems = [
-  { name: 'T-shirts with multiple colors, for men', price: '$10.30', image: '/images/cloth/2.png' },
-  { name: 'Jeans shorts for men blue color', price: '$10.30', image: '/images/cloth/4.png' },
-  { name: 'Brown winter coat medium size', price: '$12.50', image: '/images/cloth/3.png' },
-  { name: 'Jeans bag for travel for men', price: '$34.00', image: '/images/cloth/5.png' },
-  { name: 'Leather wallet', price: '$99.00', image: '/images/cloth/6.png' },
-  { name: 'Canon camera black, 100x zoom', price: '$9.99', image: '/images/tech/6.png' },
-  { name: 'Headset for gaming with mic', price: '$8.99', image: '/images/tech/5.png' },
-  { name: 'Smartwatch silver color modern', price: '$10.30', image: '/images/tech/8.png' },
-  { name: 'Blue wallet for men leather material', price: '$10.30', image: '/images/cloth/6.png' },
-  { name: 'Jeans bag for travel for men', price: '$80.95', image: '/images/cloth/5.png' },
+  { name: 'Apple iPad (10th Generation) 64GB WiFi', price: '$449', id: '6a3e1716282c4f7fe8ad5815', image: '/products/Computers/Computers%20%26%20Tablets/Apple%20iPad%20(10th%20Generation)%2064GB%20WiFi/Apple%20iPad%20(10th%20Generation)%2064GB%20WiFi%201.jpg' },
+  { name: 'Samsung Galaxy Tab S9 FE 128GB', price: '$349', id: '6a3e1716282c4f7fe8ad5818', image: '/products/Computers/Computers%20%26%20Tablets/Samsung%20Galaxy%20Tab%20S9%20FE%20128GB/Samsung%20Galaxy%20Tab%20S9%20FE%20128GB%201.jpg' },
+  { name: 'HyperX Alloy Origins Core Mechanical Keyboard', price: '$69', id: '6a3e1713282c4f7fe8ad580b', image: '/products/Computers/Computer%20Accessories%20%26%20Peripherals/HyperX%20Alloy%20Origins%20Core%20Mechanical%20Keyboard/HyperX%20Alloy%20Origins%20Core%20Mechanical%20Keyboard%201.jpg' },
+  { name: 'AMD Ryzen 5 5600X Processor', price: '$150', id: '6a3e1714282c4f7fe8ad580f', image: '/products/Computers/Computer%20Components/AMD%20Ryzen%205%205600X%20Processor/AMD%20Ryzen%205%205600X%20Processor%201.jpg' },
+  { name: 'Samsung T7 1TB Portable SSD', price: '$100', id: '6a3e1717282c4f7fe8ad5819', image: '/products/Computers/Data%20Storage/Samsung%20T7%201TB%20Portable%20SSD/Samsung%20T7%201TB%20Portable%20SSD%201.jpg' },
+  { name: 'Seagate Portable 2TB External Hard Drive', price: '$55', id: '6a3e1718282c4f7fe8ad581c', image: '/products/Computers/Data%20Storage/Seagate%20Portable%202TB%20External%20Hard%20Drive/Seagate%20Portable%202TB%20External%20Hard%20Drive%201.jpg' },
+  { name: 'Logitech MX Master 3S Wireless Mouse', price: '$99', id: '6a3e1714282c4f7fe8ad580e', image: '/products/Computers/Computer%20Accessories%20%26%20Peripherals/Logitech%20MX%20Master%203S%20Wireless%20Mouse/Logitech%20MX%20Master%203S%20Wireless%20Mouse%201.webp' },
+  { name: 'Microsoft Surface Go 3 Tablet (8GB, 128GB)', price: '$549', id: '6a3e1716282c4f7fe8ad5817', image: '/products/Computers/Computers%20%26%20Tablets/Microsoft%20Surface%20Go%203%20Tablet%20(8GB%2C%20128GB)/Microsoft%20Surface%20Go%203%20Tablet%20(8GB%2C%20128GB)%201.jpg' },
+  { name: 'WD My Passport 4TB Portable HDD', price: '$89', id: '6a3e1718282c4f7fe8ad581d', image: '/products/Computers/Data%20Storage/WD%20My%20Passport%204TB%20Portable%20HDD%20Black/WD%20My%20Passport%204TB%20Portable%20HDD%201.jpg' },
+  { name: 'SanDisk 128GB Ultra USB 3.0 Flash Drive', price: '$20', id: '6a3e1717282c4f7fe8ad581a', image: '/products/Computers/Data%20Storage/SanDisk%20128GB%20Ultra%20USB%203.0%20Flash%20Drive/SanDisk%20128GB%20Ultra%20USB%203.0%20Flash%20Drive%201.jpg' },
 ];
 
 const regions = [
@@ -61,11 +61,19 @@ const regions = [
   { name: 'China', flag: '/images/flags/Property 1=CN.png', domain: 'shopname.ae' },
 ];
 
+const dealsProducts = [
+  { keyword: 'Canon EOS M50', name: 'Canon EOS M50 Mark II Mirrorless (15-45mm Kit)', price: 699, image: '/products/Electronics/Camera%20%26%20Photo/Canon%20EOS%20M50%20Mark%20II%20Mirrorless%20(15-45mm%20Kit)/Canon%20EOS%20M50%20Mark%20II%20Mirrorless%20(15-45mm%20Kit)%201.jpg' },
+  { keyword: 'LG C5', name: 'LG C5 55 OLED evo 4K Smart TV', price: 1296, image: '/products/Electronics/Television%20%26%20Video/LG%20C5%2055%20OLED%20evo%204K%20Smart%20TV/LG%20C5%2055%20OLED%20evo%204K%20Smart%20TV%201.jpg' },
+  { keyword: 'Fire TV Stick 4K', name: 'Amazon Fire TV Stick 4K Max (2nd Gen)', price: 60, image: '/products/Electronics/Television%20%26%20Video/Amazon%20Fire%20TV%20Stick%204K%20Max%20(2nd%20Gen)/Amazon%20Fire%20TV%20Stick%204K%20Max%20(2nd%20Gen)%201.jpg' },
+  { keyword: 'Arlo Pro 4', name: 'Arlo Pro 4 Wireless Security Camera (3-pack)', price: 300, image: '/products/Electronics/Security%20%26%20Surveillance/Arlo%20Pro%204%20Wireless%20Security%20Camera%20(3-pack)/Arlo%20Pro%204%20Wireless%20Security%20Camera%20(3-pack)%201.jpg' },
+  { keyword: 'DualSense', name: 'DualSense Wireless Controller for PS5 (White)', price: 70, image: '/products/Electronics/Video%20Game%20Consoles%20%26%20Accessories/DualSense%20Wireless%20Controller%20for%20PS5%20(White)/DualSense%20Wireless%20Controller%20for%20PS5%20(White)%201.jpg' },
+];
+
 const services = [
-  { title: 'Source from Industry Hubs', icon: <Search className="service-icon w-5 h-5 text-white" />, color: 'bg-amber-500', image: '/images/book/1.png' },
-  { title: 'Customize Your Products', icon: <Settings className="service-icon w-5 h-5 text-white" />, color: 'bg-amber-500', image: '/images/book/2.png' },
-  { title: 'Fast, reliable shipping by ocean or air', icon: <Truck className="service-icon w-5 h-5 text-white" />, color: 'bg-amber-500', image: '/images/book/3.png' },
-  { title: 'Product monitoring and inspection', icon: <Shield className="service-icon w-5 h-5 text-white" />, color: 'bg-amber-500', image: '/images/book/4.png' },
+  { title: 'Source from Industry Hubs', icon: <Search className="service-icon w-5 h-5 text-white" />, color: 'bg-amber-500', image: '/images/services/Industrial Hub.png' },
+  { title: 'Customize Your Products', icon: <Settings className="service-icon w-5 h-5 text-white" />, color: 'bg-amber-500', image: '/images/services/Customize Products.png' },
+  { title: 'Fast, reliable shipping by ocean or air', icon: <Truck className="service-icon w-5 h-5 text-white" />, color: 'bg-amber-500', image: '/images/services/Shipping.png' },
+  { title: 'Product monitoring and inspection', icon: <Shield className="service-icon w-5 h-5 text-white" />, color: 'bg-amber-500', image: '/images/services/Monitoring.png' },
 ];
 
 function CountdownTimer() {
@@ -126,6 +134,7 @@ export default function Home() {
   const [quoteQuantity, setQuoteQuantity] = useState('');
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [subCategoryMap, setSubCategoryMap] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -142,7 +151,22 @@ export default function Home() {
     const loadCategories = async () => {
       try {
         const data = await fetchCategories();
-        setCategories((data || []).filter(c => !c.parent));
+        const parents = (data || []).filter(c => !c.parent);
+        setCategories(parents);
+        const map = {};
+        for (const parent of parents) {
+          const children = await fetchCategories({ parent: parent._id });
+          for (const child of (children || [])) {
+            map[child.name] = { id: child._id, parentId: parent._id };
+          }
+          for (const child of (children || [])) {
+            const grandchildren = await fetchCategories({ parent: child._id });
+            for (const gc of (grandchildren || [])) {
+              map[gc.name] = { id: gc._id, parentId: parent._id };
+            }
+          }
+        }
+        setSubCategoryMap(map);
       } catch (error) {
         console.error('Failed to load categories:', error);
       }
@@ -239,54 +263,63 @@ export default function Home() {
                 <CountdownTimer />
               </div>
             </div>
-            {loading ? (
-              <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-              </div>
-            ) : (
-              <div className="deals-grid grid grid-cols-2 md:grid-cols-5 gap-4 auto-rows-fr">
-                {featuredProducts.map((product) => (
-                  <Link to={`/products/${product._id}`} key={product._id}>
-                    <div className="product-card bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col items-center text-center group cursor-pointer h-full">
-                      <div className="product-card-image-wrapper w-full h-28 bg-gray-50 rounded-md flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors overflow-hidden p-2">
-                        <img src={product.image} alt={product.name} className="product-card-image max-h-full max-w-full object-contain" />
-                      </div>
-                      <h3 className="product-card-name text-xs font-medium text-gray-800 mb-1 line-clamp-2">{product.name}</h3>
-                      <span className="product-card-price text-gray-900 font-bold text-xs mt-auto">${product.price}</span>
+            <div className="deals-grid grid grid-cols-2 md:grid-cols-5 gap-4 auto-rows-fr">
+              {dealsProducts.map((product, idx) => (
+                <Link to={`/products?keyword=${encodeURIComponent(product.keyword)}`} key={idx}>
+                  <div className="product-card bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col items-center text-center group cursor-pointer h-full">
+                    <div className="product-card-image-wrapper w-full h-28 bg-gray-50 rounded-md flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors overflow-hidden p-2">
+                      <img src={product.image} alt={product.name} className="product-card-image max-h-full max-w-full object-contain" />
                     </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-            {featuredProducts.length > 0 && (
-              <div className="text-center mt-4">
-                <Link to="/products" className="text-blue-500 text-sm font-medium hover:underline">
-                  View all products
+                    <h3 className="product-card-name text-xs font-medium text-gray-800 mb-1 line-clamp-2">{product.name}</h3>
+                    <span className="product-card-price text-gray-900 font-bold text-xs mt-auto">${product.price}</span>
+                  </div>
                 </Link>
-              </div>
-            )}
+              ))}
+            </div>
+            <div className="text-center mt-4">
+              <Link to="/products" className="inline-block bg-blue-500 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                View all products
+              </Link>
+            </div>
           </section>
 
           {/* Home and outdoor */}
           <section className="home-outdoor-section bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+            {/* Mobile banner */}
+            <div className="block md:hidden mb-4">
+              <div className="home-outdoor-banner-card bg-amber-50 rounded-lg p-4 flex items-center justify-between">
+                <div>
+                  <h3 className="home-outdoor-banner-title text-lg font-bold text-gray-900 leading-tight">Home and outdoor</h3>
+                </div>
+                <button className="home-outdoor-banner-cta bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
+                  Shop Now
+                </button>
+              </div>
+            </div>
+
             <div className="home-outdoor-content flex gap-5">
-              {/* Left banner */}
+              {/* Left banner - desktop only */}
               <div className="home-outdoor-banner w-52 flex-shrink-0 hidden md:block">
                 <div className="home-outdoor-banner-card bg-amber-50 rounded-lg p-5 h-full flex flex-col justify-between">
                   <div>
                     <h3 className="home-outdoor-banner-title text-lg font-bold text-gray-900 leading-tight">Home and<br />outdoor</h3>
                     <button className="home-outdoor-banner-cta mt-3 bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
-                      Source now
+                      Shop Now
                     </button>
                   </div>
-              </div>
+                </div>
               </div>
 
               {/* Products grid */}
               <div className="home-outdoor-products flex-1">
                 <div className="home-outdoor-grid grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-fr">
-                  {homeOutdoorProducts.map((item, idx) => (
-                    <Link to={`/products?keyword=${encodeURIComponent(item.slug)}`} key={idx}>
+                  {homeOutdoorProducts.map((item, idx) => {
+                    const catInfo = subCategoryMap[item.categoryName];
+                    const linkTo = catInfo
+                      ? `/products?category=${catInfo.id}&parentCategory=${catInfo.parentId}`
+                      : `/products?keyword=${encodeURIComponent(item.categoryName)}`;
+                    return (
+                    <Link to={linkTo} key={idx}>
                       <div className="product-card bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col items-center text-center group cursor-pointer h-full">
                         <div className="product-card-image-wrapper w-full h-28 bg-gray-50 rounded-md flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors overflow-hidden p-2">
                           <img src={item.image} alt={item.name} className="product-card-image max-h-full max-w-full object-contain" />
@@ -294,7 +327,8 @@ export default function Home() {
                         <h3 className="product-card-name text-xs font-medium text-gray-800 line-clamp-2 mt-auto">{item.name}</h3>
                       </div>
                     </Link>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -309,7 +343,7 @@ export default function Home() {
                   <div>
                     <h3 className="consumer-banner-title text-lg font-bold text-gray-900 leading-tight">Consumer<br />electronics and<br />gadgets</h3>
                     <button className="consumer-banner-cta mt-3 bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
-                      Source now
+                      Shop now
                     </button>
                   </div>
                 </div>
@@ -318,8 +352,13 @@ export default function Home() {
               {/* Products grid */}
               <div className="consumer-products flex-1">
                 <div className="consumer-grid grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-fr">
-                  {consumerElectronics.map((item, idx) => (
-                    <Link to={`/products?keyword=${encodeURIComponent(item.slug)}`} key={idx}>
+                  {consumerElectronics.map((item, idx) => {
+                    const catInfo = subCategoryMap[item.categoryName];
+                    const linkTo = catInfo
+                      ? `/products?category=${catInfo.id}&parentCategory=${catInfo.parentId}`
+                      : `/products?keyword=${encodeURIComponent(item.categoryName)}`;
+                    return (
+                    <Link to={linkTo} key={idx}>
                       <div className="product-card bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col items-center text-center group cursor-pointer h-full">
                         <div className="product-card-image-wrapper w-full h-28 bg-gray-50 rounded-md flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors overflow-hidden p-2">
                           <img src={item.image} alt={item.name} className="product-card-image max-h-full max-w-full object-contain" />
@@ -327,7 +366,8 @@ export default function Home() {
                         <h3 className="product-card-name text-xs font-medium text-gray-800 line-clamp-2 mt-auto">{item.name}</h3>
                       </div>
                     </Link>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -385,7 +425,9 @@ export default function Home() {
             <h2 className="recommended-title text-lg font-bold text-gray-900 mb-4">Recommended items</h2>
             <div className="recommended-grid grid grid-cols-2 md:grid-cols-5 gap-4 auto-rows-fr">
               {recommendedItems.map((item, idx) => (
-                <ProductCard key={idx} item={item} type="price" />
+                <Link to={`/products/${item.id}`} key={idx}>
+                  <ProductCard item={item} type="price" />
+                </Link>
               ))}
             </div>
           </section>
