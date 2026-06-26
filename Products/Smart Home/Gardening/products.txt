@@ -6,7 +6,7 @@ PRODUCTS - Smart Home Gardening
    Price: ~$170 USD
    Note: Weather intelligence, Alexa/Google, WaterSense, app control
 
-2. Govee Plant Moisture Sensor (4-pack, Bluetooth)
+2. Govee Bluetooth Hygrometer Thermometer
    ASIN: B09QXM7HFH
    Price: ~$28 USD
    Note: Soil humidity/temp, app alerts, Govee Home integration

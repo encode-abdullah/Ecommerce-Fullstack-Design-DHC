@@ -16,14 +16,14 @@ import {
 import { fetchProducts, fetchCategories } from '../../api';
 
 const homeOutdoorProducts = [
-  { name: 'Soft chairs', price: 'USD 19', image: '/images/interior/1.png' },
-  { name: 'Sofa & chair', price: 'USD 19', image: '/images/interior/2.png' },
-  { name: 'Kitchen dishes', price: 'USD 19', image: '/images/interior/3.png' },
-  { name: 'Smart watches', price: 'USD 19', image: '/images/interior/4.png' },
-  { name: 'Kitchen mixer', price: 'USD 100', image: '/images/interior/8.png' },
-  { name: 'Blenders', price: 'USD 39', image: '/images/interior/9.png' },
-  { name: 'Home appliance', price: 'USD 19', image: '/images/interior/5.png' },
-  { name: 'Coffee maker', price: 'USD 10', image: '/images/interior/6.png' },
+  { name: 'Baby & Child Care', slug: 'Baby & Child Care', image: '/products/Health%20%26%20HouseHold/Baby%20%26%20Child%20Care/Baby%20Brezza%20Formula%20Pro%20One-Step%20Baby%20Formula%20Dispenser/Baby%20Brezza%20Formula%20Pro%20One-Step%20Baby%20Formula%20Dispenser%201.jpg' },
+  { name: 'Health Care', slug: 'Health Care', image: '/products/Health%20%26%20HouseHold/Health%20Care/Braun%20ThermoScan%207%20Ear%20Thermometer%20IRT6520/Braun%20ThermoScan%207%20Ear%20Thermometer%20IRT6520%201.jpg' },
+  { name: 'Household Supplies', slug: 'Household Supplies', image: '/products/Health%20%26%20HouseHold/Household%20Supplies/Bounty%20Select-A-Size%20Paper%20Towels%20(12%20Double%20Rolls)/Bounty%20Select-A-Size%20Paper%20Towels%20(12%20Double%20Rolls)%201.jpg' },
+  { name: 'Personal Care', slug: 'Personal Care', image: '/products/Health%20%26%20HouseHold/Personal%20Care/Dove%20Men%2BCare%20Body%20Wash%20Extra%20Fresh%20(30.6oz%2C%203-pack)/Dove%20Men%2BCare%20Body%20Wash%20Extra%20Fresh%20(30.6oz%2C%203-pack)%201.jpg' },
+  { name: 'Sports Nutrition', slug: 'Sports Nutrition', image: '/products/Health%20%26%20HouseHold/Sports%20Nutrition/BSN%20SYNTHA-6%20Protein%20Powder%204.56%20lb/BSN%20SYNTHA-6%20Protein%20Powder%204.56%20lb%201.jpg' },
+  { name: 'Vitamins & Supplements', slug: 'Vitamins & Dietary Supplements', image: '/products/Health%20%26%20HouseHold/Vitamins%20%26%20Dietary%20Supplements/Airborne%20Vitamin%20C%201000mg%20Supplement%20(116%20tablets)/Airborne%20Vitamin%20C%201000mg%20Supplement%20(116%20tablets)%201.jpg' },
+  { name: 'Oral Care', slug: 'Oral Care', image: '/products/Health%20%26%20HouseHold/Oral%20Care/ACT%20Restoring%20Anticavity%20Mouthwash%2033.8oz%20(2-pack)/ACT%20Restoring%20Anticavity%20Mouthwash%2033.8oz%20(2-pack)%201.jpg' },
+  { name: 'Wellness & Relaxation', slug: 'Wellness & Relaxation', image: '/products/Health%20%26%20HouseHold/Wellness%20%26%20Relaxation/Aenllosi%20Storage%20Organizer%20Hard%20Case/Aenllosi%20Storage%20Organizer%20Hard%20Case%201.jpg' },
 ];
 
 const consumerElectronics = [
@@ -279,17 +279,21 @@ export default function Home() {
                       Source now
                     </button>
                   </div>
-                  <div className="home-outdoor-banner-image-wrapper mt-4">
-                    <img src="/images/interior/1.png" alt="Home and outdoor" className="home-outdoor-banner-image w-full h-28 object-contain" />
-                  </div>
-                </div>
+              </div>
               </div>
 
               {/* Products grid */}
               <div className="home-outdoor-products flex-1">
                 <div className="home-outdoor-grid grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-fr">
                   {homeOutdoorProducts.map((item, idx) => (
-                    <ProductCard key={idx} item={item} type="price" />
+                    <Link to={`/products?keyword=${encodeURIComponent(item.slug)}`} key={idx}>
+                      <div className="product-card bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col items-center text-center group cursor-pointer h-full">
+                        <div className="product-card-image-wrapper w-full h-28 bg-gray-50 rounded-md flex items-center justify-center mb-3 group-hover:bg-blue-50 transition-colors overflow-hidden p-2">
+                          <img src={item.image} alt={item.name} className="product-card-image max-h-full max-w-full object-contain" />
+                        </div>
+                        <h3 className="product-card-name text-xs font-medium text-gray-800 line-clamp-2 mt-auto">{item.name}</h3>
+                      </div>
+                    </Link>
                   ))}
                 </div>
               </div>

@@ -21,7 +21,7 @@ PRODUCTS - Smart Home WiFi & Networking
    Price: ~$400 USD
    Note: WiFi 6E, Matter hub, Google Home integration, self-organizing
 
-5. Amazon Eero 6+ Mesh Router (Single, AX3000)
+5. TP-Link Deco X55 AX3000 WiFi 6 Mesh System
    ASIN: B08ZK8BKXH
    Price: ~$140 USD
    Note: WiFi 6, 140 devices, Alexa, Zigbee hub built-in
