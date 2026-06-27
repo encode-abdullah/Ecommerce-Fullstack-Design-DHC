@@ -4,6 +4,7 @@ import { ShoppingCart, ArrowLeft, Truck, Shield, Headphones, CreditCard } from '
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import PageLoader from '../../components/PageLoader/PageLoader';
+import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { createOrder } from '../../api';
 import { toast } from 'react-toastify';
 
@@ -14,6 +15,7 @@ const Cart = () => {
   const [coupon, setCoupon] = useState('');
   const [savedForLater, setSavedForLater] = useState([]);
   const [checkingOut, setCheckingOut] = useState(false);
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: () => {} });
 
   const cartTotal = cartItems?.reduce(
     (sum, item) => sum + (item.product?.price || 0) * item.quantity,
@@ -29,16 +31,28 @@ const Cart = () => {
   };
 
   const handleRemove = (productId) => {
-    if (window.confirm('Are you sure you want to remove this item?')) {
-      removeFromCart(productId);
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: 'Remove item',
+      message: 'Are you sure you want to remove this item?',
+      onConfirm: () => {
+        removeFromCart(productId);
+        setConfirmModal({ isOpen: false, title: '', message: '', onConfirm: () => {} });
+      },
+    });
   };
 
   const handleClear = () => {
-    if (window.confirm('Are you sure you want to clear your cart?')) {
-      clearCart();
-      toast.success('Cart cleared');
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: 'Clear cart',
+      message: 'Are you sure you want to clear your cart?',
+      onConfirm: () => {
+        clearCart();
+        toast.success('Cart cleared');
+        setConfirmModal({ isOpen: false, title: '', message: '', onConfirm: () => {} });
+      },
+    });
   };
 
   const handleSaveForLater = (item) => {
@@ -298,6 +312,14 @@ const Cart = () => {
           Shop now
         </button>
       </div>
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal({ isOpen: false, title: '', message: '', onConfirm: () => {} })}
+      />
     </div>
   );
 };
