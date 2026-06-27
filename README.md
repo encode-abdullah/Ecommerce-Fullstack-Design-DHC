@@ -175,17 +175,6 @@ This project includes a `render.yaml` for easy deployment on Render's free tier.
 
 ---
 
-## Screenshots
-
-<!-- Drop your screenshots in a /screenshots folder and link them here -->
-<!-- 
-![Home Page](./screenshots/home.png)
-![Product Page](./screenshots/product.png)
-![Admin Panel](./screenshots/admin.png) 
--->
-
----
-
 ## License
 
 This project is for demonstration and portfolio purposes.
