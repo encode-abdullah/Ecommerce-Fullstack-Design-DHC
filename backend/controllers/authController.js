@@ -6,6 +6,16 @@ const syncUser = asyncHandler(async (req, res) => {
 
   let user = await User.findOne({ firebaseUid }).select('-password');
 
+  if (user) {
+    if (profileImage && !user.profileImage) {
+      user.profileImage = profileImage;
+    }
+    if (!user.name && name) {
+      user.name = name;
+    }
+    user = await user.save();
+  }
+
   if (!user) {
     user = await User.findOne({ email }).select('-password');
     if (user) {

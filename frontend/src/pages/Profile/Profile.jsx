@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Camera } from 'lucide-react';
+import { ArrowLeft, Camera, Lock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { auth } from '../../config/firebase';
+import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { toast } from 'react-toastify';
 
 const Profile = () => {
@@ -12,6 +14,11 @@ const Profile = () => {
   const [email, setEmail] = useState(user?.email || '');
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState(user?.profileImage || '');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
 
   const getInitial = () => {
     return (user?.name || 'U').charAt(0).toUpperCase();
@@ -70,6 +77,44 @@ const Profile = () => {
       toast.error(error.response?.data?.message || 'Failed to update profile');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error('New passwords do not match');
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+    setPasswordLoading(true);
+    try {
+      const fbUser = auth.currentUser;
+      if (!fbUser) {
+        toast.error('You must be logged in');
+        return;
+      }
+      const credential = EmailAuthProvider.credential(fbUser.email, currentPassword);
+      await reauthenticateWithCredential(fbUser, credential);
+      await updatePassword(fbUser, newPassword);
+      toast.success('Password updated successfully');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setShowPasswordForm(false);
+    } catch (error) {
+      if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+        toast.error('Current password is incorrect');
+      } else if (error.code === 'auth/weak-password') {
+        toast.error('Password must be at least 6 characters');
+      } else {
+        toast.error(error.message || 'Failed to update password');
+      }
+    } finally {
+      setPasswordLoading(false);
     }
   };
 
@@ -152,6 +197,82 @@ const Profile = () => {
             )}
           </div>
         </form>
+
+        {/* Change Password Section */}
+        <div className="mt-6 pt-6 border-t border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Lock className="w-5 h-5 text-gray-500" />
+              <h2 className="text-lg font-semibold text-gray-900">Password</h2>
+            </div>
+            {!showPasswordForm && (
+              <button
+                onClick={() => setShowPasswordForm(true)}
+                className="px-4 py-2 text-sm font-medium text-blue-500 hover:text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors"
+              >
+                Change Password
+              </button>
+            )}
+          </div>
+
+          {showPasswordForm && (
+            <form onSubmit={handlePasswordChange} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                <input
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg outline-none focus:border-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg outline-none focus:border-blue-500"
+                  required
+                  minLength={6}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg outline-none focus:border-blue-500"
+                  required
+                  minLength={6}
+                />
+              </div>
+              <div className="flex items-center gap-3 pt-2">
+                <button
+                  type="submit"
+                  disabled={passwordLoading}
+                  className="px-6 py-2.5 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition disabled:opacity-50"
+                >
+                  {passwordLoading ? 'Updating...' : 'Update Password'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPasswordForm(false);
+                    setCurrentPassword('');
+                    setNewPassword('');
+                    setConfirmPassword('');
+                  }}
+                  className="px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   );

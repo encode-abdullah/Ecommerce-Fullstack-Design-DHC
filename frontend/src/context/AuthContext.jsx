@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const profile = await response.json();
-        setUser({ ...profile, token });
+        setUser({ ...profile, token, profileImage: profile.profileImage || fbUser.photoURL || '' });
       } else {
         setUser({
           _id: fbUser.uid,

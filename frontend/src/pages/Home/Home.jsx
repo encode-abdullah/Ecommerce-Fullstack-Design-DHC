@@ -14,6 +14,7 @@ import {
   ShoppingCart,
 } from 'lucide-react';
 import { fetchProducts, fetchCategories } from '../../api';
+import { useAuth } from '../../context/AuthContext';
 import PageLoader from '../../components/PageLoader/PageLoader';
 
 const homeOutdoorProducts = [
@@ -137,6 +138,7 @@ export default function Home() {
   const [categories, setCategories] = useState([]);
   const [subCategoryMap, setSubCategoryMap] = useState({});
   const [loading, setLoading] = useState(true);
+  const { user, isAuthenticated } = useAuth();
 
   const homeOutdoorParentId = categories.find(c => c.name === 'Health & HouseHold')?._id;
   const electronicsParentId = categories.find(c => c.name === 'Electronics')?._id;
@@ -237,19 +239,42 @@ export default function Home() {
               <div className="hero-user-card bg-white rounded-lg p-4 border border-gray-100">
                 <div className="hero-user-info flex items-center gap-3 mb-3">
                   <div className="hero-user-avatar w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
-                    <img src="/images/avatar/avatar=pic1.jpg" alt="User avatar" className="w-full h-full object-cover" />
+                    {isAuthenticated && user?.profileImage ? (
+                      <img src={user.profileImage} alt="User avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-sm font-medium text-gray-600">
+                        {isAuthenticated ? user?.name?.charAt(0)?.toUpperCase() || 'U' : 'U'}
+                      </span>
+                    )}
                   </div>
                   <div>
-                    <p className="hero-user-greeting text-sm text-gray-500">Hi, user</p>
-                    <p className="hero-user-message text-sm font-medium text-gray-800">let's get stated</p>
+                    <p className="hero-user-greeting text-sm text-gray-500">Hi, {isAuthenticated ? user?.name?.split(' ')[0] || 'user' : 'user'}</p>
+                    <p className="hero-user-message text-sm font-medium text-gray-800">let's get started</p>
                   </div>
                 </div>
-                <button className="hero-user-join w-full bg-blue-500 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors mb-2">
-                  Join now
-                </button>
-                <button className="hero-user-login w-full border border-gray-300 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-                  Log in
-                </button>
+                {isAuthenticated ? (
+                  <Link
+                    to="/profile"
+                    className="hero-user-join w-full bg-blue-500 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors mb-2 block text-center"
+                  >
+                    My Profile
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/register"
+                      className="hero-user-join w-full bg-blue-500 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors mb-2 block text-center"
+                    >
+                      Join now
+                    </Link>
+                    <Link
+                      to="/login"
+                      className="hero-user-login w-full border border-gray-300 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors block text-center"
+                    >
+                      Log in
+                    </Link>
+                  </>
+                )}
               </div>
 
               {/* Promo card 1 */}
