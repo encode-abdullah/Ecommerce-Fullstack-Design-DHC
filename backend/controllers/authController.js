@@ -1,62 +1,45 @@
 const asyncHandler = require('express-async-handler');
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE || '30d',
+const syncUser = asyncHandler(async (req, res) => {
+  const { firebaseUid, email, name, profileImage } = req.body;
+
+  let user = await User.findOne({ firebaseUid }).select('-password');
+
+  if (!user) {
+    user = await User.findOne({ email }).select('-password');
+    if (user) {
+      user.firebaseUid = firebaseUid;
+      if (!user.profileImage && profileImage) {
+        user.profileImage = profileImage;
+      }
+      if (!user.name && name) {
+        user.name = name;
+      }
+      user = await user.save();
+    }
+  }
+
+  if (!user) {
+    user = await User.create({
+      firebaseUid,
+      name: name || email?.split('@')[0] || 'User',
+      email: email || '',
+      profileImage: profileImage || '',
+      role: 'user',
+    });
+    user = user.toObject();
+    delete user.password;
+  }
+
+  res.json({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    profileImage: user.profileImage || '',
+    firebaseUid: user.firebaseUid,
   });
-};
-
-const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
-
-  if (!name || !email || !password) {
-    res.status(400);
-    throw new Error('Please provide name, email and password');
-  }
-
-  const userExists = await User.findOne({ email });
-  if (userExists) {
-    res.status(400);
-    throw new Error('User already exists');
-  }
-
-  const user = await User.create({ name, email, password });
-
-  if (user) {
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      profileImage: user.profileImage,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(400);
-    throw new Error('Invalid user data');
-  }
-});
-
-const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-
-  const user = await User.findOne({ email });
-
-  if (user && (await user.matchPassword(password))) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      profileImage: user.profileImage,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(401);
-    throw new Error('Invalid email or password');
-  }
 });
 
 const getUserProfile = asyncHandler(async (req, res) => {
@@ -66,6 +49,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
     email: req.user.email,
     role: req.user.role,
     profileImage: req.user.profileImage || '',
+    firebaseUid: req.user.firebaseUid,
   });
 });
 
@@ -75,9 +59,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   if (user) {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-    if (req.body.password) {
-      user.password = req.body.password;
-    }
     if (req.body.profileImage !== undefined) {
       user.profileImage = req.body.profileImage;
     }
@@ -89,17 +70,16 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       email: updatedUser.email,
       role: updatedUser.role,
       profileImage: updatedUser.profileImage || '',
-      token: generateToken(updatedUser._id),
+      firebaseUid: updatedUser.firebaseUid,
     });
   } else {
-    res.status(404);
-    throw new Error('User not found');
+    res.status(401);
+    throw new Error('Not authorized');
   }
 });
 
 module.exports = {
-  registerUser,
-  loginUser,
+  syncUser,
   getUserProfile,
   updateUserProfile,
 };

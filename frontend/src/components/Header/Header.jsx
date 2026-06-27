@@ -17,7 +17,9 @@ export default function Header() {
   const dropdownRef = useRef(null);
   const userMenuRef = useRef(null);
   const searchInputRef = useRef(null);
+  const searchFormRef = useRef(null);
   const suggestionTimeoutRef = useRef(null);
+  const [overlayTop, setOverlayTop] = useState(0);
   const navigate = useNavigate();
   const { user, isAuthenticated, handleLogout } = useAuth();
   const { cartItems } = useCart();
@@ -81,10 +83,26 @@ export default function Header() {
   };
 
   const handleSearchFocus = () => {
+    if (searchFormRef.current) {
+      const rect = searchFormRef.current.getBoundingClientRect();
+      setOverlayTop(rect.bottom);
+    }
     if (suggestions.length > 0 && searchQuery.trim().length >= 2) {
       setShowSuggestions(true);
     }
   };
+
+  const updateOverlayTop = () => {
+    if (searchFormRef.current) {
+      const rect = searchFormRef.current.getBoundingClientRect();
+      setOverlayTop(rect.bottom);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', updateOverlayTop);
+    return () => window.removeEventListener('resize', updateOverlayTop);
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -144,7 +162,7 @@ export default function Header() {
           <img src="/images/logo/Dravix.png" alt="Dravix" className="h-[60px] w-auto object-contain" />
         </Link>
 
-        <form onSubmit={handleSearch} className="site-search flex-1 max-w-3xl flex items-center border-2 border-blue-500 rounded-lg relative">
+        <form ref={searchFormRef} onSubmit={handleSearch} className="site-search flex-1 max-w-3xl flex items-center border-2 border-blue-500 rounded-lg relative">
           <input
             ref={searchInputRef}
             type="text"
@@ -371,7 +389,7 @@ export default function Header() {
       {showSuggestions && (
         <div
           className="fixed left-0 right-0 bottom-0 bg-black/50 z-40"
-          style={{ top: '88px' }}
+          style={{ top: `${overlayTop}px` }}
           onClick={() => setShowSuggestions(false)}
         />
       )}

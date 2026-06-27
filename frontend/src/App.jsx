@@ -19,69 +19,77 @@ import AdminProducts from './pages/Admin/Products/Products.jsx';
 import AdminCategories from './pages/Admin/Categories/Categories.jsx';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
 
-function App() {
+function AppContent() {
   const [showCategorySidebar, setShowCategorySidebar] = useState(false);
 
+  return (
+    <>
+      <div className="app-root flex flex-col min-h-screen overflow-x-hidden">
+        <Header />
+        <Navbar onOpenCategorySidebar={() => setShowCategorySidebar(true)} />
+        <main className="app-main flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute>
+                  <Orders />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/order-confirmation/:id"
+              element={
+                <ProtectedRoute>
+                  <OrderConfirmation />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/products"
+              element={
+                <ProtectedRoute adminOnly>
+                  <AdminProducts />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/categories"
+              element={
+                <ProtectedRoute adminOnly>
+                  <AdminCategories />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+      <CategorySidebar isOpen={showCategorySidebar} onClose={() => setShowCategorySidebar(false)} />
+    </>
+  );
+}
+
+function App() {
   return (
     <AuthProvider>
       <CartProvider>
         <Router>
-        <div className="app-root flex flex-col min-h-screen overflow-x-hidden">
-          <Header />
-          <Navbar onOpenCategorySidebar={() => setShowCategorySidebar(true)} />
-          <main className="app-main flex-grow">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/products/:id" element={<ProductDetails />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route
-                  path="/profile"
-                  element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/orders"
-                  element={
-                    <ProtectedRoute>
-                      <Orders />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/order-confirmation/:id"
-                  element={
-                    <ProtectedRoute>
-                      <OrderConfirmation />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/products"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <AdminProducts />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/categories"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <AdminCategories />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
-        <CategorySidebar isOpen={showCategorySidebar} onClose={() => setShowCategorySidebar(false)} />
+          <AppContent />
         </Router>
       </CartProvider>
     </AuthProvider>

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { ChevronDown, ChevronRight, Star, Grid, List, Heart, ChevronLeft, X, ShoppingCart } from 'lucide-react';
+import { ChevronDown, ChevronRight, Star, Grid, List, Heart, ChevronLeft, X, ShoppingCart, SlidersHorizontal } from 'lucide-react';
 import { fetchProducts, fetchCategories } from '../../api';
 import { useCart } from '../../context/CartContext';
+import PageLoader from '../../components/PageLoader/PageLoader';
 import { toast } from 'react-toastify';
 
 const FilterSection = ({ title, children, defaultOpen = true }) => {
@@ -90,7 +91,10 @@ const Products = () => {
   const [showCount, setShowCount] = useState(12);
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
   const { addToCart } = useCart();
+
+  const activeFilterCount = (parentCategory ? 1 : 0) + (priceMin ? 1 : 0) + (priceMax ? 1 : 0);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -176,6 +180,7 @@ const Products = () => {
       setCategory('');
     }
     setPage(1);
+    setShowMobileFilter(false);
   };
 
   const handleSubCatClick = (catId) => {
@@ -189,11 +194,13 @@ const Products = () => {
       setSubSubCategories([]);
     }
     setPage(1);
+    setShowMobileFilter(false);
   };
 
   const handleSubSubCatClick = (catId) => {
     setCategory(category === catId ? '' : catId);
     setPage(1);
+    setShowMobileFilter(false);
   };
 
   const renderStars = (rating) => (
@@ -207,12 +214,113 @@ const Products = () => {
     </div>
   );
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
-      </div>
-    );
+  const renderFilterContent = () => (
+    <>
+      <FilterSection title="Categories">
+        <div className="space-y-2">
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => { setParentCategory(''); setCategory(''); setPage(1); setShowMobileFilter(false); }}
+          >
+            <input
+              type="radio"
+              name="category"
+              checked={!parentCategory}
+              readOnly
+              className="w-4 h-4 text-red-500 pointer-events-none"
+            />
+            <span className={`text-sm ${!parentCategory ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
+              All Categories
+            </span>
+          </div>
+          {categories.map((cat) => (
+            <div key={cat._id}>
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => handleParentCatClick(cat._id)}
+              >
+                <input
+                  type="radio"
+                  name="category"
+                  checked={parentCategory === cat._id}
+                  readOnly
+                  className="w-4 h-4 text-red-500 pointer-events-none"
+                />
+                <span className={`text-sm ${parentCategory === cat._id ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
+                  {cat.name}
+                </span>
+              </div>
+              {parentCategory === cat._id && subCategories.length > 0 && (
+                <div className="ml-5 mt-1 space-y-1">
+                  {subCategories.map((sub) => (
+                    <div key={sub._id}>
+                      <button
+                        onClick={() => handleSubCatClick(sub._id)}
+                        className={`block text-xs text-left w-full break-words ${selectedSubCat === sub._id ? 'text-red-500 font-semibold' : 'text-gray-500 hover:text-red-500'}`}
+                      >
+                        {sub.name}
+                      </button>
+                      {selectedSubCat === sub._id && subSubCategories.length > 0 && (
+                        <div className="ml-4 mt-1 space-y-1">
+                          {subSubCategories.map((subSub) => (
+                            <button
+                              key={subSub._id}
+                              onClick={() => handleSubSubCatClick(subSub._id)}
+                              className={`block text-xs text-left w-full break-words ${category === subSub._id ? 'text-red-500 font-semibold' : 'text-gray-400 hover:text-red-500'}`}
+                            >
+                              {subSub.name}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </FilterSection>
+
+      <FilterSection title="Price range">
+        <div className="space-y-3">
+          <div className="flex gap-2">
+            <input
+              type="number"
+              placeholder="Min"
+              value={priceMin}
+              onChange={(e) => setPriceMin(e.target.value)}
+              className="w-1/2 px-3 py-1.5 border border-gray-200 rounded text-sm outline-none focus:border-red-500"
+            />
+            <input
+              type="number"
+              placeholder="Max"
+              value={priceMax}
+              onChange={(e) => setPriceMax(e.target.value)}
+              className="w-1/2 px-3 py-1.5 border border-gray-200 rounded text-sm outline-none focus:border-red-500"
+            />
+          </div>
+          <button className="w-full py-1.5 border border-gray-200 rounded text-sm text-red-500 hover:bg-red-50 transition-colors">
+            Apply
+          </button>
+        </div>
+      </FilterSection>
+
+      <FilterSection title="Ratings" defaultOpen={false}>
+        <div className="space-y-2">
+          {[5, 4, 3, 2].map((rating) => (
+            <label key={rating} className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" className="w-4 h-4 text-red-500 rounded" />
+              {renderStars(rating)}
+            </label>
+          ))}
+        </div>
+      </FilterSection>
+    </>
+  );
+
+  if (loading && products.length === 0) {
+    return <PageLoader show={true} />;
   }
 
   return (
@@ -243,106 +351,7 @@ const Products = () => {
       <div className="flex gap-6 min-w-0">
         {/* Left Sidebar */}
         <aside className="w-64 flex-shrink-0 hidden lg:block">
-          <FilterSection title="Categories">
-            <div className="space-y-2">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={() => { setParentCategory(''); setCategory(''); setPage(1); }}
-              >
-                <input
-                  type="radio"
-                  name="category"
-                  checked={!parentCategory}
-                  readOnly
-                  className="w-4 h-4 text-red-500 pointer-events-none"
-                />
-                <span className={`text-sm ${!parentCategory ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
-                  All Categories
-                </span>
-              </div>
-              {categories.map((cat) => (
-                <div key={cat._id}>
-                  <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => handleParentCatClick(cat._id)}
-                  >
-                    <input
-                      type="radio"
-                      name="category"
-                      checked={parentCategory === cat._id}
-                      readOnly
-                      className="w-4 h-4 text-red-500 pointer-events-none"
-                    />
-                    <span className={`text-sm ${parentCategory === cat._id ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
-                      {cat.name}
-                    </span>
-                  </div>
-                  {parentCategory === cat._id && subCategories.length > 0 && (
-                    <div className="ml-5 mt-1 space-y-1">
-                      {subCategories.map((sub) => (
-                        <div key={sub._id}>
-                          <button
-                            onClick={() => handleSubCatClick(sub._id)}
-                            className={`block text-xs text-left w-full break-words ${selectedSubCat === sub._id ? 'text-red-500 font-semibold' : 'text-gray-500 hover:text-red-500'}`}
-                          >
-                            {sub.name}
-                          </button>
-                          {selectedSubCat === sub._id && subSubCategories.length > 0 && (
-                            <div className="ml-4 mt-1 space-y-1">
-                              {subSubCategories.map((subSub) => (
-                                <button
-                                  key={subSub._id}
-                                  onClick={() => handleSubSubCatClick(subSub._id)}
-                                  className={`block text-xs text-left w-full break-words ${category === subSub._id ? 'text-red-500 font-semibold' : 'text-gray-400 hover:text-red-500'}`}
-                                >
-                                  {subSub.name}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </FilterSection>
-
-          <FilterSection title="Price range">
-            <div className="space-y-3">
-              <div className="flex gap-2">
-                <input
-                  type="number"
-                  placeholder="Min"
-                  value={priceMin}
-                  onChange={(e) => setPriceMin(e.target.value)}
-                  className="w-1/2 px-3 py-1.5 border border-gray-200 rounded text-sm outline-none focus:border-red-500"
-                />
-                <input
-                  type="number"
-                  placeholder="Max"
-                  value={priceMax}
-                  onChange={(e) => setPriceMax(e.target.value)}
-                  className="w-1/2 px-3 py-1.5 border border-gray-200 rounded text-sm outline-none focus:border-red-500"
-                />
-              </div>
-              <button className="w-full py-1.5 border border-gray-200 rounded text-sm text-red-500 hover:bg-red-50 transition-colors">
-                Apply
-              </button>
-            </div>
-          </FilterSection>
-
-          <FilterSection title="Ratings" defaultOpen={false}>
-            <div className="space-y-2">
-              {[5, 4, 3, 2].map((rating) => (
-                <label key={rating} className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 text-red-500 rounded" />
-                  {renderStars(rating)}
-                </label>
-              ))}
-            </div>
-          </FilterSection>
+          {renderFilterContent()}
         </aside>
 
         {/* Main Content */}
@@ -361,6 +370,18 @@ const Products = () => {
               </span>
             </div>
             <div className="flex items-center gap-3 flex-shrink-0 ml-4">
+              <button
+                onClick={() => setShowMobileFilter(true)}
+                className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded text-sm bg-white hover:bg-gray-50 transition-colors"
+              >
+                <SlidersHorizontal className="w-4 h-4 text-gray-600" />
+                Filters
+                {activeFilterCount > 0 && (
+                  <span className="ml-0.5 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
               <select
                 value={sort}
                 onChange={(e) => { setSort(e.target.value); setPage(1); }}
@@ -505,6 +526,38 @@ const Products = () => {
           )}
         </div>
       </div>
+
+      {/* Mobile Filter Drawer */}
+      {showMobileFilter && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowMobileFilter(false)}
+          />
+          <div className="absolute inset-y-0 left-0 w-80 max-w-[85vw] bg-white shadow-xl flex flex-col animate-slide-in-left">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+              <h2 className="text-base font-semibold text-gray-900">Filters</h2>
+              <button
+                onClick={() => setShowMobileFilter(false)}
+                className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto px-4 py-4">
+              {renderFilterContent()}
+            </div>
+            <div className="px-4 py-3 border-t border-gray-100">
+              <button
+                onClick={() => setShowMobileFilter(false)}
+                className="w-full py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                Show results
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

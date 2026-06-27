@@ -1,6 +1,10 @@
-const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
+const { auth } = require('../config/firebase');
 const User = require('../models/User');
+
+if (!auth) {
+  console.warn('Firebase Auth is not initialized. Authentication will not work.');
+}
 
 const protect = asyncHandler(async (req, res, next) => {
   let token;
@@ -11,25 +15,34 @@ const protect = asyncHandler(async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(' ')[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.id).select('-password');
-      
-      if (!req.user) {
-        res.status(401);
-        throw new Error('User not found');
+
+      const decodedToken = await auth.verifyIdToken(token);
+      const firebaseUid = decodedToken.uid;
+
+      let user = await User.findOne({ firebaseUid }).select('-password');
+
+      if (!user) {
+        user = await User.create({
+          firebaseUid,
+          name: decodedToken.name || decodedToken.email?.split('@')[0] || 'User',
+          email: decodedToken.email || '',
+          role: 'user',
+          profileImage: decodedToken.picture || '',
+        });
       }
-      
+
+      req.user = user;
       next();
     } catch (error) {
-      console.error(error);
+      console.error('Auth verification failed:', error.message);
       res.status(401);
-      throw new Error('Not authorized, token failed');
+      throw new Error('Not authorized');
     }
   }
 
   if (!token) {
     res.status(401);
-    throw new Error('Not authorized, no token');
+    throw new Error('Not authorized');
   }
 });
 

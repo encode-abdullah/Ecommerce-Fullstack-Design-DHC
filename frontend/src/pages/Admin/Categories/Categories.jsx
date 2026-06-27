@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, X } from 'lucide-react';
 import { fetchCategories, createCategory, updateCategory, deleteCategory } from '../../../api';
+import PageLoader from '../../../components/PageLoader/PageLoader';
 import { toast } from 'react-toastify';
 
 const CategoryModal = ({ category, onClose, onSave }) => {
@@ -143,11 +144,7 @@ const Categories = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
-      </div>
-    );
+    return <PageLoader show={true} />;
   }
 
   return (

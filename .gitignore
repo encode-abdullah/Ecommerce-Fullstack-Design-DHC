@@ -9,6 +9,7 @@ npm-debug.log*
 
 # Backend
 backend/uploads/
+backend/config/serviceAccountKey.json
 
 # Frontend
 frontend/dist

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { CheckCircle, Package, ArrowLeft } from 'lucide-react';
 import { getMyOrders } from '../../api';
+import PageLoader from '../../components/PageLoader/PageLoader';
 import { toast } from 'react-toastify';
 
 const OrderConfirmation = () => {
@@ -25,11 +26,7 @@ const OrderConfirmation = () => {
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
-      </div>
-    );
+    return <PageLoader show={true} />;
   }
 
   if (!order) {

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { auth } from '../config/firebase';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -9,13 +10,24 @@ const api = axios.create({
   },
 });
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
+api.interceptors.request.use(async (config) => {
+  const user = auth.currentUser;
+  if (user) {
+    const token = await user.getIdToken();
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
+
+export const apiPost = async (endpoint, data) => {
+  const response = await api.post(endpoint, data);
+  return response.data;
+};
+
+export const apiGet = async (endpoint) => {
+  const response = await api.get(endpoint);
+  return response.data;
+};
 
 export const fetchProducts = async (params = {}) => {
   const response = await api.get('/products', { params });
@@ -61,16 +73,6 @@ export const removeFromCart = async (productId) => {
 
 export const clearCart = async () => {
   const response = await api.delete('/cart/clear');
-  return response.data;
-};
-
-export const register = async (userData) => {
-  const response = await api.post('/auth/register', userData);
-  return response.data;
-};
-
-export const login = async (credentials) => {
-  const response = await api.post('/auth/login', credentials);
   return response.data;
 };
 

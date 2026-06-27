@@ -14,6 +14,7 @@ import {
   ShoppingCart,
 } from 'lucide-react';
 import { fetchProducts, fetchCategories } from '../../api';
+import PageLoader from '../../components/PageLoader/PageLoader';
 
 const homeOutdoorProducts = [
   { name: 'Baby & Child Care', categoryName: 'Baby & Child Care', parentName: 'Health & HouseHold', image: '/products/Health%20%26%20HouseHold/Baby%20%26%20Child%20Care/Baby%20Brezza%20Formula%20Pro%20One-Step%20Baby%20Formula%20Dispenser/Baby%20Brezza%20Formula%20Pro%20One-Step%20Baby%20Formula%20Dispenser%201.jpg' },
@@ -137,6 +138,9 @@ export default function Home() {
   const [subCategoryMap, setSubCategoryMap] = useState({});
   const [loading, setLoading] = useState(true);
 
+  const homeOutdoorParentId = categories.find(c => c.name === 'Health & HouseHold')?._id;
+  const electronicsParentId = categories.find(c => c.name === 'Electronics')?._id;
+
   useEffect(() => {
     const loadFeatured = async () => {
       try {
@@ -144,8 +148,6 @@ export default function Home() {
         setFeaturedProducts(data.products || []);
       } catch (error) {
         console.error('Failed to load featured products:', error);
-      } finally {
-        setLoading(false);
       }
     };
     const loadCategories = async () => {
@@ -153,27 +155,41 @@ export default function Home() {
         const data = await fetchCategories();
         const parents = (data || []).filter(c => !c.parent);
         setCategories(parents);
+
+        const childResults = await Promise.all(
+          parents.map(p => fetchCategories({ parent: p._id }))
+        );
+
+        const grandchildrenResults = await Promise.all(
+          childResults.flat().filter(Boolean).map(c => fetchCategories({ parent: c._id }))
+        );
+
         const map = {};
-        for (const parent of parents) {
-          const children = await fetchCategories({ parent: parent._id });
-          for (const child of (children || [])) {
-            map[child.name] = { id: child._id, parentId: parent._id };
-          }
-          for (const child of (children || [])) {
-            const grandchildren = await fetchCategories({ parent: child._id });
-            for (const gc of (grandchildren || [])) {
-              map[gc.name] = { id: gc._id, parentId: parent._id };
+        childResults.forEach((children, i) => {
+          const parentId = parents[i]._id;
+          (children || []).forEach(child => {
+            map[child.name] = { id: child._id, parentId };
+          });
+        });
+        grandchildrenResults.forEach((gcs) => {
+          (gcs || []).forEach(gc => {
+            if (!map[gc.name]) {
+              map[gc.name] = { id: gc._id, parentId: '' };
             }
-          }
-        }
+          });
+        });
+
         setSubCategoryMap(map);
       } catch (error) {
         console.error('Failed to load categories:', error);
       }
     };
-    loadFeatured();
-    loadCategories();
+    Promise.all([loadFeatured(), loadCategories()]).finally(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return <PageLoader show={true} />;
+  }
 
   return (
     <div className="home-page min-h-screen bg-gray-50 font-sans text-gray-800">
@@ -287,27 +303,27 @@ export default function Home() {
           <section className="home-outdoor-section bg-white rounded-lg p-5 shadow-sm border border-gray-100">
             {/* Mobile banner */}
             <div className="block md:hidden mb-4">
-              <div className="home-outdoor-banner-card bg-amber-50 rounded-lg p-4 flex items-center justify-between">
+              <Link to={homeOutdoorParentId ? `/products?parentCategory=${homeOutdoorParentId}` : '/products'} className="home-outdoor-banner-card bg-amber-50 rounded-lg p-4 flex items-center justify-between">
                 <div>
                   <h3 className="home-outdoor-banner-title text-lg font-bold text-gray-900 leading-tight">Home and outdoor</h3>
                 </div>
-                <button className="home-outdoor-banner-cta bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
+                <span className="home-outdoor-banner-cta bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
                   Shop Now
-                </button>
-              </div>
+                </span>
+              </Link>
             </div>
 
             <div className="home-outdoor-content flex gap-5">
               {/* Left banner - desktop only */}
               <div className="home-outdoor-banner w-52 flex-shrink-0 hidden md:block">
-                <div className="home-outdoor-banner-card bg-amber-50 rounded-lg p-5 h-full flex flex-col justify-between">
+                <Link to={homeOutdoorParentId ? `/products?parentCategory=${homeOutdoorParentId}` : '/products'} className="home-outdoor-banner-card bg-amber-50 rounded-lg p-5 h-full flex flex-col justify-between">
                   <div>
                     <h3 className="home-outdoor-banner-title text-lg font-bold text-gray-900 leading-tight">Home and<br />outdoor</h3>
-                    <button className="home-outdoor-banner-cta mt-3 bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
+                    <span className="home-outdoor-banner-cta mt-3 inline-block bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
                       Shop Now
-                    </button>
+                    </span>
                   </div>
-                </div>
+                </Link>
               </div>
 
               {/* Products grid */}
@@ -336,17 +352,29 @@ export default function Home() {
 
           {/* Consumer electronics and gadgets */}
           <section className="consumer-section bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+            {/* Mobile banner */}
+            <div className="block md:hidden mb-4">
+              <Link to={electronicsParentId ? `/products?parentCategory=${electronicsParentId}` : '/products'} className="consumer-banner-card bg-blue-50 rounded-lg p-4 flex items-center justify-between">
+                <div>
+                  <h3 className="consumer-banner-title text-lg font-bold text-gray-900 leading-tight">Consumer electronics and gadgets</h3>
+                </div>
+                <span className="consumer-banner-cta bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
+                  Shop now
+                </span>
+              </Link>
+            </div>
+
             <div className="consumer-content flex gap-5">
-              {/* Left banner */}
+              {/* Left banner - desktop only */}
               <div className="consumer-banner w-52 flex-shrink-0 hidden md:block">
-                <div className="consumer-banner-card bg-blue-50 rounded-lg p-5 h-full flex flex-col justify-between">
+                <Link to={electronicsParentId ? `/products?parentCategory=${electronicsParentId}` : '/products'} className="consumer-banner-card bg-blue-50 rounded-lg p-5 h-full flex flex-col justify-between">
                   <div>
                     <h3 className="consumer-banner-title text-lg font-bold text-gray-900 leading-tight">Consumer<br />electronics and<br />gadgets</h3>
-                    <button className="consumer-banner-cta mt-3 bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
+                    <span className="consumer-banner-cta mt-3 inline-block bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
                       Shop now
-                    </button>
+                    </span>
                   </div>
-                </div>
+                </Link>
               </div>
 
               {/* Products grid */}

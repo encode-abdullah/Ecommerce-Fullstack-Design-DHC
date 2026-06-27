@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Package, ArrowLeft, XCircle, X } from 'lucide-react';
 import { getMyOrders, cancelOrder } from '../../api';
+import PageLoader from '../../components/PageLoader/PageLoader';
 import { toast } from 'react-toastify';
 
 const Orders = () => {
@@ -45,11 +46,7 @@ const Orders = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    return <PageLoader show={true} />;
   }
 
   return (

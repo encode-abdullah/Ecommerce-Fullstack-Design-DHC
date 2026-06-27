@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ShoppingCart, Star, ChevronRight, Heart, Check, Truck, Shield, MapPin, MessageSquare } from 'lucide-react';
 import { fetchProductById, fetchProducts } from '../../api';
 import { useCart } from '../../context/CartContext';
+import PageLoader from '../../components/PageLoader/PageLoader';
 import { toast } from 'react-toastify';
 
 const ProductDetails = () => {
@@ -50,11 +51,7 @@ const ProductDetails = () => {
   );
 
   if (loading) {
-    return (
-      <div className="loading-container flex justify-center items-center h-64">
-        <div className="loading-spinner animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    return <PageLoader show={true} />;
   }
 
   if (!product) {

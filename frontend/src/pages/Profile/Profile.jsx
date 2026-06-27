@@ -10,8 +10,6 @@ const Profile = () => {
   const fileInputRef = useRef(null);
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState(user?.profileImage || '');
 
@@ -64,18 +62,10 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password && password !== confirmPassword) {
-      toast.error('Passwords do not match');
-      return;
-    }
     setLoading(true);
     try {
-      const updates = { name, email };
-      if (password) updates.password = password;
-      await handleUpdateProfile(updates);
+      await handleUpdateProfile({ name, email });
       toast.success('Profile updated successfully');
-      setPassword('');
-      setConfirmPassword('');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to update profile');
     } finally {
@@ -145,25 +135,9 @@ const Profile = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2.5 border border-gray-200 rounded-lg outline-none focus:border-blue-500"
               required
+              disabled
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">New Password (leave blank to keep current)</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg outline-none focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg outline-none focus:border-blue-500"
-            />
+            <p className="text-xs text-gray-400 mt-1">Email is managed by your authentication provider</p>
           </div>
           <div className="flex items-center gap-3 pt-2">
             <button
@@ -173,7 +147,9 @@ const Profile = () => {
             >
               {loading ? 'Updating...' : 'Update Profile'}
             </button>
-            <span className="text-xs text-gray-400">Role: {user?.role || 'user'}</span>
+            {user?.role === 'admin' && (
+              <span className="text-xs text-gray-400">Role: admin</span>
+            )}
           </div>
         </form>
       </div>
