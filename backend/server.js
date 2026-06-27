@@ -13,16 +13,11 @@ connectDB();
 
 const app = express();
 
-// Must be unsafe-none so Firebase popup auth works (window.closed check)
-app.use((req, res, next) => {
-  res.setHeader('Cross-Origin-Opener-Policy', 'unsafe-none');
-  next();
-});
-
 app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginEmbedderPolicy: false,
   crossOriginResourcePolicy: false,
+  crossOriginOpenerPolicy: { policy: 'unsafe-none' },
 }));
 
 app.use((req, res, next) => {
