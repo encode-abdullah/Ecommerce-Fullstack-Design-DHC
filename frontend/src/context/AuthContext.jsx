@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 5000);
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/sync`,
+        `${import.meta.env.VITE_API_URL || '/api'}/auth/sync`,
         {
           method: 'POST',
           headers: {
@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
     const token = await fbUser.getIdToken();
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/sync`,
+        `${import.meta.env.VITE_API_URL || '/api'}/auth/sync`,
         {
           method: 'POST',
           headers: {

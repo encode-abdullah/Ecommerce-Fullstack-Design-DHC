@@ -29,7 +29,9 @@ const Cart = () => {
   };
 
   const handleRemove = (productId) => {
-    removeFromCart(productId);
+    if (window.confirm('Are you sure you want to remove this item?')) {
+      removeFromCart(productId);
+    }
   };
 
   const handleClear = () => {
