@@ -1,7 +1,7 @@
 {
   "name": "dravix-ecommerce",
   "version": "1.0.0",
-  "description": "INFERNO E-Commerce - Full Stack",
+  "description": "Dravix - Full Stack E-Commerce",
   "scripts": {
     "dev": "concurrently -n BE,FE -c blue,green \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && npm run dev",

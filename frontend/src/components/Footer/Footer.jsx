@@ -74,7 +74,7 @@ const Footer = () => {
               </button>
               <span className="text-gray-700 text-xs md:text-sm">$ USD</span>
             </div>
-            <p className="site-footer-copyright text-xs md:text-sm text-gray-500">&copy; 2026 Dravix E-Commerce</p>
+            <p className="site-footer-copyright text-xs md:text-sm text-gray-500">&copy; 2026 Dravix</p>
           </div>
         </div>
       </div>
