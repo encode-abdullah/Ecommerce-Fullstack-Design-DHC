@@ -5,13 +5,15 @@ const {
   updateUserProfile,
 } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
+const { validateSyncUser, validateProfileUpdate } = require('../middleware/validate');
+const { generalLimiter, registerLimiter } = require('../middleware/rateLimiter');
 
 const router = express.Router();
 
-router.post('/sync', protect, syncUser);
+router.post('/sync', protect, registerLimiter, validateSyncUser, syncUser);
 router
   .route('/profile')
-  .get(protect, getUserProfile)
-  .put(protect, updateUserProfile);
+  .get(protect, generalLimiter, getUserProfile)
+  .put(protect, generalLimiter, validateProfileUpdate, updateUserProfile);
 
 module.exports = router;

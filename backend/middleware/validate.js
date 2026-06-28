@@ -73,6 +73,35 @@ const validateObjectId = [
   handleValidationErrors,
 ];
 
+const validateSyncUser = [
+  body('firebaseUid')
+    .notEmpty().withMessage('Firebase UID is required'),
+  body('email')
+    .optional()
+    .isEmail().withMessage('Invalid email format')
+    .normalizeEmail(),
+  body('name')
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 100 }).withMessage('Name must be 1-100 characters'),
+  handleValidationErrors,
+];
+
+const validateProfileUpdate = [
+  body('name')
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 100 }).withMessage('Name must be 1-100 characters'),
+  body('email')
+    .optional()
+    .isEmail().withMessage('Invalid email format')
+    .normalizeEmail(),
+  body('profileImage')
+    .optional()
+    .isString().withMessage('Profile image must be a string'),
+  handleValidationErrors,
+];
+
 module.exports = {
   handleValidationErrors,
   validateRegister,
@@ -80,4 +109,6 @@ module.exports = {
   validateProduct,
   validateCategory,
   validateObjectId,
+  validateSyncUser,
+  validateProfileUpdate,
 };

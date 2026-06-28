@@ -9,7 +9,8 @@ const getProducts = asyncHandler(async (req, res) => {
   const filter = {};
 
   if (req.query.keyword) {
-    filter.name = { $regex: req.query.keyword, $options: 'i' };
+    const escaped = req.query.keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    filter.name = { $regex: escaped, $options: 'i' };
   }
 
   if (req.query.category) {
