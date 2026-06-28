@@ -7,7 +7,6 @@ const helmet = require('helmet');
 const sanitize = require('mongo-sanitize');
 const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
-const { generalLimiter } = require('./middleware/rateLimiter');
 
 connectDB();
 
@@ -37,11 +36,11 @@ app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use('/api/auth', generalLimiter, require('./routes/authRoutes'));
-app.use('/api/products', generalLimiter, require('./routes/productRoutes'));
-app.use('/api/categories', generalLimiter, require('./routes/categoryRoutes'));
-app.use('/api/cart', generalLimiter, require('./routes/cartRoutes'));
-app.use('/api/orders', generalLimiter, require('./routes/orderRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/categories', require('./routes/categoryRoutes'));
+app.use('/api/cart', require('./routes/cartRoutes'));
+app.use('/api/orders', require('./routes/orderRoutes'));
 
 app.use('/products', express.static(path.join(__dirname, '..', 'Products')));
 
