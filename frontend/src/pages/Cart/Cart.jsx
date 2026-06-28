@@ -9,7 +9,7 @@ import { createOrder } from '../../api';
 import { toast } from 'react-toastify';
 
 const Cart = () => {
-  const { cartItems, cartLoading, updateCart, removeFromCart, clearCart } = useCart();
+  const { cartItems, cartLoading, addToCart, updateCart, removeFromCart, clearCart } = useCart();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [coupon, setCoupon] = useState('');
@@ -55,16 +55,24 @@ const Cart = () => {
     });
   };
 
-  const handleSaveForLater = (item) => {
-    setSavedForLater([...savedForLater, item]);
-    removeFromCart(item.product._id);
-    toast.success('Saved for later');
+  const handleSaveForLater = async (item) => {
+    try {
+      setSavedForLater([...savedForLater, item]);
+      await removeFromCart(item.product._id);
+      toast.success('Saved for later');
+    } catch {
+      toast.error('Failed to save for later');
+    }
   };
 
-  const handleMoveToCart = (item) => {
-    updateCart(item.product._id, 1);
-    setSavedForLater(savedForLater.filter(i => i.product._id !== item.product._id));
-    toast.success('Moved to cart');
+  const handleMoveToCart = async (item) => {
+    try {
+      await addToCart(item.product._id, 1);
+      setSavedForLater(savedForLater.filter(i => i.product._id !== item.product._id));
+      toast.success('Moved to cart');
+    } catch {
+      toast.error('Failed to move to cart');
+    }
   };
 
   const handleCheckout = async () => {
@@ -73,7 +81,7 @@ const Cart = () => {
       navigate('/login');
       return;
     }
-    if (!cartItems || cartItems.length === 0) {
+    if (!cartItems || cartItems.filter(item => item.product).length === 0) {
       toast.error('Your cart is empty');
       return;
     }
@@ -96,9 +104,9 @@ const Cart = () => {
 
   return (
     <div className="cart-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">My cart ({cartItems?.length || 0})</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">My cart ({cartItems?.filter(item => item.product).length || 0})</h1>
 
-      {cartItems?.length === 0 && savedForLater.length === 0 ? (
+      {cartItems?.filter(item => item.product).length === 0 && savedForLater.length === 0 ? (
         <div className="text-center py-16">
           <ShoppingCart size={64} className="mx-auto text-gray-300 mb-4" />
           <p className="text-gray-500 text-lg mb-4">Your cart is empty</p>
@@ -115,7 +123,7 @@ const Cart = () => {
           {/* Cart Items */}
           <div className="lg:col-span-8">
             <div className="bg-white rounded-lg border border-gray-100">
-              {cartItems?.map((item, idx) => (
+              {cartItems?.filter(item => item.product).map((item, idx) => (
                 <div key={item.product?._id} className={`flex gap-4 p-5 ${idx > 0 ? 'border-t border-gray-100' : ''}`}>
                   <Link to={`/products/${item.product?._id}`} className="flex-shrink-0">
                     <img
@@ -134,13 +142,13 @@ const Cart = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex gap-2">
                         <button
-                          onClick={() => handleRemove(item.product._id)}
+                          onClick={() => item.product?._id && handleRemove(item.product._id)}
                           className="text-xs text-red-500 hover:text-red-600 font-medium"
                         >
                           Remove
                         </button>
                         <button
-                          onClick={() => handleSaveForLater(item)}
+                          onClick={() => item.product?._id && handleSaveForLater(item)}
                           className="text-xs text-gray-500 hover:text-gray-700 font-medium"
                         >
                           Save for later
@@ -150,7 +158,7 @@ const Cart = () => {
                         <span className="text-xs text-gray-500">Qty:</span>
                         <select
                           value={item.quantity}
-                          onChange={(e) => handleUpdate(item.product._id, Number(e.target.value))}
+                          onChange={(e) => item.product?._id && handleUpdate(item.product._id, Number(e.target.value))}
                           className="px-3 py-1.5 border border-gray-200 rounded text-sm outline-none focus:border-blue-500 bg-white"
                         >
                           {[...Array(10).keys()].map((x) => (
@@ -223,7 +231,7 @@ const Cart = () => {
               </div>
               <button
                 onClick={handleCheckout}
-                disabled={checkingOut || !cartItems || cartItems.length === 0}
+                disabled={checkingOut || !cartItems || cartItems.filter(item => item.product).length === 0}
                 className="w-full mt-4 py-3 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {checkingOut ? 'Processing...' : 'Checkout'}
@@ -280,17 +288,17 @@ const Cart = () => {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Saved for later</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {savedForLater.map((item) => (
-              <div key={item.product._id} className="bg-white rounded-lg border border-gray-100 p-4">
+              <div key={item.product?._id} className="bg-white rounded-lg border border-gray-100 p-4">
                 <img
-                  src={item.product.image ? encodeURI(item.product.image) : '/placeholder.svg'}
-                  alt={item.product.name}
+                  src={item.product?.image ? encodeURI(item.product.image) : '/placeholder.svg'}
+                  alt={item.product?.name}
                   className="w-full h-36 object-contain mb-3"
                   onError={(e) => { e.target.src = '/placeholder.svg'; }}
                 />
-                <p className="text-lg font-bold text-gray-900 mb-1">${item.product.price}</p>
-                <p className="text-xs text-gray-700 line-clamp-2 mb-3">{item.product.name}</p>
+                <p className="text-lg font-bold text-gray-900 mb-1">${item.product?.price}</p>
+                <p className="text-xs text-gray-700 line-clamp-2 mb-3">{item.product?.name}</p>
                 <button
-                  onClick={() => handleMoveToCart(item)}
+                  onClick={() => item.product?._id && handleMoveToCart(item)}
                   className="w-full flex items-center justify-center gap-2 py-2 border border-blue-500 text-blue-500 rounded-lg text-sm font-medium hover:bg-blue-50 transition"
                 >
                   <ShoppingCart className="w-4 h-4" />

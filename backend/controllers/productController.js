@@ -31,6 +31,12 @@ const getProducts = asyncHandler(async (req, res) => {
     filter.featured = true;
   }
 
+  if (req.query.priceMin || req.query.priceMax) {
+    filter.price = {};
+    if (req.query.priceMin) filter.price.$gte = Number(req.query.priceMin);
+    if (req.query.priceMax) filter.price.$lte = Number(req.query.priceMax);
+  }
+
   const sort = req.query.sort || '-createdAt';
 
   const isLightweight = req.query.featured === 'true' && Number(req.query.pageSize) <= 10;

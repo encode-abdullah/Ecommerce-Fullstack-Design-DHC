@@ -92,6 +92,8 @@ const Products = () => {
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
   const [showMobileFilter, setShowMobileFilter] = useState(false);
+  const [appliedPriceMin, setAppliedPriceMin] = useState('');
+  const [appliedPriceMax, setAppliedPriceMax] = useState('');
   const { addToCart } = useCart();
 
   const activeFilterCount = (parentCategory ? 1 : 0) + (priceMin ? 1 : 0) + (priceMax ? 1 : 0);
@@ -103,6 +105,8 @@ const Products = () => {
         const params = { page, keyword, sort, pageSize: showCount };
         if (category) params.category = category;
         else if (parentCategory) params.parentCategory = parentCategory;
+        if (appliedPriceMin) params.priceMin = appliedPriceMin;
+        if (appliedPriceMax) params.priceMax = appliedPriceMax;
         const data = await fetchProducts(params);
         setProducts(data.products || []);
         setPages(data.pages || 1);
@@ -114,7 +118,7 @@ const Products = () => {
       }
     };
     loadProducts();
-  }, [page, keyword, category, parentCategory, sort, showCount]);
+  }, [page, keyword, category, parentCategory, sort, showCount, appliedPriceMin, appliedPriceMax]);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -300,7 +304,10 @@ const Products = () => {
               className="w-1/2 px-3 py-1.5 border border-gray-200 rounded text-sm outline-none focus:border-red-500"
             />
           </div>
-          <button className="w-full py-1.5 border border-gray-200 rounded text-sm text-red-500 hover:bg-red-50 transition-colors">
+          <button
+            onClick={() => { setAppliedPriceMin(priceMin); setAppliedPriceMax(priceMax); setPage(1); }}
+            className="w-full py-1.5 border border-gray-200 rounded text-sm text-red-500 hover:bg-red-50 transition-colors"
+          >
             Apply
           </button>
         </div>

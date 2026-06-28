@@ -56,6 +56,17 @@ const addToCart = asyncHandler(async (req, res) => {
 const updateCart = asyncHandler(async (req, res) => {
   const { productId, quantity } = req.body;
 
+  const product = await Product.findById(productId);
+  if (!product) {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+
+  if (product.stock < quantity) {
+    res.status(400);
+    throw new Error('Not enough stock available');
+  }
+
   const cart = await Cart.findOne({ user: req.user._id });
 
   if (!cart) {
